@@ -6,7 +6,7 @@ import { Projects } from "@/components/sections/Projects";
 import { Process } from "@/components/sections/Process";
 import { Building } from "@/components/sections/Building";
 import { GitHub } from "@/components/sections/GitHub";
-import { Section } from "@/components/ui/Section";
+import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
       <Process />
       <Building />
       <GitHub />
-      <Section id="contact" eyebrow="08" title="Contact" />
+      <Contact />
     </>
   );
 }
