@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MotionConfig } from "framer-motion";
 import { site } from "@/lib/data/site";
 import { jetbrainsMono, spaceGrotesk } from "@/lib/fonts";
 import { Navbar } from "@/components/layout/Navbar";
@@ -23,11 +24,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to main content
         </a>
-        <Navbar />
-        <main id="main-content" className="flex flex-1 flex-col">
-          {children}
-        </main>
-        <Footer />
+        <MotionConfig reducedMotion="user">
+          <Navbar />
+          <main id="main-content" className="flex flex-1 flex-col">
+            {children}
+          </main>
+          <Footer />
+        </MotionConfig>
       </body>
     </html>
   );
