@@ -19,7 +19,7 @@ export function Journey() {
           transition={{ duration: 0.5 }}
         >
           <p className="mb-3 font-mono text-sm uppercase tracking-[0.2em] text-accent">
-            04 — Timeline
+            03 — Timeline
           </p>
           <h2
             id="journey-heading"

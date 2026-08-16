@@ -6,6 +6,8 @@ export const profile = {
   bio: "Diploma in Computer Science & Engineering student focused on building modern web applications and developing my full-stack skills. I like designing systems end-to-end — from the API layer to the pixels on screen.",
   currentlyLearning:
     "Expanding my full-stack skills across real production-grade projects.",
+  currentlyBuilding:
+    "This portfolio — designed and engineered as a product, not a template.",
   openTo: ["Internships", "Junior Opportunities", "Collaborative Projects"],
   email: "ranitnaskar09032007@gmail.com",
   location: "Kolkata, India",
