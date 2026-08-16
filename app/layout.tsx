@@ -4,6 +4,9 @@ import { site } from "@/lib/data/site";
 import { jetbrainsMono, spaceGrotesk } from "@/lib/fonts";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { DevLayerProvider } from "@/lib/dev-layer-context";
+import { Terminal } from "@/components/features/Terminal";
+import { DevMode } from "@/components/features/DevMode";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,11 +28,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to main content
         </a>
         <MotionConfig reducedMotion="user">
-          <Navbar />
-          <main id="main-content" className="flex flex-1 flex-col">
-            {children}
-          </main>
-          <Footer />
+          <DevLayerProvider>
+            <Navbar />
+            <main id="main-content" className="flex flex-1 flex-col">
+              {children}
+            </main>
+            <Footer />
+            <Terminal />
+            <DevMode />
+          </DevLayerProvider>
         </MotionConfig>
       </body>
     </html>

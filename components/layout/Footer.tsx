@@ -1,5 +1,6 @@
 import { profile } from "@/lib/data/profile";
 import { site } from "@/lib/data/site";
+import { BugHunt } from "@/components/features/BugHunt";
 
 const socialLinks = [
   { label: "GitHub", href: site.github },
@@ -11,7 +12,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row md:px-10">
-        <div>
+        <div className="flex items-center gap-3">
           <a
             href="#top"
             className="font-mono text-sm font-semibold text-text transition-colors hover:text-accent"
@@ -19,10 +20,11 @@ export function Footer() {
             {profile.brand}
             <span className="text-accent">.</span>
           </a>
-          <p className="mt-2 text-xs text-text-muted">
-            {profile.name} — {profile.role} · {profile.location}
-          </p>
+          <BugHunt />
         </div>
+        <p className="text-xs text-text-muted md:order-last">
+          {profile.name} — {profile.role} · {profile.location}
+        </p>
 
         <ul className="flex items-center gap-6">
           {socialLinks.map((link) => (
