@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { DevLayerProvider } from "@/lib/dev-layer-context";
 import { Terminal } from "@/components/features/Terminal";
 import { DevMode } from "@/components/features/DevMode";
+import { ScrollProgress } from "@/components/features/ScrollProgress";
 import { personJsonLd } from "@/lib/json-ld";
 import "./globals.css";
 
@@ -86,6 +87,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Footer />
             <Terminal />
             <DevMode />
+            <ScrollProgress />
           </DevLayerProvider>
         </MotionConfig>
       </body>

@@ -84,6 +84,21 @@
   .hairline {
     border-color: var(--bd-1e29);
   }
+
+  .scrollbar-thumb {
+    background: linear-gradient(180deg, var(--ac-38bd), var(--ac-8b5c));
+    background-size: 100% 200%;
+    animation: scrollbar-shimmer 3.5s linear infinite;
+  }
+}
+
+@keyframes scrollbar-shimmer {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 200%;
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -92,6 +107,11 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
