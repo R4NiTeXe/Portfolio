@@ -8,7 +8,6 @@ const buildInfo = [
   { label: "TypeScript", value: "5.x" },
   { label: "Styling", value: "Tailwind CSS v4" },
   { label: "Rendering", value: "Static-first (SSG)" },
-  { label: "3D", value: "React Three Fiber" },
   { label: "Data", value: "MongoDB + Mongoose" },
   { label: "Email", value: "Resend" },
 ] as const;
@@ -33,7 +32,7 @@ export function DevMode() {
   return (
     <aside
       aria-label="Developer mode overlay"
-      className="fixed bottom-4 right-4 z-[75] w-72 rounded-lg border border-accent/40 bg-[#05070D] p-4 shadow-[0_0_40px_rgba(56,189,248,0.15)]"
+      className="fixed bottom-4 right-4 z-[75] w-72 rounded-lg border border-accent/40 bg-bg p-4 shadow-[0_0_40px_rgba(56,189,248,0.15)]"
     >
       <div className="flex items-center justify-between">
         <p className="font-mono text-xs uppercase tracking-widest text-accent">

@@ -200,7 +200,7 @@ export function Terminal() {
       onClick={() => setTerminalOpen(false)}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-lg border border-accent/30 bg-[#05070D] shadow-[0_0_60px_rgba(56,189,248,0.15)]"
+        className="w-full max-w-2xl overflow-hidden rounded-lg border border-accent/30 bg-bg shadow-[0_0_60px_rgba(56,189,248,0.15)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-3">

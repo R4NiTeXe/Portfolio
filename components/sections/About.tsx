@@ -2,12 +2,7 @@
 
 import { motion } from "framer-motion";
 import { profile } from "@/lib/data/profile";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-};
+import { fadeUpViewport } from "@/lib/animations";
 
 export function About() {
   return (
@@ -17,7 +12,7 @@ export function About() {
       className="scroll-mt-24 py-20 md:py-28"
     >
       <div className="mx-auto w-full max-w-6xl px-6 md:px-10">
-        <motion.div {...fadeUp} transition={{ duration: 0.5 }}>
+        <motion.div {...fadeUpViewport} transition={{ duration: 0.5 }}>
           <p className="mb-3 font-mono text-sm uppercase tracking-[0.2em] text-accent">
             01 — About
           </p>
@@ -32,7 +27,7 @@ export function About() {
 
         <div className="mt-10 grid gap-10 lg:grid-cols-5 lg:gap-16">
           <motion.div
-            {...fadeUp}
+            {...fadeUpViewport}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="lg:col-span-3"
           >
@@ -62,7 +57,7 @@ export function About() {
           </motion.div>
 
           <motion.div
-            {...fadeUp}
+            {...fadeUpViewport}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:col-span-2"
           >

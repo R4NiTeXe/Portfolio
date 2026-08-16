@@ -29,6 +29,7 @@ export function CosmicBackground() {
 
   return (
     <div className="cosmic-bg absolute inset-0 overflow-hidden" aria-hidden="true">
+      {/* Deep Space Stars */}
       {stars.map((star) => (
         <div
           key={star.id}
@@ -39,19 +40,21 @@ export function CosmicBackground() {
             width: `${star.size}px`,
             height: `${star.size}px`,
             opacity: star.opacity,
-            animation: `portal-breathe ${star.duration}s ease-in-out ${star.delay}s infinite`,
+            animation: `corona-glow ${star.duration}s ease-in-out ${star.delay}s infinite alternate`,
           }}
         />
       ))}
 
-      <div className="energy-portal">
-        <div className="energy-portal-outer" />
-        <div className="energy-portal-glow" />
-        <div className="energy-portal-core" />
-        <div className="energy-portal-ring" style={{ width: "300px", height: "300px" }} />
-        <div className="energy-portal-ring" style={{ width: "400px", height: "400px", animationDelay: "1s" }} />
-        <div className="energy-portal-ring" style={{ width: "520px", height: "520px", animationDelay: "2s" }} />
+      {/* Top Black Hole / Cosmic Accretion Horizon */}
+      <div className="black-hole-container">
+        <div className="black-hole-corona" />
+        <div className="black-hole-arc-2" />
+        <div className="black-hole-arc-1" />
+        <div className="black-hole-core" />
       </div>
+
+      {/* Horizontal Anamorphic Lens Flare */}
+      <div className="black-hole-flare" />
     </div>
   );
 }

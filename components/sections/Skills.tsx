@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { skillClusters } from "@/lib/data/skills";
 import { cn } from "@/lib/utils";
@@ -9,10 +9,14 @@ export function Skills() {
   const [clusterId, setClusterId] = useState(skillClusters[0].id);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const cluster =
-    skillClusters.find((c) => c.id === clusterId) ?? skillClusters[0];
-  const selected =
-    cluster.items.find((item) => item.name === selectedId) ?? null;
+  const cluster = useMemo(
+    () => skillClusters.find((c) => c.id === clusterId) ?? skillClusters[0],
+    [clusterId],
+  );
+  const selected = useMemo(
+    () => cluster.items.find((item) => item.name === selectedId) ?? null,
+    [cluster.items, selectedId],
+  );
 
   return (
     <section

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   motion,
   useMotionTemplate,
@@ -55,7 +55,7 @@ export function ScrollProgress() {
     };
   }, []);
 
-  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+  const handlePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     event.preventDefault();
     const track = trackRef.current;
     const thumb = thumbRef.current;
@@ -70,22 +70,22 @@ export function ScrollProgress() {
     const ratio = (event.clientY - rect.top) / rect.height;
     const total = document.documentElement.scrollHeight - window.innerHeight;
     smoothScrollTo(ratio * total, false);
-  }
+  }, []);
 
-  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+  const handlePointerMove = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return;
     const total = document.documentElement.scrollHeight - window.innerHeight;
     const deltaY =
       (event.clientY - dragStartRef.current.clientY) *
       (total / window.innerHeight);
     smoothScrollTo(dragStartRef.current.scrollY + deltaY, true);
-  }
+  }, []);
 
-  function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
+  const handlePointerUp = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (!draggingRef.current) return;
     draggingRef.current = false;
     trackRef.current?.releasePointerCapture(event.pointerId);
-  }
+  }, []);
 
   return (
     <div

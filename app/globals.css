@@ -6,6 +6,7 @@
 :root {
   --bg-0507: #05070d;
   --bg-0b0f: #0b0f17;
+  --bg-0314: #030014;
   --bg-1118: #111827;
   --bd-1e29: #1e293b;
   --tx-f8fa: #f8fafc;
@@ -93,74 +94,110 @@
 
   .cosmic-bg {
     background:
-      radial-gradient(ellipse at 50% 0%, rgb(139 92 246 / 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 20% 80%, rgb(56 189 248 / 0.04) 0%, transparent 40%),
-      linear-gradient(180deg, #05070d 0%, #0b0f17 50%, #05070d 100%);
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgb(168 85 247 / 0.22) 0%, rgb(124 58 237 / 0.12) 35%, transparent 70%),
+      radial-gradient(circle 600px at 50% 20%, rgb(56 189 248 / 0.04) 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-0314) 0%, var(--bg-0507) 40%, var(--bg-0b0f) 80%, var(--bg-0507) 100%);
   }
 
-  .energy-portal {
+  /* Black hole / Accretion Horizon */
+  .black-hole-container {
     position: absolute;
-    top: -60px;
+    top: 0;
     left: 50%;
-    transform: translateX(-50%) scaleX(2.8);
-    width: 420px;
-    height: 220px;
-    border-radius: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+    height: 380px;
     pointer-events: none;
+    overflow: visible;
   }
 
-  .energy-portal-core {
+  .black-hole-flare {
     position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(
-      ellipse at center,
-      rgb(255 255 255 / 0.9) 0%,
-      rgb(192 132 252 / 0.7) 15%,
-      rgb(139 92 246 / 0.5) 30%,
-      rgb(56 189 248 / 0.2) 55%,
-      transparent 75%
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(168 85 247 / 0.15) 20%,
+      rgb(192 132 252 / 0.8) 45%,
+      rgb(255 255 255 / 1) 50%,
+      rgb(192 132 252 / 0.8) 55%,
+      rgb(168 85 247 / 0.15) 80%,
+      transparent 100%
     );
-    filter: blur(2px);
-    animation: portal-breathe 5s ease-in-out infinite;
+    box-shadow:
+      0 0 20px 2px rgb(192 132 252 / 0.9),
+      0 0 50px 8px rgb(147 51 234 / 0.5);
+    filter: blur(0.5px);
   }
 
-  .energy-portal-glow {
+  .black-hole-core {
     position: absolute;
-    inset: -40px;
+    top: -140px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: var(--bg-0314);
+    box-shadow:
+      0 0 0 3px rgb(255 255 255 / 0.95),
+      0 0 25px 6px rgb(192 132 252 / 0.9),
+      0 0 60px 18px rgb(147 51 234 / 0.75),
+      0 0 120px 40px rgb(126 34 206 / 0.45),
+      inset 0 0 30px 10px var(--bg-0314);
+    animation: hole-pulse 6s ease-in-out infinite;
+  }
+
+  .black-hole-arc-1 {
+    position: absolute;
+    top: -155px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    border: 3px solid rgb(216 180 254 / 0.85);
+    box-shadow:
+      0 0 30px 4px rgb(168 85 247 / 0.8),
+      inset 0 0 20px rgb(168 85 247 / 0.4);
+    animation: hole-pulse 6s ease-in-out infinite 0.5s;
+  }
+
+  .black-hole-arc-2 {
+    position: absolute;
+    top: -175px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 440px;
+    height: 440px;
+    border-radius: 50%;
+    border: 2px solid rgb(168 85 247 / 0.5);
+    box-shadow: 0 0 45px 8px rgb(147 51 234 / 0.5);
+    animation: hole-pulse 6s ease-in-out infinite 1s;
+  }
+
+  .black-hole-corona {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 360px;
     border-radius: 50%;
     background: radial-gradient(
       ellipse at center,
-      rgb(139 92 246 / 0.45) 0%,
-      rgb(99 102 241 / 0.2) 35%,
-      rgb(56 189 248 / 0.08) 60%,
+      rgb(168 85 247 / 0.45) 0%,
+      rgb(126 34 206 / 0.25) 40%,
+      rgb(56 189 248 / 0.08) 65%,
       transparent 80%
     );
-    filter: blur(20px);
-    animation: portal-breathe 5s ease-in-out infinite reverse;
-  }
-
-  .energy-portal-outer {
-    position: absolute;
-    inset: -100px;
-    border-radius: 50%;
-    background: radial-gradient(
-      ellipse at center,
-      rgb(139 92 246 / 0.12) 0%,
-      rgb(56 189 248 / 0.05) 50%,
-      transparent 75%
-    );
-    filter: blur(50px);
-  }
-
-  .energy-portal-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scaleX(2.8);
-    border-radius: 50%;
-    border: 1px solid rgb(139 92 246 / 0.2);
-    animation: portal-ring-pulse 6s ease-in-out infinite;
+    filter: blur(35px);
+    animation: corona-glow 8s ease-in-out infinite alternate;
   }
 
   .star {
@@ -169,14 +206,26 @@
     background: white;
   }
 
-  @keyframes portal-breathe {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
+  @keyframes hole-pulse {
+    0%, 100% {
+      transform: translateX(-50%) scale(1);
+      opacity: 0.95;
+    }
+    50% {
+      transform: translateX(-50%) scale(1.03);
+      opacity: 1;
+    }
   }
 
-  @keyframes portal-ring-pulse {
-    0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scaleX(2.8) scale(1); }
-    50% { opacity: 0.6; transform: translate(-50%, -50%) scaleX(2.8) scale(1.08); }
+  @keyframes corona-glow {
+    0% {
+      opacity: 0.7;
+      transform: translateX(-50%) scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.06);
+    }
   }
 
   @keyframes orbital-spin {
@@ -191,7 +240,7 @@
 
   @keyframes card-float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+    50% { transform: translateY(-5px); }
   }
 }
 

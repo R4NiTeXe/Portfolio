@@ -89,48 +89,70 @@ export function Navbar() {
         >
           <a
             href="#top"
-            className="font-mono text-sm font-semibold tracking-tight text-text transition-colors hover:text-accent"
+            className="flex items-center gap-3 font-mono text-sm font-semibold tracking-tight text-text transition-colors hover:text-accent"
           >
-            {profile.brand}
-            <span className="text-accent">.</span>
+            {/* Glowing Atom Logo */}
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-accent/30 bg-accent/10 shadow-[0_0_15px_rgba(56,189,248,0.35)] backdrop-blur-md">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-5 w-5 text-accent animate-[spin_12s_linear_infinite]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+              >
+                <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(0 12 12)" />
+                <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+                <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
+                <circle cx="12" cy="12" r="2" fill="currentColor" />
+              </svg>
+            </div>
+            <span className="text-base font-bold tracking-tight text-white">
+              {profile.brand}
+            </span>
           </a>
 
+          {/* Center Capsule Pill Navbar with Accretion Glow */}
           <div className="hidden items-center gap-3 lg:flex">
-            <ul className="flex items-center gap-1 rounded-full border border-white/[0.06] bg-white/[0.03] px-2 py-1.5 backdrop-blur-md">
-              {navItems.map((item) => (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    className={cn(
-                      "rounded-full px-4 py-1.5 text-xs font-medium transition-all duration-300",
-                      active === item.id
-                        ? "bg-white/[0.08] text-text"
-                        : "text-text-muted/60 hover:text-text/80",
-                    )}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div className="relative">
+              {/* Radiant violet beam above/behind navbar pill */}
+              <div className="absolute -top-3 left-1/2 h-8 w-40 -translate-x-1/2 rounded-full bg-accent-violet/30 blur-xl pointer-events-none" />
+              
+              <ul className="relative flex items-center gap-1 rounded-full border border-purple-500/30 bg-[#0B061A]/80 px-2.5 py-1.5 shadow-[0_0_25px_rgba(168,85,247,0.25)] backdrop-blur-xl">
+                {navItems.map((item) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      className={cn(
+                        "rounded-full px-4 py-1.5 text-xs font-medium transition-all duration-300",
+                        active === item.id
+                          ? "bg-purple-600/30 text-white shadow-[0_0_12px_rgba(168,85,247,0.6)] border border-purple-400/40"
+                          : "text-text-muted/70 hover:text-white hover:bg-white/[0.05]",
+                      )}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="hidden items-center gap-3 lg:flex">
             <button
               type="button"
               onClick={() => setRecruiterOpen(true)}
-              className="rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5 text-xs font-medium text-text-muted transition-all duration-300 hover:border-accent/30 hover:text-accent"
+              className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 text-xs font-medium text-text-muted transition-all duration-300 hover:border-accent/40 hover:text-accent hover:shadow-[0_0_15px_rgba(56,189,248,0.2)]"
             >
               Recruiter Mode
             </button>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               {socialLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   target={link.name !== "Email" ? "_blank" : undefined}
                   rel={link.name !== "Email" ? "noopener noreferrer" : undefined}
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-text-muted/50 transition-all duration-300 hover:text-text/80"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] text-text-muted/70 transition-all duration-300 hover:border-accent/40 hover:bg-white/[0.08] hover:text-white hover:shadow-[0_0_12px_rgba(168,85,247,0.3)]"
                   aria-label={link.name}
                 >
                   {link.icon}

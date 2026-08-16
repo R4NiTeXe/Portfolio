@@ -2,15 +2,11 @@
 
 import { motion } from "framer-motion";
 import { profile } from "@/lib/data/profile";
+import { fadeUp } from "@/lib/animations";
 import { Button } from "@/components/ui/Button";
 import { CosmicBackground } from "@/components/features/CosmicBackground";
 import { TechOrbital } from "@/components/features/TechOrbital";
 import { FeaturePanel } from "@/components/features/FeaturePanel";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
-};
 
 export function Hero() {
   return (
@@ -27,26 +23,33 @@ export function Hero() {
             <motion.div
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.05 }}
-              className="mb-2"
+              className="mb-3"
             >
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-text-muted backdrop-blur-sm">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-                {profile.brand} / {profile.role}
+              <span className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-[#110A26]/60 px-3.5 py-1.5 font-mono text-xs text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.2)] backdrop-blur-md">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-3.5 w-3.5 text-purple-400 fill-current"
+                >
+                  <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" />
+                </svg>
+                {profile.brand} · {profile.role}
               </span>
             </motion.div>
 
             <motion.h1
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="text-4xl font-bold leading-[1.1] tracking-tight text-text sm:text-5xl lg:text-6xl xl:text-[4.2rem]"
+              className="text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-[4rem]"
             >
-              Building digital
-              <br />
-              products that feel
-              <br />
-              <span className="bg-gradient-to-r from-accent-violet via-accent to-accent bg-[length:200%_auto] bg-clip-text text-transparent" style={{ WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                ahead of their time.
+              Providing{" "}
+              <span className="bg-gradient-to-r from-purple-400 to-purple-500 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                the
+              </span>{" "}
+              <span className="bg-gradient-to-r from-sky-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(56,189,248,0.4)]">
+                best
               </span>
+              <br />
+              project experience
             </motion.h1>
 
             <motion.p
@@ -60,18 +63,18 @@ export function Hero() {
             <motion.div
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.35 }}
-              className="mt-6 flex flex-col gap-3 sm:flex-row"
+              className="mt-6 flex flex-wrap items-center gap-3.5"
             >
-              <Button href="#work" size="lg">
-                Explore My Work
-              </Button>
-              <Button
-                href={profile.resumePath}
-                variant="secondary"
-                size="lg"
-                download
+              <a
+                href="#about"
+                className="group relative inline-flex items-center justify-center rounded-xl border border-purple-500/40 bg-gradient-to-r from-[#2E0854] via-[#1F073D] to-[#120326] px-6 py-3 text-sm font-semibold text-white shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all duration-300 hover:scale-[1.03] hover:border-purple-400 hover:shadow-[0_0_35px_rgba(168,85,247,0.65)] active:scale-[0.98]"
               >
-                Download Resume
+                <span>Learn More!</span>
+                <div className="absolute inset-0 rounded-xl bg-purple-500/10 opacity-0 transition-opacity group-hover:opacity-100" />
+              </a>
+
+              <Button href="#work" variant="secondary" size="md">
+                Explore Projects
               </Button>
             </motion.div>
 
