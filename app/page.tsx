@@ -1,22 +1,20 @@
 import { Section } from "@/components/ui/Section";
 import { Hero } from "@/components/sections/Hero";
+import { About } from "@/components/sections/About";
+import { Skills } from "@/components/sections/Skills";
+import { Journey } from "@/components/sections/Journey";
+import { Process } from "@/components/sections/Process";
 
 export default function Home() {
   return (
     <>
       <Hero />
-
-      <Section id="about" eyebrow="01" title="About">
-        <p className="max-w-2xl text-text-muted">Coming soon.</p>
-      </Section>
-
-      <Section id="skills" eyebrow="02" title="Skills" />
-
+      <About />
+      <Skills />
       <Section id="work" eyebrow="03" title="Work" />
-
-      <Section id="journey" eyebrow="04" title="Journey" />
-
-      <Section id="contact" eyebrow="05" title="Contact" />
+      <Journey />
+      <Process />
+      <Section id="contact" eyebrow="06" title="Contact" />
     </>
   );
 }

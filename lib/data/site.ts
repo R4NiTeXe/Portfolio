@@ -10,3 +10,41 @@ export const site = {
   linkedin: "https://www.linkedin.com/in/ranit-naskar",
   ogImage: "/opengraph-image",
 } as const;
+
+export const processSteps = [
+  {
+    id: "discover",
+    number: "01",
+    title: "Discover",
+    description:
+      "Understand the problem, the users, and the constraints before writing any code.",
+  },
+  {
+    id: "design",
+    number: "02",
+    title: "Design",
+    description:
+      "Plan the experience and the architecture — how data flows, and how it feels.",
+  },
+  {
+    id: "build",
+    number: "03",
+    title: "Build",
+    description:
+      "Develop the product in small, testable pieces with a clean separation of concerns.",
+  },
+  {
+    id: "test",
+    number: "04",
+    title: "Test",
+    description:
+      "Find and fix problems — validation, edge cases, and real user flows.",
+  },
+  {
+    id: "ship",
+    number: "05",
+    title: "Ship",
+    description:
+      "Deploy to production, monitor, and keep improving based on real usage.",
+  },
+] as const;
