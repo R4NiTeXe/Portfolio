@@ -10,6 +10,7 @@ import {
   useTransform,
   useVelocity,
 } from "framer-motion";
+import { smoothScrollTo } from "@/lib/smooth-scroll";
 
 export function ScrollProgress() {
   const reduceMotion = useReducedMotion();
@@ -68,7 +69,7 @@ export function ScrollProgress() {
     }
     const ratio = (event.clientY - rect.top) / rect.height;
     const total = document.documentElement.scrollHeight - window.innerHeight;
-    window.scrollTo({ top: ratio * total, behavior: "smooth" });
+    smoothScrollTo(ratio * total, false);
   }
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
@@ -77,10 +78,7 @@ export function ScrollProgress() {
     const deltaY =
       (event.clientY - dragStartRef.current.clientY) *
       (total / window.innerHeight);
-    window.scrollTo({
-      top: dragStartRef.current.scrollY + deltaY,
-      behavior: "auto",
-    });
+    smoothScrollTo(dragStartRef.current.scrollY + deltaY, true);
   }
 
   function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {

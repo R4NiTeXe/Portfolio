@@ -8,6 +8,7 @@ import { DevLayerProvider } from "@/lib/dev-layer-context";
 import { Terminal } from "@/components/features/Terminal";
 import { DevMode } from "@/components/features/DevMode";
 import { ScrollProgress } from "@/components/features/ScrollProgress";
+import { SmoothScroll } from "@/components/features/SmoothScroll";
 import { personJsonLd } from "@/lib/json-ld";
 import "./globals.css";
 
@@ -79,16 +80,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to main content
         </a>
         <MotionConfig reducedMotion="user">
-          <DevLayerProvider>
-            <Navbar />
-            <main id="main-content" className="flex flex-1 flex-col">
-              {children}
-            </main>
-            <Footer />
-            <Terminal />
-            <DevMode />
-            <ScrollProgress />
-          </DevLayerProvider>
+          <SmoothScroll>
+            <DevLayerProvider>
+              <Navbar />
+              <main id="main-content" className="flex flex-1 flex-col">
+                {children}
+              </main>
+              <Footer />
+              <Terminal />
+              <DevMode />
+              <ScrollProgress />
+            </DevLayerProvider>
+          </SmoothScroll>
         </MotionConfig>
       </body>
     </html>
