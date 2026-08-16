@@ -48,6 +48,7 @@ export function CosmicBackground() {
       {/* Top Black Hole / Cosmic Accretion Horizon */}
       <div className="black-hole-container">
         <div className="black-hole-corona" />
+        <div className="black-hole-arc-3" />
         <div className="black-hole-arc-2" />
         <div className="black-hole-arc-1" />
         <div className="black-hole-core" />
