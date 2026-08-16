@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const Hero3DScene = dynamic(
@@ -31,6 +32,12 @@ export function Hero3D() {
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const desktop = useMediaQuery("(min-width: 768px)");
 
+  const glowX = useMotionValue(-200);
+  const glowY = useMotionValue(-200);
+  const springGlowX = useSpring(glowX, { stiffness: 60, damping: 20 });
+  const springGlowY = useSpring(glowY, { stiffness: 60, damping: 20 });
+  const glowBackground = useMotionTemplate`radial-gradient(320px circle at ${springGlowX}px ${springGlowY}px, rgb(56 189 248 / 0.1), transparent 70%)`;
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -44,15 +51,30 @@ export function Hero3D() {
 
   const render3D = desktop && !reduceMotion && inView;
 
+  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    glowX.set(event.clientX - rect.left);
+    glowY.set(event.clientY - rect.top);
+  }
+
   return (
     <div
       ref={containerRef}
-      className="relative h-[360px] w-full md:h-[460px] lg:h-[520px]"
+      onPointerMove={render3D ? handlePointerMove : undefined}
+      onPointerLeave={() => {
+        glowX.set(-200);
+        glowY.set(-200);
+      }}
+      className="group relative h-[360px] w-full md:h-[460px] lg:h-[520px]"
       aria-hidden="true"
     >
       {render3D ? (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.02]">
           <Hero3DScene />
+          <motion.div
+            className="pointer-events-none absolute inset-0"
+            style={{ background: glowBackground }}
+          />
         </div>
       ) : (
         <FallbackVisual />
