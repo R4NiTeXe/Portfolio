@@ -26,15 +26,14 @@ y 96-272    HERO TEXT BLOCK (x 208-352):
               y 208-256 secondary gray text lines
               y 256-272 mint accents
 y 60-340    ECLIPSE (right side):
-              dark disk: center (770,196) r~102, bbox x 668-876 y 88-308,
-              near-solid black interior (fill 0.717)
-              white-hot CORE inside disk at x 810-850, y 100-200
-              violet halo top-left of disk (x 760-880, y 60-230)
-              mint rim right/bottom (x 880-930, y 80-200; x 1072-1120 y 96)
+              SOLID BLACK disk: center (770,196) r~102, bbox x 668-876 y 88-308,
+              near-solid black interior (fill 0.717), NO bright core inside
+              VIOLET illumination/halo upper-left of disk (x 760-880, y 60-230)
+              MINT rim on the right/bottom of disk (x 880-930, y 80-200; x 1072-1120 y 96)
 y 384-448   divider band with scattered bright marks (section break)
-y 448-680   CONTENT PANEL zone: wide mid-bright glass panel x 42-682
-            + violet element bottom-right x 1300-1420 y 480-560
+y 448-680   CONTENT zone (soft reference only — not a hard measurement)
 y 688-870   CARD zone: text rows at x 42-336 (left), x 560-688, x 900-1150
+            DESKTOP: 4 project cards
 y 880-1024  FOOTER: mint text x 296-456 (y 896), amber bits y 928,
             sparse text bottom y 992-1008
 ```
@@ -52,14 +51,16 @@ y 880-1024  FOOTER: mint text x 296-456 (y 896), amber bits y 928,
 
 | Visual element | Technique |
 |---|---|
-| Eclipse disk + core | three.js: black sphere, emissive white core sprite, layered glow rings |
-| Violet halo / mint rim | R3F shader sprites + CSS radial gradients |
+| Eclipse disk | three.js: SOLID BLACK sphere (no emissive core) |
+| Violet halo (upper-left) | R3F glow sprite / shader, violet, above-left of disk |
+| Mint rim (right/bottom) | R3F crescent/rim glow sprite, mint, wrapping right-bottom |
 | Aurora atmosphere | CSS radial-gradient blobs, slow drift |
 | Technical grid | CSS repeating-linear-gradient, 1px, faint |
 | Glass panels/cards | `bg-white/8 + border-white/10 + backdrop-blur` |
 | Headline | Space Grotesk, white, ~clamp(40px, 8vw, 72px) |
 | Mono labels | JetBrains Mono, mint, ~11-12px uppercase |
 | Amber availability | nav right, pulsing dot + text |
+| Projects (desktop) | 4 cards |
 
 ## 5. Uncertain (needs visual confirmation during refinement)
 
