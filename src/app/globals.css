@@ -61,6 +61,7 @@
   --animate-aurora: aurora 24s ease-in-out infinite alternate;
   --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
   --animate-spin-slow: spin 14s linear infinite;
+  --animate-scroll-line: scroll-line 2.2s ease-in-out infinite;
 }
 
 :root {
@@ -288,6 +289,15 @@
   50% {
     box-shadow: 0 0 0 6px rgba(255, 184, 107, 0);
     opacity: 0.85;
+  }
+}
+
+@keyframes scroll-line {
+  0% {
+    transform: translateY(-120%);
+  }
+  100% {
+    transform: translateY(340%);
   }
 }
 
