@@ -6,7 +6,7 @@ export const site = {
   email: "ranitnaskar09032007@gmail.com",
   phone: "+91 9002036816",
   github: "https://github.com/R4NiTeXe",
-  linkedin: "https://in.linkedin.com/in/ranit-naskar-933244358",
+  linkedin: "https://www.linkedin.com/in/ranit-naskar/",
   portfolio: "your-portfolio.com",
   availability: "Available for work",
   location: "Kolkata, West Bengal, India",
