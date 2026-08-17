@@ -5,7 +5,7 @@ import { navLinks, site } from "@/lib/site";
 export function Footer() {
   return (
     <footer className="relative border-t border-white/5">
-      <div className="mx-auto max-w-5xl px-6 py-16">
+      <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <p className="font-display text-2xl font-semibold text-white">
