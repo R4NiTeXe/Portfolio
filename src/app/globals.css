@@ -291,6 +291,63 @@
   }
 }
 
+@keyframes preloader-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (pointer: fine) {
+  .has-custom-cursor,
+  .has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+.cursor-ring-active {
+  border-color: rgba(101, 246, 213, 0.7) !important;
+  background: rgba(101, 246, 213, 0.08);
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+}
+
+@keyframes preloader-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(0deg);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4) rotate(90deg);
+  }
+}
+
+.preloader-ring {
+  animation: preloader-ring 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.preloader-ring-2 {
+  animation: preloader-ring 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+.marquee-track {
+  animation: marquee 46s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
