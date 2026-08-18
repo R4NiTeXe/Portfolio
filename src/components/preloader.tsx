@@ -14,6 +14,7 @@ export function Preloader() {
     document.documentElement.style.overflow = "hidden";
     const t = setTimeout(() => {
       document.documentElement.style.overflow = "";
+      window.dispatchEvent(new Event("eclipse:ready"));
       setGone(true);
     }, 1500);
     return () => {

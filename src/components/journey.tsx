@@ -28,7 +28,7 @@ export function Journey() {
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
         <p className="mono-label text-mint">04 // Journey</p>
         <div className="mt-10 grid gap-14 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
-          <div>
+          <div data-reveal-item>
             <h2 className="font-display text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
               The path so far —
               <br />
@@ -42,7 +42,7 @@ export function Journey() {
 
           <ol className="relative space-y-12 border-l border-white/10 pl-8">
             {milestones.map((milestone, index) => (
-              <li key={milestone.title} className="relative">
+              <li key={milestone.title} data-reveal-item className="relative">
                 <span
                   aria-hidden="true"
                   className={`absolute top-1.5 -left-[41px] h-2.5 w-2.5 rounded-full ${

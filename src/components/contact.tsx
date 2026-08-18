@@ -35,7 +35,7 @@ export function Contact() {
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
         <p className="mono-label text-mint">05 // Contact</p>
         <div className="mt-10 grid gap-14 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
-          <div>
+          <div data-reveal-item>
             <h2 className="font-display text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
               Let&apos;s build at
               <br />
@@ -71,6 +71,7 @@ export function Contact() {
                     ? "noopener noreferrer"
                     : undefined
                 }
+                data-reveal-item
                 className="eclipse-card group flex items-center gap-4 p-4"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 text-mint/80 transition-colors group-hover:border-mint/40 group-hover:text-mint">

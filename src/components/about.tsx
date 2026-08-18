@@ -12,7 +12,7 @@ export function About() {
         <p className="mono-label text-mint">01 // About</p>
 
         <div className="mt-10 grid gap-14 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
-          <div>
+          <div data-reveal-item>
             <h2 className="font-display text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
               Turning ideas into
               <br />
@@ -33,7 +33,7 @@ export function About() {
 
           <div className="grid grid-cols-2 gap-4 self-start">
             {stats.map((stat) => (
-              <div key={stat.label} className="eclipse-card p-5">
+              <div key={stat.label} data-reveal-item className="eclipse-card p-5">
                 <p className="font-display text-3xl font-semibold text-white md:text-4xl">
                   {stat.value}
                 </p>

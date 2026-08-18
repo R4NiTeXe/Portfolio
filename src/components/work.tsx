@@ -36,7 +36,7 @@ export function Work() {
     <section id="work" aria-label="Work" className="relative scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
         <p className="mono-label text-mint">03 // Work</p>
-        <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
+        <div data-reveal-item className="mt-10 flex flex-wrap items-end justify-between gap-6">
           <h2 className="font-display max-w-xl text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
             Selected
             <br />
@@ -60,6 +60,7 @@ export function Work() {
               href={project.href}
               target="_blank"
               rel="noopener noreferrer"
+              data-reveal-item
               className="eclipse-card group flex flex-col p-6"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -104,6 +105,7 @@ export function Work() {
 
           <a
             href={`mailto:${site.email}?subject=Project%20inquiry`}
+            data-reveal-item
             className="group flex min-h-48 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 p-6 text-center transition-colors hover:border-mint/40"
           >
             <span className="font-display text-2xl font-light text-white/40 transition-colors group-hover:text-mint">
