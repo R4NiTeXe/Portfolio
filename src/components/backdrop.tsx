@@ -10,9 +10,6 @@ export function Backdrop() {
       {/* Faint mint glow — bottom-left */}
       <div className="aurora-mint absolute -bottom-[20%] left-[-5%] h-[45vh] w-[35vw] rounded-full opacity-40 [animation-delay:-16s]" />
 
-      {/* Technical grid overlay */}
-      <div className="grid-lines absolute inset-0 opacity-60" />
-
       {/* Vignette — keeps edges dark and premium */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_75%_60%_at_50%_35%,transparent_40%,rgba(4,6,10,0.55)_100%)]" />
     </div>
