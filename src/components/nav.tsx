@@ -23,27 +23,31 @@ export function Nav() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b px-6 transition-all duration-300 md:px-10 ${
+        scrolled
+          ? "border-white/5 bg-[#070A0F]/70 backdrop-blur-md"
+          : "border-transparent bg-transparent"
+      }`}
+    >
       <nav
         aria-label="Main"
-        className={`mx-auto flex h-14 max-w-5xl items-center justify-between rounded-full px-5 transition-all duration-300 ${
-          scrolled ? "glass-strong" : "glass"
-        }`}
+        className="relative mx-auto flex h-14 max-w-[1440px] items-center justify-between md:h-16"
       >
         <a
           href="#top"
-          className="font-display text-base font-semibold tracking-wide text-white"
+          className="font-display text-base font-semibold tracking-wide text-white md:text-lg"
         >
           {site.brand}
           <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-mint align-middle" />
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
-                className="rounded-full px-3.5 py-2 text-[13px] text-muted-foreground transition-colors hover:text-white"
+                className="rounded-full px-3.5 py-2 text-[13px] text-white/60 transition-colors hover:text-white"
               >
                 {link.label}
               </a>

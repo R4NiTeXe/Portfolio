@@ -15,12 +15,39 @@ export function Hero() {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-[23%] left-[75.5%] z-0 hidden h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(101,246,213,0.8),transparent_65%)] opacity-90 blur-xl md:block"
+        className="pointer-events-none absolute top-[3%] left-[1%] z-0 hidden h-[300px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.5),transparent_70%)] opacity-45 blur-2xl md:block"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-[6%] left-[70%] z-0 hidden h-[340px] w-[340px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.6),transparent_70%)] opacity-45 blur-2xl md:block"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-[21%] left-[75.5%] z-0 hidden h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(101,246,213,1),transparent_65%)] opacity-90 blur-xl md:block"
       />
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-[35%] left-[85%] z-0 hidden h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.85),transparent_70%)] opacity-70 blur-2xl md:block"
       />
+
+      <div className="pointer-events-none absolute top-[17%] right-[6%] z-10 hidden w-[330px] lg:block">
+        <p className="mono-label text-mint">{"// "}CURRENT ORBIT</p>
+        <div className="mt-4 border-l-2 border-mint/30 pl-4">
+          <p className="text-sm leading-relaxed text-white/90">
+            Intern — Full-Stack, Agnirath Aerospace
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-white/90">
+            MAGANAL rover: mission dashboards & telemetry
+          </p>
+        </div>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          Diploma CSE — Brainware University, 2027
+        </p>
+        <div className="mt-3 flex items-center gap-2">
+          <span className="h-1 w-1 rounded-full bg-mint" />
+          <span className="mono-label text-mint">@R4NiTeXe</span>
+        </div>
+      </div>
 
       <HeroIntro>
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-28 pb-24 md:px-12 lg:px-20">
@@ -33,13 +60,16 @@ export function Hero() {
             <br />
             NASKAR
           </h1>
-          <p data-hero-item className="text-glow-mint mt-6 max-w-md text-lg font-light text-mint md:text-xl">
+          <p data-hero-item className="text-glow-mint mt-6 max-w-md text-xl font-light text-mint md:text-2xl">
             {site.tagline}
           </p>
           <p data-hero-item className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
             Software Developer from Kolkata, India — building full-stack products
             with React, Node.js and MongoDB. Currently crafting with the team at
             Agnirath Aerospace.
+          </p>
+          <p data-hero-item className="mono-label mt-4 text-mint">
+            {"// "}React · Node.js · MongoDB · Docker
           </p>
           <div data-hero-item className="mt-9 flex flex-wrap items-center gap-4">
             <Button

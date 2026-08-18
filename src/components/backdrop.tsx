@@ -1,8 +1,8 @@
 export function Backdrop() {
   return (
     <div aria-hidden="true" className="fixed inset-0 -z-10 overflow-hidden bg-[#070A0F]">
-      {/* Violet aurora — upper area (behind eclipse zone, reference x 42-64% y 5-25%) */}
-      <div className="aurora-violet animate-aurora absolute top-[2%] left-[40%] h-[34vh] w-[24vw] rounded-full opacity-55" />
+      {/* Violet aurora — wide glow across the upper hero (reference x 3-71% y 3-36%) */}
+      <div className="aurora-violet animate-aurora absolute -top-[8%] left-[-5%] h-[45vh] w-[72vw] rounded-full opacity-60" />
 
       {/* Mint aurora — right/lower */}
       <div className="aurora-mint animate-aurora absolute top-[35%] right-[-8%] h-[55vh] w-[38vw] rounded-full opacity-70 [animation-delay:-8s]" />

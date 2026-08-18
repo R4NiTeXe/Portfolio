@@ -120,26 +120,22 @@ function Scene() {
   const reduced = useReducedMotion() ?? false;
   const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.65)"), []);
   const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,255,0.85)"), []);
-  const mintTex = useMemo(() => glowTexture("rgba(101,246,213,0.55)"), []);
 
   return (
     <>
       <CameraRig reduced={reduced} />
-      <sprite position={[-0.68, 0.35, -0.15]} scale={[3, 3, 1]}>
+      <sprite position={[-0.9, 0.1, -0.15]} scale={[3.6, 3.6, 1]}>
         <spriteMaterial map={violetTex} transparent depthWrite={false} />
       </sprite>
       <sprite position={[-0.68, 0.95, -0.14]} scale={[1, 1, 1]}>
         <spriteMaterial map={violetCoreTex} transparent depthWrite={false} />
-      </sprite>
-      <sprite position={[-0.48, -1.05, -0.15]} scale={[1, 1, 1]}>
-        <spriteMaterial map={mintTex} transparent depthWrite={false} />
       </sprite>
       <mesh position={[0, 0, -0.02]}>
         <ringGeometry args={[1.16, 1.48, 128, 1, RIM_START, RIM_LEN]} />
         <meshBasicMaterial
           color={MINT}
           transparent
-          opacity={0.5}
+          opacity={0.6}
           depthWrite={false}
           side={THREE.DoubleSide}
         />
