@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { site } from "@/lib/site";
 
 const display = Space_Grotesk({
   variable: "--font-display",
@@ -21,10 +22,25 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "R4NiTeXe — ECLIPSE Portfolio",
+  title: `${site.name} — ECLIPSE Portfolio`,
   description:
-    "Futuristic portfolio of R4NiTeXe — full-stack engineer crafting interfaces at the edge of light.",
+    "Futuristic portfolio of Ranit Naskar — full-stack engineer crafting interfaces at the edge of light.",
   keywords: ["portfolio", "full-stack", "developer", "next.js", "three.js"],
+  authors: [{ name: site.name }],
+  openGraph: {
+    title: `${site.name} — ECLIPSE Portfolio`,
+    description:
+      "Full-stack developer from Kolkata, India — building deliberate software at the edge of light.",
+    type: "website",
+    siteName: site.brand,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary",
+    title: `${site.name} — ECLIPSE Portfolio`,
+    description:
+      "Full-stack developer from Kolkata, India — building deliberate software at the edge of light.",
+  },
 };
 
 export const viewport: Viewport = {
