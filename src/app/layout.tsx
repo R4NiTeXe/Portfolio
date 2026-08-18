@@ -24,13 +24,13 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: `${site.name} — ECLIPSE Portfolio`,
   description:
-    "Futuristic portfolio of Ranit Naskar — full-stack engineer crafting interfaces at the edge of light.",
+    "Portfolio of Ranit Naskar — Software Developer crafting deliberate software at the edge of light.",
   keywords: ["portfolio", "full-stack", "developer", "next.js", "three.js"],
   authors: [{ name: site.name }],
   openGraph: {
     title: `${site.name} — ECLIPSE Portfolio`,
     description:
-      "Full-stack developer from Kolkata, India — building deliberate software at the edge of light.",
+      "Software Developer from Kolkata, India — building deliberate software at the edge of light.",
     type: "website",
     siteName: site.brand,
     locale: "en_US",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: `${site.name} — ECLIPSE Portfolio`,
     description:
-      "Full-stack developer from Kolkata, India — building deliberate software at the edge of light.",
+      "Software Developer from Kolkata, India — building deliberate software at the edge of light.",
   },
 };
 

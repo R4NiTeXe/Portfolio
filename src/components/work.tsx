@@ -303,7 +303,7 @@ function ProjectModal({
             className="inline-flex items-center gap-1.5 rounded-lg border border-mint/30 bg-mint/10 px-3.5 py-2 text-xs text-mint transition-colors hover:bg-mint/20"
           >
             <GithubIcon className="h-3.5 w-3.5" />
-            View source
+            {project.repo ? "View source" : "GitHub profile"}
             <ArrowUpRight className="h-3 w-3" />
           </a>
           <a
@@ -413,7 +413,7 @@ export function Work() {
                       className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-mint"
                     >
                       <GithubIcon className="h-3.5 w-3.5" />
-                      Source
+                      {project.repo ? "Source" : "GitHub profile"}
                     </a>
                     <span className="mono-label inline-flex items-center gap-1.5 !text-[9px] text-muted-foreground/60 transition-colors group-hover:text-mint">
                       Details

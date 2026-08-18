@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const LINES: { prefix?: string; text: string; color?: string }[] = [
-  { prefix: "", text: "ECLIPSE OS v2.0 — PORTFOLIO TERMINAL", color: "text-mint" },
+  { prefix: "", text: "ECLIPSE OS v3.0 — PORTFOLIO TERMINAL", color: "text-mint" },
   { prefix: "", text: "> boot sequence initiated" },
   { prefix: "", text: "> loading core modules ......... OK" },
   { prefix: "", text: "> loading mission data ......... OK" },
@@ -11,7 +11,7 @@ const LINES: { prefix?: string; text: string; color?: string }[] = [
   { prefix: "TYPE     ", text: "Software Developer · Fullstack", color: "text-mint" },
   { prefix: "LOC      ", text: "Kolkata, West Bengal, India" },
   { prefix: "EDU      ", text: "Diploma CSE — Brainware University · 2027 · CGPA 7.01" },
-  { prefix: "EXPER    ", text: "Team Project Intern — Agnirath Aerospace (20.04.2026 — 07.08.2026)" },
+  { prefix: "EXPER    ", text: "MAGANAL rover mission — Team Project Intern, Agnirath Aerospace · Completed Aug 2026 (20.04.2026 — 07.08.2026)" },
   { prefix: "MISSION  ", text: "MAGANAL — Mars Autonomous Ground Analyser with Navigation and Life-Assessment Logic", color: "text-violet" },
   { prefix: "SKILLS   ", text: "C / C++ · React.js · Node.js · Express.js · MongoDB · MySQL · Docker · Linux" },
   { prefix: "AI       ", text: "ChatGPT · Gemini · Claude · OpenCode · Kimi Code · MiMo · Nimotron · DeepSeek", color: "text-violet" },

@@ -7,7 +7,6 @@ export const site = {
   phone: "+91 9002036816",
   github: "https://github.com/R4NiTeXe",
   linkedin: "https://www.linkedin.com/in/ranit-naskar/",
-  portfolio: "your-portfolio.com",
   availability: "Available for work",
   location: "Kolkata, West Bengal, India",
   education: "Diploma in CSE — Brainware University (Expected 2027)",

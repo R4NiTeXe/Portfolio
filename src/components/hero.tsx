@@ -92,10 +92,11 @@ export function Hero() {
         <p className="mono-label text-mint">{"// "}CURRENT ORBIT</p>
         <div className="mt-4 border-l-2 border-mint/30 pl-4">
           <p className="text-sm leading-relaxed text-white/90">
-            Team Project Intern — Agnirath Aerospace
+            MAGANAL rover mission — Team Project Intern, Agnirath Aerospace
           </p>
           <p className="mt-2 text-sm leading-relaxed text-white/90">
-            MAGANAL rover: mission systems & telemetry
+            Completed Aug 2026 — autonomous navigation · obstacle detection ·
+            environmental sensing
           </p>
         </div>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">

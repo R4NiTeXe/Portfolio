@@ -46,9 +46,9 @@ export function About() {
               in the background.
             </p>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              Currently pursuing a Diploma in CSE at Brainware University while
-              completing a Team Project Internship at Agnirath Aerospace — on
-              the MAGANAL rover mission.
+              Pursuing a Diploma in CSE at Brainware University after the Team
+              Project Internship at Agnirath Aerospace — on the MAGANAL rover
+              mission.
             </p>
 
             <div className="mt-8 max-w-xl rounded-xl border border-white/10 bg-white/[0.02] p-5">
@@ -165,7 +165,7 @@ export function About() {
             <p className="mono-label mt-2 text-mint">{"// "}CURRENT FOCUS</p>
             <p className="mt-4 text-sm leading-relaxed text-white/90">
               <span className="text-violet">AnatomiaX</span> — a 3D AI-powered
-              anatomy learning platform, currently on the build bench.
+              anatomy learning platform, on the build bench.
             </p>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Alongside: deepening Three.js, systems programming and
