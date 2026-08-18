@@ -118,34 +118,38 @@ function Particles({ reduced }: { reduced: boolean }) {
 
 function Scene() {
   const reduced = useReducedMotion() ?? false;
-  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.6)"), []);
-  const mintTex = useMemo(() => glowTexture("rgba(101,246,213,0.36)"), []);
+  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.65)"), []);
+  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,255,0.85)"), []);
+  const mintTex = useMemo(() => glowTexture("rgba(101,246,213,0.55)"), []);
 
   return (
     <>
       <CameraRig reduced={reduced} />
-      <sprite position={[-0.5, 0.42, -0.15]} scale={[3, 3, 1]}>
+      <sprite position={[-0.68, 0.35, -0.15]} scale={[3, 3, 1]}>
         <spriteMaterial map={violetTex} transparent depthWrite={false} />
       </sprite>
-      <sprite position={[0.58, -0.48, -0.15]} scale={[2.6, 2.6, 1]}>
+      <sprite position={[-0.68, 0.95, -0.14]} scale={[1, 1, 1]}>
+        <spriteMaterial map={violetCoreTex} transparent depthWrite={false} />
+      </sprite>
+      <sprite position={[-0.48, -1.05, -0.15]} scale={[1, 1, 1]}>
         <spriteMaterial map={mintTex} transparent depthWrite={false} />
       </sprite>
       <mesh position={[0, 0, -0.02]}>
-        <ringGeometry args={[0.9, 1.16, 128, 1, RIM_START, RIM_LEN]} />
+        <ringGeometry args={[1.16, 1.48, 128, 1, RIM_START, RIM_LEN]} />
         <meshBasicMaterial
           color={MINT}
           transparent
-          opacity={0.95}
+          opacity={0.5}
           depthWrite={false}
           side={THREE.DoubleSide}
         />
       </mesh>
       <mesh position={[0, 0, -0.03]}>
-        <ringGeometry args={[1.16, 1.62, 128, 1, RIM_START, RIM_LEN]} />
+        <ringGeometry args={[1.48, 1.8, 128, 1, RIM_START, RIM_LEN]} />
         <meshBasicMaterial
           color={MINT}
           transparent
-          opacity={0.14}
+          opacity={0.12}
           depthWrite={false}
           side={THREE.DoubleSide}
         />

@@ -13,6 +13,15 @@ export function Hero() {
     >
       <Eclipse />
 
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-[23%] left-[75.5%] z-0 hidden h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(101,246,213,0.8),transparent_65%)] opacity-90 blur-xl md:block"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-[35%] left-[85%] z-0 hidden h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.85),transparent_70%)] opacity-70 blur-2xl md:block"
+      />
+
       <HeroIntro>
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-28 pb-24 md:px-12 lg:px-20">
           <p data-hero-item className="mono-label text-mint">

@@ -14,7 +14,7 @@ export function Eclipse() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute top-24 right-[-12%] z-0 h-56 w-56 opacity-70 select-none md:top-[max(19%,180px)] md:right-auto md:left-1/2 md:h-80 md:w-80 md:-translate-x-1/2 md:-translate-y-1/2 md:opacity-100"
+      className="pointer-events-none absolute top-24 right-[-12%] z-0 h-56 w-56 opacity-70 select-none md:top-[max(19%,180px)] md:right-auto md:left-1/2 md:h-80 md:w-[680px] md:-translate-x-1/2 md:-translate-y-1/2 md:opacity-100"
     >
       <EclipseCanvas />
     </div>
