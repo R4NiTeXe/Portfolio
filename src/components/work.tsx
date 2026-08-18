@@ -10,23 +10,133 @@ import { site } from "@/lib/site";
 const toneStyles = {
   mint: {
     chip: "border-mint/30 bg-mint/10 text-mint",
-    orb: "from-mint/55 to-mint/5",
     index: "text-mint",
     bar: "bg-mint",
+    glow: "text-mint",
   },
   amber: {
     chip: "border-amber/30 bg-amber/10 text-amber",
-    orb: "from-amber/55 to-amber/5",
     index: "text-amber",
     bar: "bg-amber",
+    glow: "text-amber",
   },
   violet: {
     chip: "border-violet/30 bg-violet/10 text-violet",
-    orb: "from-violet/55 to-violet/5",
     index: "text-violet",
     bar: "bg-violet",
+    glow: "text-violet",
   },
 } as const;
+
+type Tone = (typeof toneStyles)[keyof typeof toneStyles];
+
+function MiniPreview({
+  variant,
+  tone,
+}: {
+  variant: "video" | "retail" | "anatomy";
+  tone: Tone;
+}) {
+  if (variant === "video") {
+    return (
+      <div className="flex gap-2 p-2.5">
+        <div className="relative flex-1 overflow-hidden rounded-md border border-white/10 bg-black/60">
+          <span
+            aria-hidden="true"
+            className="absolute top-1/2 left-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 border-y-[6px] border-l-[10px] border-y-transparent border-l-white/80"
+          />
+          <span
+            aria-hidden="true"
+            className="absolute bottom-1.5 left-1/2 h-0.5 w-4/5 -translate-x-1/2 rounded-full bg-white/15"
+          >
+            <span
+              className={`absolute left-0 top-0 h-full w-1/3 rounded-full ${tone.bar}`}
+            />
+          </span>
+        </div>
+        <div className="flex w-16 flex-col gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="flex-1 rounded-md border border-white/10 bg-white/[0.03] p-1"
+            >
+              <div className="h-3/5 rounded-sm bg-gradient-to-br from-white/15 to-white/5" />
+              <div className="mt-1 h-0.5 w-3/4 rounded-full bg-white/15" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (variant === "retail") {
+    return (
+      <div className="flex gap-2 p-2.5">
+        <div className="flex w-8 flex-col gap-1.5 border-r border-white/10 pr-2">
+          {[0, 1, 2, 3].map((i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={`h-1.5 rounded-full ${
+                i === 0 ? `w-full ${tone.bar}` : "w-3/4 bg-white/15"
+              }`}
+            />
+          ))}
+        </div>
+        <div className="flex-1">
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="flex-1 rounded-md border border-white/10 bg-white/[0.03] p-1.5"
+              >
+                <div className="h-0.5 w-3/4 rounded-full bg-white/15" />
+                <div
+                  className={`mt-1 h-2 rounded-sm ${
+                    i === 1 ? `${tone.bar} opacity-80` : "bg-white/10"
+                  }`}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="mt-1.5 flex h-10 items-end gap-1 rounded-md border border-white/10 bg-white/[0.02] p-1.5">
+            {[35, 55, 40, 70, 50, 85, 60].map((h, i) => (
+              <span
+                key={i}
+                aria-hidden="true"
+                style={{ height: `${h}%` }}
+                className={`flex-1 rounded-sm ${
+                  i === 5 ? `${tone.bar} opacity-90` : "bg-white/10"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative flex items-center justify-center p-2.5">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 120 64"
+        className="h-full w-full"
+      >
+        <ellipse cx="60" cy="32" rx="26" ry="30" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="1" />
+        <circle cx="60" cy="27" r="11" fill="none" stroke={tone.glow === "text-violet" ? "rgba(139,124,255,0.65)" : "rgba(101,246,213,0.65)"} strokeWidth="1" />
+        <line x1="60" y1="10" x2="60" y2="54" stroke="rgba(255,255,255,0.1)" strokeDasharray="2 3" />
+        <circle cx="51" cy="37" r="1.5" fill="rgba(255,255,255,0.35)" />
+        <circle cx="69" cy="37" r="1.5" fill="rgba(255,255,255,0.35)" />
+        <path d="M60 54 L60 60" stroke="rgba(255,255,255,0.15)" />
+      </svg>
+      <span
+        aria-hidden="true"
+        className="animate-scan-line absolute inset-x-3 top-1/2 h-px bg-gradient-to-r from-transparent via-violet/70 to-transparent"
+      />
+    </div>
+  );
+}
 
 function TiltCard({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -54,81 +164,6 @@ function TiltCard({ children }: { children: React.ReactNode }) {
       className="[transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] transition-transform duration-300 ease-out"
     >
       {children}
-    </div>
-  );
-}
-
-function ProjectPreview({
-  tone,
-  variant,
-  onSwap,
-}: {
-  tone: (typeof toneStyles)[keyof typeof toneStyles];
-  variant: number;
-  onSwap: () => void;
-}) {
-  return (
-    <div className="preview-grid relative mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">
-      {variant === 0 && (
-        <>
-          <span
-            aria-hidden="true"
-            className={`absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br ${tone.orb} blur-sm`}
-          />
-          <span
-            aria-hidden="true"
-            className="orbit-rotate absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 [animation-duration:20s]"
-          />
-          <span
-            aria-hidden="true"
-            className={`absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full ${tone.index} shadow-[0_0_8px_currentColor]`}
-          />
-        </>
-      )}
-      {variant === 1 && (
-        <>
-          <span
-            aria-hidden="true"
-            className={`animate-pulse-ring absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border ${tone.bar}/30`}
-          />
-          <span
-            aria-hidden="true"
-            className={`animate-pulse-ring absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border ${tone.bar}/20 [animation-delay:0.5s]`}
-          />
-          <span
-            aria-hidden="true"
-            className={`absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full ${tone.bar} shadow-[0_0_16px_currentColor]`}
-          />
-        </>
-      )}
-      {variant === 2 && (
-        <>
-          <span
-            aria-hidden="true"
-            className={`absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-white/[0.02]`}
-          />
-          <span
-            aria-hidden="true"
-            className="animate-scan-line absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-mint/70 to-transparent"
-          />
-          <span
-            aria-hidden="true"
-            className={`absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full ${tone.index} opacity-70`}
-          />
-        </>
-      )}
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onSwap();
-        }}
-        data-cursor-label="SWAP"
-        aria-label="Swap preview"
-        className="absolute right-1.5 bottom-1.5 rounded border border-white/10 bg-[#070A0F]/80 px-1.5 py-0.5 mono-label !text-[8px] text-white/40 transition-colors hover:border-mint/40 hover:text-mint"
-      >
-        SWAP
-      </button>
     </div>
   );
 }
@@ -262,6 +297,16 @@ function ProjectModal({
         <p data-modal-stagger className="mono-label mt-1.5 !text-[9px] text-muted-foreground">
           {project.category}
         </p>
+        <p data-modal-stagger className="mono-label mt-1 !text-[9px] text-white/50">
+          ROLE — {project.role}
+        </p>
+
+        <div data-modal-stagger className="preview-grid mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">
+          <div className="h-full w-full">
+            <MiniPreview variant={project.preview} tone={tone} />
+          </div>
+        </div>
+
         <p data-modal-stagger className="mt-4 text-sm leading-relaxed text-muted-foreground">
           {project.description}
         </p>
@@ -326,10 +371,6 @@ function ProjectModal({
 
 export function Work() {
   const [open, setOpen] = useState<Project | null>(null);
-  const [previews, setPreviews] = useState<Record<string, number>>({});
-
-  const swapPreview = (name: string) =>
-    setPreviews((prev) => ({ ...prev, [name]: ((prev[name] ?? 0) + 1) % 3 }));
 
   return (
     <section id="work" aria-label="Work" className="relative scroll-mt-24">
@@ -377,11 +418,9 @@ export function Work() {
                     </span>
                   </div>
 
-                  <ProjectPreview
-                    tone={tone}
-                    variant={previews[project.name] ?? 0}
-                    onSwap={() => swapPreview(project.name)}
-                  />
+                  <div className="preview-grid relative mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">
+                    <MiniPreview variant={project.preview} tone={tone} />
+                  </div>
 
                   <h3 className="font-display mt-5 text-xl font-semibold text-white transition-colors group-hover:text-mint">
                     {project.name}
@@ -393,15 +432,25 @@ export function Work() {
                     {project.description}
                   </p>
 
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {project.stack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded border border-white/10 px-2 py-0.5 text-[10px] tracking-[0.12em] text-muted-foreground uppercase"
-                      >
-                        {tech}
+                  <div className="mt-4 max-h-40 overflow-hidden opacity-100 transition-all duration-300 group-hover:mt-0 group-hover:max-h-0 group-hover:opacity-0">
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.stack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="rounded border border-white/10 px-2 py-0.5 text-[10px] tracking-[0.12em] text-muted-foreground uppercase"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:mt-4 group-hover:max-h-12 group-hover:opacity-100">
+                    <span className="flex items-center gap-1.5">
+                      <span className={`h-1 w-1 animate-pulse-dot rounded-full ${tone.bar}`} />
+                      <span className="mono-label !text-[9px] text-muted-foreground">
+                        {project.status} — {project.role}
                       </span>
-                    ))}
+                    </span>
                   </div>
 
                   <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">

@@ -97,7 +97,22 @@ export function Journey() {
                     index === 0 ? "orbit-node-active" : ""
                   }`}
                 />
-                <p className="mono-label text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="mono-label text-mint">
+                    ORBIT {String(index + 1).padStart(2, "0")}
+                  </p>
+                  {"tag" in milestone && milestone.tag === "active" && (
+                    <span className="mono-label rounded border border-mint/30 bg-mint/10 !text-[8px] text-mint">
+                      ACTIVE ORBIT
+                    </span>
+                  )}
+                  {"tag" in milestone && milestone.tag === "target" && (
+                    <span className="mono-label rounded border border-amber/30 bg-amber/10 !text-[8px] text-amber">
+                      TARGET
+                    </span>
+                  )}
+                </div>
+                <p className="mono-label mt-2 text-muted-foreground">
                   {milestone.period}
                 </p>
                 <p className="mt-2 text-xs tracking-[0.18em] text-mint uppercase">

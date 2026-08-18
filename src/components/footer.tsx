@@ -55,9 +55,25 @@ function useFps() {
   return fps;
 }
 
+function useSessionUptime() {
+  const [uptime, setUptime] = useState(0);
+  useEffect(() => {
+    const start = Date.now();
+    const id = window.setInterval(
+      () => setUptime(Math.floor((Date.now() - start) / 1000)),
+      1000,
+    );
+    return () => window.clearInterval(id);
+  }, []);
+  const mm = String(Math.floor(uptime / 60)).padStart(2, "0");
+  const ss = String(uptime % 60).padStart(2, "0");
+  return `${mm}:${ss}`;
+}
+
 export function Footer() {
   const time = useClock();
   const fps = useFps();
+  const uptime = useSessionUptime();
 
   return (
     <footer className="relative border-t border-white/5">
@@ -161,6 +177,9 @@ export function Footer() {
           </p>
           <p className="mono-label !text-[10px] !tracking-[0.14em] text-muted-foreground/60">
             {fps !== null ? `SYS // ${fps} FPS — LIVE` : "SYS // ONLINE"}
+          </p>
+          <p className="mono-label !text-[10px] !tracking-[0.14em] text-muted-foreground/60">
+            SESSION {uptime}
           </p>
           <p className="mono-label !text-[10px] !tracking-[0.14em] text-muted-foreground/60">
             ENGINEERED WITH AI ASSISTANCE · OPENCODE

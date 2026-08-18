@@ -13,7 +13,8 @@ export function HeroIntro({ children }: { children: React.ReactNode }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const targets = [...el.querySelectorAll<HTMLElement>("[data-hero-item]")];
-    if (!targets.length) return;
+    const lines = [...el.querySelectorAll<HTMLElement>("[data-hero-line]")];
+    if (!targets.length && !lines.length) return;
 
     let played = false;
     const play = () => {
@@ -33,6 +34,19 @@ export function HeroIntro({ children }: { children: React.ReactNode }) {
             delay: 0.15,
           },
         );
+        if (lines.length) {
+          gsap.fromTo(
+            lines,
+            { yPercent: 110 },
+            {
+              yPercent: 0,
+              duration: 0.9,
+              ease: "power4.out",
+              stagger: 0.12,
+              delay: 0.4,
+            },
+          );
+        }
       }, el);
     };
 

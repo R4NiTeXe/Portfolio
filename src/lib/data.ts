@@ -66,6 +66,7 @@ export const projects = [
     category: "Individual Full-Stack Project",
     status: "Shipped",
     tone: "mint" as const,
+    role: "Full-stack build — individual",
     description:
       "A full video-sharing platform built end to end — authentication, uploads, viewing, engagement and notifications, deployed to production.",
     features: [
@@ -89,6 +90,7 @@ export const projects = [
     category: "Hackathon Team Project",
     status: "Top 6 — Hackathon",
     tone: "amber" as const,
+    role: "Team member — hackathon sprint",
     description:
       "An AI-assisted e-commerce companion for small shopkeepers — practical retail and business workflows, built under sprint pressure at the Digontom Pvt. Ltd. hackathon.",
     features: [
@@ -108,6 +110,7 @@ export const projects = [
     category: "3D AI-Powered Anatomy Learning Platform",
     status: "In development",
     tone: "violet" as const,
+    role: "Personal project — build bench",
     description:
       "An interactive 3D anatomy learning platform — explorable models, educational information and AI-assisted learning. Currently on the build bench.",
     features: [
@@ -141,6 +144,7 @@ export const milestones = [
     period: "2024 — 2027",
     role: "Diploma in CSE",
     title: "Brainware University",
+    tag: "active",
     description:
       "CGPA 7.01 through the 4th semester — DSA, DBMS, OOP and systems foundations.",
   },
@@ -169,6 +173,7 @@ export const milestones = [
     period: "2027",
     role: "Target",
     title: "Diploma Completion",
+    tag: "target",
     description:
       "Completing the Diploma in CSE — and continuing to ship software on the way.",
   },

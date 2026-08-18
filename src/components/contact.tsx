@@ -323,6 +323,16 @@ export function Contact() {
                 {site.location}
               </span>
               <span className="inline-flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span
+                    aria-hidden="true"
+                    className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-60"
+                  />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
+                </span>
+                SIGNAL STRONG — {site.location}
+              </span>
+              <span className="inline-flex items-center gap-2">
                 <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-mint" />
                 {site.availability}
               </span>
@@ -333,9 +343,13 @@ export function Contact() {
                   href="/Ranit_Naskar_CV.pdf"
                   download="Ranit_Naskar_CV.pdf"
                   data-cursor-label="GET"
-                  className="inline-flex h-11 items-center gap-2 rounded-lg border border-mint/40 bg-mint/10 px-6 text-sm font-medium text-mint transition-all hover:bg-mint/20 hover:shadow-[0_0_24px_-8px_rgba(101,246,213,0.6)]"
+                  className="group relative inline-flex h-11 items-center gap-2 overflow-hidden rounded-lg border border-mint/40 bg-mint/10 px-6 text-sm font-medium text-mint transition-all hover:bg-mint/20 hover:shadow-[0_0_24px_-8px_rgba(101,246,213,0.6)] active:scale-95"
                 >
-                  <Download className="h-4 w-4" />
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+                  />
+                  <Download className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
                   Download CV
                 </a>
               </Magnetic>
@@ -348,7 +362,7 @@ export function Contact() {
                 type="button"
                 onClick={copyEmail}
                 data-cursor-label="COPY"
-                className="eclipse-card group flex w-full items-center gap-4 p-4 text-left transition-colors"
+                className="eclipse-card group flex w-full items-center gap-4 p-4 text-left transition-all active:scale-[0.98]"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 text-mint/80 transition-colors group-hover:border-mint/40 group-hover:text-mint">
                   <Mail className="h-4 w-4" />
@@ -396,7 +410,7 @@ export function Contact() {
                 }
                 data-reveal-item
                 data-cursor-label="OPEN"
-                className="eclipse-card group flex items-center gap-4 p-4"
+                className="eclipse-card group flex items-center gap-4 p-4 transition-all active:scale-[0.98]"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 text-mint/80 transition-colors group-hover:border-mint/40 group-hover:text-mint">
                   {channel.icon}

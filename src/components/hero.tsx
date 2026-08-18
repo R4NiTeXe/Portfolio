@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
@@ -13,13 +13,33 @@ import { site } from "@/lib/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
+function HeroUplink() {
+  const [t, setT] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => setT((v) => v + 1), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const mm = String(Math.floor(t / 60)).padStart(2, "0");
+  const ss = String(t % 60).padStart(2, "0");
+
+  return (
+    <p className="mono-label mt-4 text-muted-foreground">
+      T+{mm}:{ss} · UPLINK STABLE
+    </p>
+  );
+}
+
 export function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLElement>(null);
   const orbitRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = gsap.context(() => {
       gsap.to(contentRef.current, {
         y: 46,
@@ -56,6 +76,24 @@ export function Hero() {
           },
         });
       }
+      if (!reduced && glowRef.current) {
+        const qx = gsap.quickTo(glowRef.current, "x", {
+          duration: 0.6,
+          ease: "power3.out",
+        });
+        const qy = gsap.quickTo(glowRef.current, "y", {
+          duration: 0.6,
+          ease: "power3.out",
+        });
+        const onMove = (e: PointerEvent) => {
+          const nx = e.clientX / window.innerWidth - 0.5;
+          const ny = e.clientY / window.innerHeight - 0.5;
+          qx(nx * 24);
+          qy(ny * 16);
+        };
+        window.addEventListener("pointermove", onMove, { passive: true });
+        return () => window.removeEventListener("pointermove", onMove);
+      }
     });
     return () => ctx.revert();
   }, []);
@@ -69,21 +107,15 @@ export function Hero() {
       <Eclipse />
 
       <div
+        ref={glowRef}
         aria-hidden="true"
-        className="pointer-events-none absolute top-[3%] left-[1%] z-0 hidden h-[300px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.5),transparent_70%)] opacity-45 blur-2xl md:block"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-[6%] left-[70%] z-0 hidden h-[340px] w-[340px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.6),transparent_70%)] opacity-45 blur-2xl md:block"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-[21%] left-[75.5%] z-0 hidden h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(101,246,213,1),transparent_65%)] opacity-90 blur-xl md:block"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-[35%] left-[85%] z-0 hidden h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.85),transparent_70%)] opacity-70 blur-2xl md:block"
-      />
+        className="pointer-events-none absolute inset-0 z-0 hidden will-change-transform md:block"
+      >
+        <div className="absolute top-[3%] left-[1%] h-[300px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.5),transparent_70%)] opacity-45 blur-2xl" />
+        <div className="absolute top-[6%] left-[70%] h-[340px] w-[340px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.6),transparent_70%)] opacity-45 blur-2xl" />
+        <div className="absolute top-[21%] left-[75.5%] h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(101,246,213,1),transparent_65%)] opacity-90 blur-xl" />
+        <div className="absolute top-[35%] left-[85%] h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(139,124,255,0.85),transparent_70%)] opacity-70 blur-2xl" />
+      </div>
 
       <div
         ref={orbitRef}
@@ -106,6 +138,7 @@ export function Hero() {
           <span className="h-1 w-1 rounded-full bg-mint" />
           <span className="mono-label text-mint">@R4NiTeXe</span>
         </div>
+        <HeroUplink />
       </div>
 
       <HeroIntro>
@@ -118,13 +151,17 @@ export function Hero() {
             {site.role} — Kolkata, IN
             <span className="blink-cursor inline-block h-3 w-px bg-mint" />
           </p>
-          <h1
-            data-hero-item
-            className="font-display mt-4 text-5xl leading-[1.02] font-semibold tracking-tight text-white md:text-7xl xl:text-[5.5rem]"
-          >
-            RANIT
-            <br />
-            NASKAR
+          <h1 className="font-display mt-4 text-5xl leading-[1.02] font-semibold tracking-tight text-white md:text-7xl xl:text-[5.5rem]">
+            <span className="block overflow-hidden">
+              <span data-hero-line className="block will-change-transform">
+                RANIT
+              </span>
+            </span>
+            <span className="block overflow-hidden">
+              <span data-hero-line className="block will-change-transform">
+                NASKAR
+              </span>
+            </span>
           </h1>
           <p
             data-hero-item
@@ -149,11 +186,17 @@ export function Hero() {
                 asChild
                 size="lg"
                 data-cursor-label="EXPLORE"
-                className="group h-11 bg-mint px-6 font-medium text-[#04110c] shadow-[0_0_24px_-8px_rgba(101,246,213,0.5)] transition-all hover:bg-mint/85 hover:shadow-[0_0_36px_-8px_rgba(101,246,213,0.7)] active:scale-95"
+                className="group relative h-11 overflow-hidden bg-mint px-6 font-medium text-[#04110c] shadow-[0_0_24px_-8px_rgba(101,246,213,0.5)] transition-all hover:bg-mint/85 hover:shadow-[0_0_36px_-8px_rgba(101,246,213,0.7)] active:scale-95"
               >
                 <Link href="#work">
-                  View Work
-                  <ArrowUpRight className="ml-1.5 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
+                  />
+                  <span className="relative inline-flex items-center">
+                    View Work
+                    <ArrowUpRight className="ml-1.5 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </span>
                 </Link>
               </Button>
             </Magnetic>
@@ -214,7 +257,7 @@ export function Hero() {
         <span className="relative h-10 w-px overflow-hidden bg-white/10">
           <span className="animate-scroll-line absolute inset-x-0 top-0 h-3 bg-mint" />
         </span>
-        <ArrowDown className="h-3 w-3 text-muted-foreground/50" />
+        <ArrowDown className="h-3 w-3 animate-pulse text-muted-foreground/50" />
       </div>
     </section>
   );

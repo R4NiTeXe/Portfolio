@@ -1,15 +1,65 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Copy } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { dataSheet, maganal } from "@/lib/data";
 import { useToast } from "@/components/toast";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const stats = [
-  { value: "Top 6", label: "Hackathon finalist" },
-  { value: "7.01", label: "CGPA — Brainware University" },
-  { value: "3", label: "Languages spoken" },
-  { value: "2027", label: "Diploma completion target" },
+  { text: "Top 6", label: "Hackathon finalist" },
+  { to: 7.01, decimals: 2, label: "CGPA — Brainware University" },
+  { to: 3, decimals: 0, label: "Languages spoken" },
+  { to: 2027, decimals: 0, label: "Diploma completion target" },
 ] as const;
+
+const systemLog = [
+  { when: "2024 — 2027", what: "DIPLOMA CSE — BRAINWARE UNIVERSITY" },
+  { when: "2025", what: "HACKATHON TOP 6 — DIGONTOM PVT. LTD." },
+  { when: "20.04 — 07.08.2026", what: "MAGANAL ROVER — AGNIRATH AEROSPACE" },
+] as const;
+
+function CountUp({
+  to,
+  decimals = 0,
+}: {
+  to: number;
+  decimals?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.textContent = to.toFixed(decimals);
+      return;
+    }
+    const obj = { v: 0 };
+    const tween = gsap.to(obj, {
+      v: to,
+      duration: 1.4,
+      ease: "power2.out",
+      scrollTrigger: { trigger: el, start: "top 85%", once: true },
+      onUpdate: () => {
+        el.textContent = obj.v.toFixed(decimals);
+      },
+    });
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [to, decimals]);
+
+  return (
+    <span ref={ref} aria-hidden="true">
+      {to.toFixed(decimals)}
+    </span>
+  );
+}
 
 export function About() {
   const push = useToast();
@@ -100,6 +150,27 @@ export function About() {
                 })}
               </dl>
             </div>
+
+            <div className="mt-5 max-w-xl rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <p className="mono-label !text-[9px] text-white/40">
+                SYSTEM LOG — LAST 3 EVENTS
+              </p>
+              <ul className="mt-4 space-y-2.5">
+                {systemLog.map((entry) => (
+                  <li
+                    key={entry.what}
+                    className="flex items-baseline justify-between gap-6 border-b border-white/5 pb-2.5 last:border-0 last:pb-0"
+                  >
+                    <span className="mono-label !text-[9px] text-mint">
+                      {entry.when}
+                    </span>
+                    <span className="text-right text-[13px] text-white/85">
+                      {entry.what}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 self-start">
@@ -110,7 +181,11 @@ export function About() {
                 className="card-spotlight eclipse-card p-5"
               >
                 <p className="font-display text-3xl font-semibold text-white md:text-4xl">
-                  {stat.value}
+                  {"text" in stat ? (
+                    stat.text
+                  ) : (
+                    <CountUp to={stat.to} decimals={stat.decimals} />
+                  )}
                 </p>
                 <p className="mono-label mt-3 text-muted-foreground">
                   {stat.label}
@@ -180,12 +255,12 @@ export function About() {
             className="h-10 w-full rounded-full bg-[radial-gradient(ellipse_60%_120%_at_50%_50%,rgba(101,246,213,0.6),transparent_70%)] blur-md"
           />
           <p className="mono-label mt-4 text-mint">
-            {"// "}STATUS: OPERATIONAL — OPEN TO NEW PROJECTS
+            {"// "}SIGNAL: OPERATIONAL — MODE: FULL-STACK — OPEN TO NEW PROJECTS
           </p>
           <div className="mt-4 flex flex-wrap gap-x-8 gap-y-2">
             <p className="mono-label !text-[9px] text-muted-foreground">
-              MISSION LOG — <span className="text-mint">{maganal.name}</span>{" "}
-              · {maganal.org}
+              MISSION LOG — <span className="text-mint">{maganal.name}</span> ·{" "}
+              {maganal.org}
             </p>
             <p className="mono-label !text-[9px] text-muted-foreground">
               PHASE: TEAM PROJECT — INTERNSHIP COMPLETE · {maganal.period}

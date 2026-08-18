@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Menu } from "lucide-react";
+import gsap from "gsap";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -16,6 +17,8 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>("");
   const progressRef = useRef<HTMLSpanElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -52,11 +55,39 @@ export function Nav() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const list = listRef.current;
+    const indicator = indicatorRef.current;
+    if (!list || !indicator) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const position = () => {
+      const link = active
+        ? list.querySelector<HTMLAnchorElement>(`a[href="${active}"]`)
+        : null;
+      if (!link) {
+        gsap.to(indicator, { opacity: 0, duration: reduced ? 0 : 0.25 });
+        return;
+      }
+      gsap.to(indicator, {
+        x: link.offsetLeft,
+        width: link.offsetWidth,
+        opacity: 1,
+        duration: reduced ? 0 : 0.4,
+        ease: "power3.out",
+      });
+    };
+
+    position();
+    window.addEventListener("resize", position);
+    return () => window.removeEventListener("resize", position);
+  }, [active]);
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b px-6 transition-all duration-300 md:px-10 ${
         scrolled
-          ? "border-white/5 bg-[#070A0F]/80 py-2 backdrop-blur-md"
+          ? "border-white/5 bg-[#070A0F]/85 py-2 shadow-[0_8px_32px_-16px_rgba(0,0,0,0.8)] backdrop-blur-md"
           : "border-transparent bg-transparent py-3.5"
       }`}
     >
@@ -71,27 +102,44 @@ export function Nav() {
       >
         <a
           href="#top"
-          className={`font-display font-semibold tracking-wide text-white transition-all duration-300 ${
+          className={`group font-display font-semibold tracking-wide text-white transition-all duration-300 ${
             scrolled ? "text-base md:text-lg" : "text-lg md:text-xl"
           }`}
         >
           {site.brand}
-          <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-mint align-middle" />
+          <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-mint align-middle transition-all duration-300 group-hover:shadow-[0_0_10px_rgba(101,246,213,0.9)]" />
         </a>
 
-        <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
+        <ul
+          ref={listRef}
+          className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex"
+        >
+          <span
+            ref={indicatorRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-0 h-full rounded-full border border-mint/20 bg-white/[0.07] opacity-0 shadow-[0_0_14px_-4px_rgba(101,246,213,0.4)]"
+          />
           {navLinks.map((link) => {
             const isActive = active === link.href;
             return (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className={`nav-underline rounded-full px-3.5 py-2 text-[13px] transition-all duration-300 ${
+                  aria-current={isActive ? "true" : undefined}
+                  className={`nav-underline group relative rounded-full px-3.5 py-2 text-[13px] transition-all duration-300 ${
                     isActive
-                      ? "nav-active bg-white/[0.06] text-white"
+                      ? "nav-active text-white"
                       : "text-white/55 hover:bg-white/[0.04] hover:text-white"
                   }`}
                 >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -inset-1 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  >
+                    <span className="orbit-rotate absolute inset-0 [animation-duration:8s]">
+                      <span className="absolute -top-px left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-mint/70 shadow-[0_0_6px_rgba(101,246,213,0.6)]" />
+                    </span>
+                  </span>
                   {link.label}
                 </a>
               </li>
@@ -121,14 +169,23 @@ export function Nav() {
             <SheetHeader>
               <SheetTitle className="font-display text-white">
                 {site.brand}
+                <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-mint align-middle" />
               </SheetTitle>
             </SheetHeader>
             <ul className="mt-8 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <li key={link.href}>
+              {navLinks.map((link, i) => (
+                <li
+                  key={link.href}
+                  className="sheet-item"
+                  style={{ animationDelay: `${i * 55}ms` }}
+                >
                   <a
                     href={link.href}
-                    className="block rounded-lg px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-white"
+                    className={`block rounded-lg px-3 py-3 text-sm transition-colors ${
+                      active === link.href
+                        ? "bg-mint/10 text-mint"
+                        : "text-muted-foreground hover:bg-white/5 hover:text-white"
+                    }`}
                   >
                     {link.label}
                   </a>
