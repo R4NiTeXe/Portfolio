@@ -1,8 +1,64 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
+import { Magnetic } from "@/components/magnetic";
 import { navLinks, site } from "@/lib/site";
 
+const BUILD_LOG = [
+  { version: "v3.0", note: "ORBIT — mini game, easter egg, live telemetry" },
+  { version: "v2.1", note: "Terminal mode, command palette, project modals" },
+  { version: "v2.0", note: "Celestial system, section rebuild, verified data" },
+  { version: "v1.9", note: "ECLIPSE identity, reference layout alignment" },
+  { version: "v1.0", note: "Initial ECLIPSE portfolio launch" },
+] as const;
+
+function useClock() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const fmt = () =>
+      new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      }).format(new Date());
+    setTime(fmt());
+    const timer = window.setInterval(() => setTime(fmt()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+  return time;
+}
+
+function useFps() {
+  const [fps, setFps] = useState<number | null>(null);
+  const frames = useRef(0);
+
+  useEffect(() => {
+    let raf = 0;
+    let last = performance.now();
+    const loop = (now: number) => {
+      frames.current += 1;
+      if (now - last >= 1000) {
+        setFps(Math.round((frames.current * 1000) / (now - last)));
+        frames.current = 0;
+        last = now;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return fps;
+}
+
 export function Footer() {
+  const time = useClock();
+  const fps = useFps();
+
   return (
     <footer className="relative border-t border-white/5">
       <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
@@ -18,6 +74,31 @@ export function Footer() {
               Full-stack development at the edge of light. Crafted in Kolkata,
               India.
             </p>
+            <p className="mono-label mt-5 flex items-center gap-2 !text-[10px] text-mint">
+              <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-mint" />
+              SYS // STATUS: OPERATIONAL
+            </p>
+            <details className="mt-4">
+              <summary className="mono-label cursor-pointer list-none !text-[9px] text-white/40 transition-colors hover:text-mint">
+                BUILD LOG
+                <span className="ml-1 inline-block transition-transform duration-300 group-open:rotate-45 open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <ul className="mt-3 space-y-1.5 border-l border-white/10 pl-3">
+                {BUILD_LOG.map((entry) => (
+                  <li
+                    key={entry.version}
+                    className="flex items-baseline gap-2 text-[11px] text-muted-foreground"
+                  >
+                    <span className="mono-label shrink-0 !text-[9px] text-mint">
+                      {entry.version}
+                    </span>
+                    <span className="truncate">{entry.note}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
           </div>
 
           <nav aria-label="Footer">
@@ -76,22 +157,32 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-6 sm:flex-row">
           <p className="mono-label !text-[10px] !tracking-[0.14em] text-muted-foreground/60">
-            Kolkata · India
+            {time ? `KOLKATA · ${time} IST` : "KOLKATA · INDIA"}
           </p>
           <p className="mono-label !text-[10px] !tracking-[0.14em] text-muted-foreground/60">
-            Designed at the edge of light
+            {fps !== null ? `SYS // ${fps} FPS — LIVE` : "SYS // ONLINE"}
           </p>
-          <a
-            href="#top"
-            className="group inline-flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-mint"
-          >
-            <span className="mono-label !text-[10px] !tracking-[0.14em]">
-              Return
-            </span>
-            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 transition-colors group-hover:border-mint/50">
-              <ArrowUp className="h-3.5 w-3.5" />
-            </span>
-          </a>
+          <p className="mono-label !text-[10px] !tracking-[0.14em] text-muted-foreground/60">
+            ENGINEERED WITH AI ASSISTANCE · OPENCODE
+          </p>
+          <Magnetic strength={0.35}>
+            <a
+              href="#top"
+              data-cursor-label="UP"
+              className="group inline-flex items-center gap-3 text-xs text-muted-foreground transition-colors hover:text-mint"
+            >
+              <span className="mono-label !text-[10px] !tracking-[0.14em]">
+                Return to orbit
+              </span>
+              <span className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white/10 transition-colors group-hover:border-mint/50">
+                <span
+                  aria-hidden="true"
+                  className="orbit-rotate absolute inset-0 rounded-full border border-transparent [animation-duration:9s] [border-top-color:rgba(101,246,213,0.5)] group-hover:[animation-play-state:running]"
+                />
+                <ArrowUp className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5" />
+              </span>
+            </a>
+          </Magnetic>
         </div>
       </div>
     </footer>

@@ -369,3 +369,233 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============ ECLIPSE system layers ============ */
+
+/* Blinking system cursor */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.blink-cursor {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+/* Slow celestial drift for distant bodies */
+@keyframes float-slow {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0);
+  }
+  100% {
+    transform: translate3d(-1.5%, 2%, 0);
+  }
+}
+
+.float-slow {
+  animation: float-slow 46s ease-in-out infinite alternate;
+}
+
+/* Slow orbit rotation for thin arcs */
+@keyframes orbit-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-rotate {
+  animation: orbit-rotate 120s linear infinite;
+}
+
+/* Celestial star dot */
+.celestial-star {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgba(230, 237, 243, 0.8);
+  box-shadow: 0 0 6px rgba(139, 124, 255, 0.25);
+}
+
+/* Dark planet body — directional rim lighting */
+@utility planet-body {
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #131c2e 0%,
+    #0b1120 45%,
+    #05070d 100%
+  );
+  box-shadow:
+    inset -3px 3px 10px rgba(0, 0, 0, 0.95),
+    inset 3px -3px 10px rgba(139, 124, 255, 0.18),
+    inset 1px -1px 4px rgba(101, 246, 213, 0.12);
+}
+
+/* Thin 1px orbit arc */
+@utility orbit-arc {
+  border: 1px solid rgba(230, 237, 243, 0.12);
+  border-radius: 9999px;
+}
+
+/* Cursor ring label */
+.cursor-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mint);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.cursor-ring-labeling .cursor-label {
+  opacity: 1;
+}
+
+/* Card spotlight — follows pointer via --mx / --my */
+@utility card-spotlight {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(101, 246, 213, 0.07),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Timeline node activation */
+@utility orbit-node {
+  border: 1px solid rgba(101, 246, 213, 0.4);
+  background: rgba(101, 246, 213, 0.08);
+  border-radius: 9999px;
+  transition:
+    background 0.5s ease,
+    box-shadow 0.5s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.orbit-node-active {
+  background: var(--mint);
+  box-shadow:
+    0 0 0 5px rgba(101, 246, 213, 0.12),
+    0 0 24px rgba(101, 246, 213, 0.45);
+  transform: scale(1.25);
+}
+
+/* Nav active link underline */
+@utility nav-underline {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 2px;
+    height: 1px;
+    width: 0;
+    transform: translateX(-50%);
+    background: var(--mint);
+    box-shadow: 0 0 8px rgba(101, 246, 213, 0.6);
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &:hover::after,
+  &.nav-active::after {
+    width: 60%;
+  }
+}
+
+.nav-active {
+  color: #ffffff;
+}
+
+/* Toast */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-in {
+  animation: toast-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Project preview placeholders */
+@utility preview-grid {
+  background-image:
+    linear-gradient(to right, rgba(230, 237, 243, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(230, 237, 243, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Pulse rings for project previews */
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+/* Scan line for project previews */
+@keyframes scan-line {
+  0% {
+    top: 12%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    top: 88%;
+    opacity: 0;
+  }
+}
+
+.animate-scan-line {
+  animation: scan-line 3.2s ease-in-out infinite;
+}
