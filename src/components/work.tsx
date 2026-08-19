@@ -349,7 +349,7 @@ function ProjectModal({
           className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/5 pt-5"
         >
           <a
-            href={project.href}
+            href={project.repo ?? project.href}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-lg border border-mint/30 bg-mint/10 px-3.5 py-2 text-xs text-mint transition-colors hover:bg-mint/20"
@@ -463,7 +463,7 @@ export function Work() {
 
                   <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
                     <a
-                      href={project.href}
+                      href={project.repo ?? project.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
