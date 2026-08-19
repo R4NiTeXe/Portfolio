@@ -23,8 +23,8 @@ const AMBER = new THREE.Color("#FFB86B");
 
 const RIM_START = Math.PI * 1.5 + 0.08;
 const RIM_LEN = Math.PI / 2 + 0.42;
-const PARTICLE_COUNT = 56;
-const DUST_COUNT = 26;
+const PARTICLE_COUNT = 48;
+const DUST_COUNT = 22;
 
 function glowTexture(inner: string) {
   const size = 256;
@@ -70,8 +70,8 @@ function CameraRig({ reduced }: { reduced: boolean }) {
 
   useFrame(({ camera }, delta) => {
     if (reduced) return;
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, target.current.x * 0.22, 2.5, delta);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, -target.current.y * 0.16, 2.5, delta);
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, target.current.x * 0.18, 2.5, delta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, -target.current.y * 0.13, 2.5, delta);
     camera.lookAt(0, 0, 0);
   });
 
@@ -121,11 +121,11 @@ function OrbitParticles({ reduced }: { reduced: boolean }) {
   return (
     <points ref={ref} geometry={geometry}>
       <pointsMaterial
-        size={0.042}
+        size={0.038}
         sizeAttenuation
         vertexColors
         transparent
-        opacity={0.9}
+        opacity={0.8}
         depthWrite={false}
       />
     </points>
@@ -170,7 +170,7 @@ function DustField({ reduced }: { reduced: boolean }) {
         sizeAttenuation
         color="#9fb4cc"
         transparent
-        opacity={0.35}
+        opacity={0.3}
         depthWrite={false}
       />
     </points>
@@ -190,7 +190,7 @@ function RimTraveler({ reduced }: { reduced: boolean }) {
   });
 
   return (
-    <sprite ref={ref} scale={[0.32, 0.32, 1]}>
+    <sprite ref={ref} scale={[0.3, 0.3, 1]}>
       <spriteMaterial map={tex} transparent depthWrite={false} />
     </sprite>
   );
@@ -199,8 +199,8 @@ function RimTraveler({ reduced }: { reduced: boolean }) {
 function Scene() {
   const reduced = useReducedMotion() ?? false;
   const groupRef = useRef<THREE.Group>(null);
-  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.6)"), []);
-  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,255,0.75)"), []);
+  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.5)"), []);
+  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,255,0.7)"), []);
 
   useFrame(({ clock }) => {
     if (reduced || !groupRef.current) return;
@@ -222,7 +222,7 @@ function Scene() {
           <meshBasicMaterial
             color={MINT}
             transparent
-            opacity={0.55}
+            opacity={0.5}
             depthWrite={false}
             side={THREE.DoubleSide}
           />
@@ -232,7 +232,7 @@ function Scene() {
           <meshBasicMaterial
             color={MINT}
             transparent
-            opacity={0.1}
+            opacity={0.08}
             depthWrite={false}
             side={THREE.DoubleSide}
           />

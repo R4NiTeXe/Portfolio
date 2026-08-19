@@ -8,14 +8,14 @@ import { foundations, skills } from "@/lib/data";
 gsap.registerPlugin(ScrollTrigger);
 
 const CONSTELLATION = [
-  { x: 8, y: 22 },
-  { x: 38, y: 8 },
-  { x: 68, y: 24 },
-  { x: 94, y: 10 },
-  { x: 18, y: 68 },
-  { x: 46, y: 78 },
-  { x: 76, y: 70 },
-  { x: 96, y: 58 },
+  { x: 12, y: 18 },
+  { x: 30, y: 8 },
+  { x: 74, y: 14 },
+  { x: 90, y: 26 },
+  { x: 16, y: 52 },
+  { x: 62, y: 48 },
+  { x: 84, y: 62 },
+  { x: 38, y: 72 },
 ];
 
 function Constellation() {
@@ -27,18 +27,6 @@ function Constellation() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      const lines = gsap.utils.toArray<SVGPathElement>("[data-const-line]");
-      lines.forEach((line) => {
-        const len = line.getTotalLength();
-        line.style.strokeDasharray = `${len}`;
-        line.style.strokeDashoffset = `${len}`;
-        gsap.to(line, {
-          strokeDashoffset: 0,
-          duration: 1.6,
-          ease: "power2.inOut",
-          scrollTrigger: { trigger: svg, start: "top 78%", once: true },
-        });
-      });
       gsap.fromTo(
         "[data-const-node]",
         { opacity: 0, scale: 0.4 },
@@ -64,41 +52,42 @@ function Constellation() {
       preserveAspectRatio="none"
       className="pointer-events-none absolute inset-0 h-full w-full opacity-50"
     >
-      {[
-        [0, 1],
-        [0, 2],
-        [1, 2],
-        [1, 3],
-        [0, 4],
-        [1, 4],
-        [2, 4],
-        [2, 5],
-        [3, 5],
-        [4, 5],
-        [5, 6],
-        [5, 7],
-        [6, 7],
-      ].map(([a, b], i) => (
-        <line
-          key={i}
-          data-const-line
-          x1={CONSTELLATION[a].x}
-          y1={CONSTELLATION[a].y}
-          x2={CONSTELLATION[b].x}
-          y2={CONSTELLATION[b].y}
-          stroke="rgba(101,246,213,0.22)"
-          strokeWidth="0.18"
-        />
-      ))}
+      <path
+        d="M 2 34 A 26 10 0 0 1 54 22"
+        fill="none"
+        stroke="rgba(101,246,213,0.18)"
+        strokeWidth="0.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 46 82 A 30 12 0 0 0 98 66"
+        fill="none"
+        stroke="rgba(139,124,255,0.14)"
+        strokeWidth="0.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 20 90 A 18 8 0 0 1 52 82"
+        fill="none"
+        stroke="rgba(230,237,243,0.1)"
+        strokeWidth="0.25"
+        strokeLinecap="round"
+      />
       {CONSTELLATION.map((node, i) => (
         <circle
           key={i}
           data-const-node
           cx={node.x}
           cy={node.y}
-          r="0.7"
-          fill="#65F6D5"
-          opacity="0.7"
+          r={i % 3 === 0 ? "1" : "0.6"}
+          fill={
+            i % 4 === 1
+              ? "#8B7CFF"
+              : i % 4 === 2
+                ? "#65F6D5"
+                : "#E6EDF3"
+          }
+          opacity={i % 3 === 0 ? "0.7" : "0.45"}
         />
       ))}
     </svg>

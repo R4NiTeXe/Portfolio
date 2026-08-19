@@ -615,3 +615,164 @@
 .sheet-item {
   animation: sheet-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
+
+/* ============ PHASE 3 — celestial depth system ============ */
+
+/* L1 — star tiers */
+.star-s1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border-radius: 9999px;
+  background: rgba(230, 237, 243, 0.45);
+}
+
+.star-s2 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border-radius: 9999px;
+  background: rgba(230, 237, 243, 0.55);
+}
+
+.star-s3 {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+}
+
+.star-signal {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+  background: rgba(255, 184, 107, 0.85);
+  box-shadow: 0 0 8px rgba(255, 184, 107, 0.55);
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: var(--tw-lo, 0.35);
+  }
+  50% {
+    opacity: var(--tw-hi, 0.95);
+  }
+}
+
+.star-twinkle {
+  animation: twinkle var(--tw-dur, 8s) ease-in-out infinite;
+}
+
+/* L2 — micro dust */
+.celestial-dust {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+  background: rgba(159, 180, 204, 0.4);
+}
+
+.celestial-spec {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(230, 237, 243, 0.6);
+  box-shadow: 0 0 6px rgba(139, 124, 255, 0.35);
+}
+
+/* L3 / L5 — procedural planets (restrained, shared lighting universe) */
+.planet-mint {
+  border-radius: 9999px;
+  background:
+    repeating-linear-gradient(178deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 7px),
+    radial-gradient(circle at 30% 26%, #1c2740 0%, #0d1526 46%, #05070d 100%);
+  box-shadow:
+    inset 3px 3px 10px rgba(0, 0, 0, 0.92),
+    inset -3px -3px 12px rgba(101, 246, 213, 0.22),
+    inset -1px -1px 3px rgba(101, 246, 213, 0.12);
+}
+
+.planet-violet {
+  border-radius: 9999px;
+  background:
+    repeating-linear-gradient(2deg, rgba(255, 255, 255, 0.02) 0 2px, transparent 2px 9px),
+    radial-gradient(circle at 68% 30%, #1a2040 0%, #0c101f 52%, #05070d 100%);
+  box-shadow:
+    inset -3px 3px 10px rgba(0, 0, 0, 0.92),
+    inset 3px -3px 12px rgba(139, 124, 255, 0.26),
+    inset 1px -1px 3px rgba(139, 124, 255, 0.14);
+}
+
+.planet-dark {
+  border-radius: 9999px;
+  background: radial-gradient(circle at 40% 35%, #0d1526 0%, #070b14 55%, #04060c 100%);
+  box-shadow:
+    inset 2px 2px 6px rgba(0, 0, 0, 0.95),
+    inset -2px -2px 8px rgba(101, 246, 213, 0.1),
+    0 0 14px rgba(139, 124, 255, 0.05);
+}
+
+.planet-atmo {
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(139, 124, 255, 0.05) 0%,
+    rgba(101, 246, 213, 0.02) 55%,
+    transparent 100%
+  );
+  box-shadow: 0 0 26px 6px rgba(139, 124, 255, 0.07);
+}
+
+.planet-amber {
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #3a2c1c 0%, #170f06 60%, #05070d 100%);
+  box-shadow:
+    inset 2px 2px 5px rgba(0, 0, 0, 0.9),
+    inset -2px -2px 6px rgba(255, 184, 107, 0.18);
+}
+
+/* L4 — orbital arcs: elliptical, inclined, partial, fading */
+.orbit-ellipse {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(230, 237, 243, 0.16);
+}
+
+.arc-fade-a {
+  -webkit-mask-image: linear-gradient(115deg, transparent 0%, black 32%, black 62%, transparent 92%);
+  mask-image: linear-gradient(115deg, transparent 0%, black 32%, black 62%, transparent 92%);
+}
+
+.arc-fade-b {
+  -webkit-mask-image: linear-gradient(250deg, transparent 0%, black 28%, black 55%, transparent 85%);
+  mask-image: linear-gradient(250deg, transparent 0%, black 28%, black 55%, transparent 85%);
+}
+
+.arc-fade-c {
+  -webkit-mask-image: linear-gradient(35deg, transparent 0%, black 30%, black 70%, transparent 88%);
+  mask-image: linear-gradient(35deg, transparent 0%, black 30%, black 70%, transparent 88%);
+}
+
+.orbit-squash {
+  transform: scaleY(var(--squash, 0.55));
+}
+
+.arc-beacon {
+  position: absolute;
+  top: -1.5px;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  margin-left: -1.5px;
+  border-radius: 9999px;
+}
+
+/* Pause all celestial animation when tab is hidden */
+.celestial-paused *,
+.celestial-paused *::before,
+.celestial-paused *::after {
+  animation-play-state: paused !important;
+}
