@@ -357,7 +357,7 @@ export function Contact() {
             <div className="mt-8">
               <Magnetic>
                 <a
-                  href="/Ranit_Naskar_CV.pdf"
+                  href="/CV_RanitNaskar_DCS_044.pdf"
                   download="Ranit_Naskar_CV.pdf"
                   data-cursor-label="GET"
                   className="group relative inline-flex h-11 items-center gap-2 overflow-hidden rounded-lg border border-mint/40 bg-mint/10 px-6 text-sm font-medium text-mint transition-all hover:bg-mint/20 hover:shadow-[0_0_24px_-8px_rgba(101,246,213,0.6)] active:scale-95"

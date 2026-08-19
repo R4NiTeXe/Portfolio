@@ -63,7 +63,7 @@ export function CommandPalette() {
         hint: "PDF",
         icon: <Download className="h-4 w-4 text-mint" />,
         run: () => {
-          window.open("/Ranit_Naskar_CV.pdf", "_blank");
+          window.open("/CV_RanitNaskar_DCS_044.pdf", "_blank");
         },
       },
       {
