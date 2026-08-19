@@ -227,12 +227,6 @@
   box-shadow: 0 0 0 1px rgba(139, 124, 255, 0.22), 0 12px 44px -12px rgba(139, 124, 255, 0.4);
 }
 
-:focus-visible {
-  outline: 2px solid rgba(101, 246, 213, 0.55);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
 @keyframes constellation-drift {
   from {
     transform: translateY(-6px);
