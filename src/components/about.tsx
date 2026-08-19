@@ -249,6 +249,28 @@ export function About() {
           </div>
         </div>
 
+        <div className="mt-10 grid gap-3 sm:grid-cols-4">
+          {[
+            { word: "BUILD", note: "Prototypes, APIs, interfaces — crafted deliberately." },
+            { word: "SHIP", note: "Full production cycles — like Video_Tube." },
+            { word: "LEARN", note: "Every orbit teaches — hackathons, rovers, diplomas." },
+            { word: "REPEAT", note: "Improve the next pass with what the last one taught." },
+          ].map((step) => (
+            <div
+              key={step.word}
+              data-reveal-item
+              className="card-spotlight eclipse-card p-4"
+            >
+              <p className="font-display text-sm font-semibold text-mint">
+                {step.word}
+              </p>
+              <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+                {step.note}
+              </p>
+            </div>
+          ))}
+        </div>
+
         <div data-reveal-item className="mt-10">
           <div
             aria-hidden="true"

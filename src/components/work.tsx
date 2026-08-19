@@ -6,8 +6,9 @@ import gsap from "gsap";
 import { GithubIcon } from "@/components/icons";
 import { projects } from "@/lib/data";
 import { site } from "@/lib/site";
+import { ProjectConstellation } from "@/components/constellation";
 
-const toneStyles = {
+export const toneStyles = {
   mint: {
     chip: "border-mint/30 bg-mint/10 text-mint",
     index: "text-mint",
@@ -168,7 +169,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-type Project = (typeof projects)[number];
+export type Project = (typeof projects)[number];
 
 function ProjectModal({
   project,
@@ -300,6 +301,9 @@ function ProjectModal({
         <p data-modal-stagger className="mono-label mt-1 !text-[9px] text-white/50">
           ROLE — {project.role}
         </p>
+        <p data-modal-stagger className="mono-label mt-1 !text-[9px] text-mint/80">
+          CURRENT STATE — {project.status.toUpperCase()}
+        </p>
 
         <div data-modal-stagger className="preview-grid mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">
           <div className="h-full w-full">
@@ -326,15 +330,18 @@ function ProjectModal({
           </ul>
         </div>
 
-        <div data-modal-stagger className="mt-5 flex flex-wrap gap-1.5">
-          {project.stack.map((tech) => (
-            <span
-              key={tech}
-              className="rounded border border-white/10 px-2 py-0.5 text-[10px] tracking-[0.12em] text-muted-foreground uppercase"
-            >
-              {tech}
-            </span>
-          ))}
+        <div data-modal-stagger className="mt-5">
+          <p className="mono-label !text-[9px] text-white/50">TECHNOLOGIES</p>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {project.stack.map((tech) => (
+              <span
+                key={tech}
+                className="rounded border border-white/10 px-2 py-0.5 text-[10px] tracking-[0.12em] text-muted-foreground uppercase"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div
@@ -404,6 +411,7 @@ export function Work() {
                 <article
                   data-reveal-item
                   data-cursor-label="OPEN"
+                  data-cursor-project
                   onClick={() => setOpen(project)}
                   className="card-spotlight eclipse-card group flex h-full cursor-pointer flex-col p-6 transition-colors"
                 >
@@ -517,6 +525,8 @@ export function Work() {
           </span>
         </div>
       </div>
+
+      <ProjectConstellation onOpen={setOpen} />
 
       {open && <ProjectModal project={open} onClose={() => setOpen(null)} />}
     </section>

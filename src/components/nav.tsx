@@ -147,10 +147,15 @@ export function Nav() {
           })}
         </ul>
 
-        <div className="hidden items-center gap-2 md:flex">
-          <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-amber" />
-          <span className="mono-label !text-[10px] !tracking-[0.14em] text-amber">
-            {site.availability}
+        <div className="hidden flex-col items-end gap-0.5 md:flex">
+          <span className="flex items-center gap-2">
+            <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-amber" />
+            <span className="mono-label !text-[10px] !tracking-[0.14em] text-amber">
+              {site.availability}
+            </span>
+          </span>
+          <span className="mono-label !text-[8px] text-mint/50">
+            ORBIT // STABLE
           </span>
         </div>
 

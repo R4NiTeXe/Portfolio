@@ -3,17 +3,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  ChevronUp,
   Download,
   Mail,
   Search,
   TerminalSquare,
+  Zap,
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { site } from "@/lib/site";
 import { navLinks } from "@/lib/site";
 
+type CommandGroup = "NAVIGATION" | "ACTIONS" | "EXPERIMENTS";
+
 type Command = {
   id: string;
+  group: CommandGroup;
   label: string;
   hint: string;
   icon: React.ReactNode;
@@ -32,23 +37,28 @@ export function CommandPalette() {
       const el = document.querySelector<HTMLElement>(href);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     };
-    return [
+    const nav: Command[] = [
       ...navLinks.map((link) => ({
         id: `go-${link.href}`,
+        group: "NAVIGATION" as const,
         label: `Go to ${link.label}`,
         hint: link.href,
         icon: <span className="text-mint">→</span>,
         run: () => scrollTo(link.href),
       })),
       {
-        id: "terminal",
-        label: "Toggle terminal mode",
-        hint: "G",
-        icon: <TerminalSquare className="h-4 w-4 text-mint" />,
-        run: () => window.dispatchEvent(new CustomEvent("eclipse:terminal")),
+        id: "go-top",
+        group: "NAVIGATION" as const,
+        label: "Return to top",
+        hint: "#top",
+        icon: <ChevronUp className="h-4 w-4 text-mint" />,
+        run: () => scrollTo("#top"),
       },
+    ];
+    const actions: Command[] = [
       {
         id: "cv",
+        group: "ACTIONS" as const,
         label: "Download CV",
         hint: "PDF",
         icon: <Download className="h-4 w-4 text-mint" />,
@@ -58,6 +68,7 @@ export function CommandPalette() {
       },
       {
         id: "github",
+        group: "ACTIONS" as const,
         label: "Open GitHub profile",
         hint: "external",
         icon: <GithubIcon className="h-4 w-4 text-mint" />,
@@ -65,6 +76,7 @@ export function CommandPalette() {
       },
       {
         id: "linkedin",
+        group: "ACTIONS" as const,
         label: "Open LinkedIn profile",
         hint: "external",
         icon: <LinkedinIcon className="h-4 w-4 text-mint" />,
@@ -72,6 +84,7 @@ export function CommandPalette() {
       },
       {
         id: "email",
+        group: "ACTIONS" as const,
         label: "Send an email",
         hint: site.email,
         icon: <Mail className="h-4 w-4 text-mint" />,
@@ -80,6 +93,25 @@ export function CommandPalette() {
         },
       },
     ];
+    const experiments: Command[] = [
+      {
+        id: "lab",
+        group: "EXPERIMENTS" as const,
+        label: "Start Orbital Lab",
+        hint: "enter",
+        icon: <Zap className="h-4 w-4 text-mint" />,
+        run: () => window.dispatchEvent(new CustomEvent("eclipse:lab-start")),
+      },
+      {
+        id: "terminal",
+        group: "EXPERIMENTS" as const,
+        label: "Toggle terminal mode",
+        hint: "G",
+        icon: <TerminalSquare className="h-4 w-4 text-mint" />,
+        run: () => window.dispatchEvent(new CustomEvent("eclipse:terminal")),
+      },
+    ];
+    return [...nav, ...actions, ...experiments];
   }, []);
 
   const filtered = useMemo(() => {
@@ -139,6 +171,8 @@ export function CommandPalette() {
 
   if (!open) return null;
 
+  let lastGroup: CommandGroup | null = null;
+
   return (
     <div
       className="fixed inset-0 z-[85] flex items-start justify-center bg-black/70 p-4 pt-[14vh] backdrop-blur-sm"
@@ -168,40 +202,53 @@ export function CommandPalette() {
           ref={listRef}
           className="max-h-72 overflow-y-auto p-2"
           role="listbox"
+          aria-activedescendant={`command-${filtered[selected]?.id}`}
         >
           {filtered.length === 0 && (
             <li className="mono-label px-3 py-4 text-muted-foreground/60">
               NO MATCHING COMMANDS
             </li>
           )}
-          {filtered.map((command, i) => (
-            <li key={command.id} role="option" aria-selected={i === selected}>
-              <button
-                type="button"
-                onMouseEnter={() => setSelected(i)}
-                onClick={() => {
-                  command.run();
-                  setOpen(false);
-                }}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
-                  i === selected
-                    ? "bg-mint/10 text-white"
-                    : "text-muted-foreground"
-                }`}
-              >
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center">
-                  {command.icon}
-                </span>
-                <span className="flex-1 truncate">{command.label}</span>
-                <span className="mono-label !text-[9px] text-muted-foreground/50">
-                  {command.hint}
-                </span>
-                {i === selected && (
-                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-mint" />
+          {filtered.map((command, i) => {
+            const showGroup = command.group !== lastGroup;
+            lastGroup = command.group;
+            return (
+              <li key={command.id}>
+                {showGroup && (
+                  <p className="mono-label px-3 pt-3 pb-1.5 !text-[8px] text-white/35">
+                    {command.group}
+                  </p>
                 )}
-              </button>
-            </li>
-          ))}
+                <button
+                  id={`command-${command.id}`}
+                  type="button"
+                  role="option"
+                  aria-selected={i === selected}
+                  onMouseEnter={() => setSelected(i)}
+                  onClick={() => {
+                    command.run();
+                    setOpen(false);
+                  }}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors focus-visible:outline-none ${
+                    i === selected
+                      ? "bg-mint/10 text-white"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center">
+                    {command.icon}
+                  </span>
+                  <span className="flex-1 truncate">{command.label}</span>
+                  <span className="mono-label !text-[9px] text-muted-foreground/50">
+                    {command.hint}
+                  </span>
+                  {i === selected && (
+                    <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-mint" />
+                  )}
+                </button>
+              </li>
+            );
+          })}
         </ul>
         <div className="border-t border-white/10 px-4 py-2.5">
           <p className="mono-label !text-[9px] text-muted-foreground/50">

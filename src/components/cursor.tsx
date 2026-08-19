@@ -37,19 +37,26 @@ export function Cursor() {
 
       // Magnetic pull toward interactive element center
       const labeled = interactive?.closest<HTMLElement>("[data-cursor-label]");
+      const project = interactive?.closest<HTMLElement>("[data-cursor-project]");
       if (interactive && labeled) {
         const rect = labeled.getBoundingClientRect();
         const pull = 0.22;
         mx = x + (rect.left + rect.width / 2 - x) * pull;
         my = y + (rect.top + rect.height / 2 - y) * pull;
         label.textContent = labeled.dataset.cursorLabel ?? "";
-        ring.classList.add("cursor-ring-labeling");
       } else {
         mx = x;
         my = y;
-        ring.classList.remove("cursor-ring-labeling");
       }
-      ring.classList.toggle("cursor-ring-active", !!interactive);
+      const isLink = !!interactive?.closest("a[href]");
+      ring.classList.toggle("cursor-ring-link", !!interactive && !labeled && !project && isLink);
+      ring.classList.toggle(
+        "cursor-ring-button",
+        !!interactive && !labeled && !project && !isLink
+      );
+      ring.classList.toggle("cursor-ring-project", !!project);
+      ring.classList.toggle("cursor-ring-active", !!labeled);
+      ring.classList.toggle("cursor-ring-labeling", !!labeled);
     };
 
     const loop = () => {

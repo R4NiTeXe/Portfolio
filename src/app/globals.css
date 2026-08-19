@@ -227,6 +227,31 @@
   box-shadow: 0 0 0 1px rgba(139, 124, 255, 0.22), 0 12px 44px -12px rgba(139, 124, 255, 0.4);
 }
 
+:focus-visible {
+  outline: 2px solid rgba(101, 246, 213, 0.55);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes constellation-drift {
+  from {
+    transform: translateY(-6px);
+  }
+  to {
+    transform: translateY(6px);
+  }
+}
+
+.constellation-drift {
+  animation: constellation-drift 16s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .constellation-drift {
+    animation: none;
+  }
+}
+
 @utility mono-label {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -323,6 +348,49 @@
   background: rgba(101, 246, 213, 0.08);
   width: 3.5rem !important;
   height: 3.5rem !important;
+}
+
+.cursor-ring-link {
+  border-color: rgba(101, 246, 213, 0.5);
+  background: rgba(101, 246, 213, 0.06);
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.cursor-ring-button {
+  border-color: rgba(101, 246, 213, 0.65);
+  background: rgba(101, 246, 213, 0.1);
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.cursor-ring-project {
+  border-color: rgba(139, 124, 255, 0.55);
+  background: rgba(139, 124, 255, 0.08);
+  width: 3rem;
+  height: 3rem;
+}
+
+@keyframes transmission-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
+.transmission-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(101, 246, 213, 0.5);
+  animation: transmission-ripple 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes preloader-ring {

@@ -14,6 +14,13 @@ const BUILD_LOG = [
   { version: "v1.0", note: "Initial ECLIPSE portfolio launch" },
 ] as const;
 
+const SYS_LOG = [
+  { tag: "SYS", text: "NAVIGATION READY" },
+  { tag: "WORK", text: "PROJECT ARCHIVE LOADED" },
+  { tag: "ORBIT", text: "STABLE" },
+  { tag: "UI", text: "INTERFACE READY" },
+] as const;
+
 function useClock() {
   const [time, setTime] = useState("");
   useEffect(() => {
@@ -35,9 +42,11 @@ function useClock() {
 function useFps() {
   const [fps, setFps] = useState<number | null>(null);
   const frames = useRef(0);
+  const footerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let raf = 0;
+    let alive = false;
     let last = performance.now();
     const loop = (now: number) => {
       frames.current += 1;
@@ -46,13 +55,35 @@ function useFps() {
         frames.current = 0;
         last = now;
       }
+      if (alive) raf = requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (alive) return;
+      alive = true;
+      last = performance.now();
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    const stop = () => {
+      alive = false;
+      cancelAnimationFrame(raf);
+    };
+    const el = footerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) start();
+        else stop();
+      },
+      { threshold: 0 },
+    );
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      stop();
+    };
   }, []);
 
-  return fps;
+  return { fps, footerRef };
 }
 
 function useSessionUptime() {
@@ -72,11 +103,11 @@ function useSessionUptime() {
 
 export function Footer() {
   const time = useClock();
-  const fps = useFps();
+  const { fps, footerRef } = useFps();
   const uptime = useSessionUptime();
 
   return (
-    <footer className="relative border-t border-white/5">
+    <footer ref={footerRef} className="relative border-t border-white/5">
       <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
@@ -111,6 +142,27 @@ export function Footer() {
                       {entry.version}
                     </span>
                     <span className="truncate">{entry.note}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+            <details className="mt-4">
+              <summary className="mono-label cursor-pointer list-none !text-[9px] text-white/40 transition-colors hover:text-mint">
+                SYSTEM LOG — STATIC · DECORATIVE
+                <span className="ml-1 inline-block transition-transform duration-300 group-open:rotate-45 open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <ul className="mt-3 space-y-1.5 border-l border-white/10 pl-3">
+                {SYS_LOG.map((entry) => (
+                  <li
+                    key={entry.tag}
+                    className="flex items-baseline gap-2 text-[11px] text-muted-foreground"
+                  >
+                    <span className="mono-label shrink-0 !text-[9px] text-mint">
+                      [{entry.tag}]
+                    </span>
+                    <span className="truncate">{entry.text}</span>
                   </li>
                 ))}
               </ul>

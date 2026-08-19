@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  Check,
   Copy,
   Download,
   Mail,
@@ -28,6 +29,7 @@ function TransmissionForm() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<TransmissionStatus>("idle");
   const [composeUrl, setComposeUrl] = useState("");
+  const [ripple, setRipple] = useState(0);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ function TransmissionForm() {
     if (!validate()) return;
 
     setStatus("transmitting");
+    setRipple((r) => r + 1);
     const subject = `Portfolio transmission from ${name.trim()}`;
     const body = `${message.trim()}\n\n— ${name.trim()}\n${email.trim()}`;
     const url = `mailto:${site.email}?subject=${encodeURIComponent(
@@ -217,8 +220,11 @@ function TransmissionForm() {
           type="submit"
           disabled={status === "transmitting"}
           data-cursor-label="SEND"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-mint/40 bg-mint/10 px-6 text-sm font-medium text-mint transition-all hover:bg-mint/20 hover:shadow-[0_0_24px_-8px_rgba(101,246,213,0.6)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="relative inline-flex h-11 items-center justify-center gap-2 overflow-hidden rounded-lg border border-mint/40 bg-mint/10 px-6 text-sm font-medium text-mint transition-all hover:bg-mint/20 hover:shadow-[0_0_24px_-8px_rgba(101,246,213,0.6)] disabled:cursor-not-allowed disabled:opacity-60"
         >
+          {ripple > 0 && (
+            <span key={ripple} aria-hidden="true" className="transmission-ripple" />
+          )}
           {status === "transmitting" ? (
             <>
               <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-mint" />
@@ -285,11 +291,22 @@ function TransmissionForm() {
 
 export function Contact() {
   const push = useToast();
+  const [copied, setCopied] = useState(false);
+  const copyTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(site.email);
       push("EMAIL COPIED TO CLIPBOARD");
+      setCopied(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = window.setTimeout(() => setCopied(false), 1600);
     } catch {
       push("COPY FAILED — SELECT MANUALLY");
     }
@@ -361,11 +378,15 @@ export function Contact() {
               <button
                 type="button"
                 onClick={copyEmail}
-                data-cursor-label="COPY"
+                data-cursor-label={copied ? "COPIED" : "COPY"}
                 className="eclipse-card group flex w-full items-center gap-4 p-4 text-left transition-all active:scale-[0.98]"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 text-mint/80 transition-colors group-hover:border-mint/40 group-hover:text-mint">
-                  <Mail className="h-4 w-4" />
+                  {copied ? (
+                    <Check className="h-4 w-4 text-mint" />
+                  ) : (
+                    <Mail className="h-4 w-4" />
+                  )}
                 </span>
                 <span className="min-w-0">
                   <span className="mono-label block text-muted-foreground">
@@ -375,7 +396,13 @@ export function Contact() {
                     {site.email}
                   </span>
                 </span>
-                <Copy className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-mint" />
+                {copied ? (
+                  <span className="mono-label shrink-0 text-mint">
+                    COPIED
+                  </span>
+                ) : (
+                  <Copy className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-mint" />
+                )}
               </button>
             </Magnetic>
 
