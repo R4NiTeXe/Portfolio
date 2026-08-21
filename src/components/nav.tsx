@@ -164,7 +164,7 @@ export function Nav() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground md:hidden"
+              className="min-h-11 min-w-11 text-muted-foreground md:hidden"
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />

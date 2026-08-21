@@ -552,7 +552,7 @@ export function OrbitLab() {
                   else resumeGame();
                 }}
                 data-cursor-label={mode === "idle" ? "START" : mode === "running" ? "PAUSE" : "RUN"}
-                className="mono-label rounded-lg border border-mint/30 bg-mint/10 px-5 py-2.5 text-mint transition-colors hover:bg-mint/20"
+                className="mono-label min-h-11 rounded-lg border border-mint/30 bg-mint/10 px-5 py-2.5 text-mint transition-colors hover:bg-mint/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
               >
                 {mode === "idle" ? "START" : mode === "running" ? "PAUSE" : "RESUME"}
               </button>
@@ -560,7 +560,7 @@ export function OrbitLab() {
                 type="button"
                 onClick={resetGame}
                 data-cursor-label="RESET"
-                className="mono-label rounded-lg border border-white/15 px-5 py-2.5 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint"
+                className="mono-label min-h-11 rounded-lg border border-white/15 px-5 py-2.5 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
               >
                 RESTART
               </button>
@@ -568,7 +568,7 @@ export function OrbitLab() {
                 type="button"
                 onClick={() => setShowHelp((s) => !s)}
                 aria-expanded={showHelp}
-                className="mono-label rounded-lg border border-white/15 px-5 py-2.5 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint"
+                className="mono-label min-h-11 rounded-lg border border-white/15 px-5 py-2.5 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
               >
                 {showHelp ? "HIDE GUIDE" : "HOW TO FLY"}
               </button>

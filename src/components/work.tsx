@@ -285,7 +285,7 @@ function ProjectModal({
               type="button"
               onClick={close}
               aria-label="Close project details"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -378,6 +378,7 @@ function ProjectModal({
 
 export function Work() {
   const [open, setOpen] = useState<Project | null>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   return (
     <section id="work" aria-label="Work" className="relative scroll-mt-24">
@@ -406,14 +407,27 @@ export function Work() {
         <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {projects.map((project) => {
             const tone = toneStyles[project.tone];
+            const openProject = (trigger: HTMLElement | null) => {
+              triggerRef.current = trigger ?? (document.activeElement as HTMLElement | null);
+              setOpen(project);
+            };
             return (
               <TiltCard key={project.name}>
                 <article
                   data-reveal-item
                   data-cursor-label="OPEN"
                   data-cursor-project
-                  onClick={() => setOpen(project)}
-                  className="card-spotlight eclipse-card group flex h-full cursor-pointer flex-col p-6 transition-colors"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${project.name} — ${project.status}. Open project details.`}
+                  onClick={(e) => openProject(e.currentTarget as HTMLElement)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openProject(e.currentTarget as HTMLElement);
+                    }
+                  }}
+                  className="card-spotlight eclipse-card group flex h-full cursor-pointer flex-col p-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <p className={`font-display text-sm font-semibold ${tone.index}`}>
@@ -526,9 +540,25 @@ export function Work() {
         </div>
       </div>
 
-      <ProjectConstellation onOpen={setOpen} />
+      <ProjectConstellation
+        onOpen={(project, trigger) => {
+          triggerRef.current = trigger ?? (document.activeElement as HTMLElement | null);
+          setOpen(project);
+        }}
+      />
 
-      {open && <ProjectModal project={open} onClose={() => setOpen(null)} />}
+      {open && (
+        <ProjectModal
+          project={open}
+          onClose={() => {
+            setOpen(null);
+            // restore focus to the exact trigger after closing animation
+            setTimeout(() => {
+              triggerRef.current?.focus();
+            }, 0);
+          }}
+        />
+      )}
     </section>
   );
 }

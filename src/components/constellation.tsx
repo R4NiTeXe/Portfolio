@@ -46,7 +46,7 @@ function InfoPanel({ project }: { project: Project }) {
 export function ProjectConstellation({
   onOpen,
 }: {
-  onOpen: (project: Project) => void;
+  onOpen: (project: Project, trigger?: HTMLElement | null) => void;
 }) {
   const nodePos = NODE_ANGLES.map((deg) => {
     const rad = (deg * Math.PI) / 180;
@@ -146,10 +146,10 @@ export function ProjectConstellation({
               >
                 <button
                   type="button"
-                  onClick={() => onOpen(project)}
+                  onClick={(e) => onOpen(project, e.currentTarget as HTMLElement)}
                   data-cursor-label="OPEN"
                   aria-label={`${project.name} — ${project.status}. Open project details.`}
-                  className="group relative flex flex-col items-center gap-2"
+                  className="group relative flex min-h-[44px] min-w-[44px] flex-col items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F] rounded-lg p-1"
                 >
                   <span className="relative flex h-12 w-12 items-center justify-center">
                     <span
@@ -183,9 +183,10 @@ export function ProjectConstellation({
             <button
               key={project.name}
               type="button"
-              onClick={() => onOpen(project)}
+              onClick={(e) => onOpen(project, e.currentTarget as HTMLElement)}
               data-cursor-label="OPEN"
-              className="eclipse-card group flex items-center justify-between gap-3 p-4 text-left transition-transform active:scale-[0.99]"
+              aria-label={`${project.name} — ${project.status}. Open project details.`}
+              className="eclipse-card group flex items-center justify-between gap-3 p-4 text-left transition-transform active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
             >
               <span className="flex min-w-0 items-center gap-3">
                 <span className={`font-display text-sm font-semibold ${tone.index}`}>

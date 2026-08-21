@@ -245,7 +245,7 @@ export function Footer() {
               <span className="mono-label !text-[10px] !tracking-[0.14em]">
                 Return to orbit
               </span>
-              <span className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white/10 transition-colors group-hover:border-mint/50">
+              <span className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 transition-colors group-hover:border-mint/50">
                 <span
                   aria-hidden="true"
                   className="orbit-rotate absolute inset-0 rounded-full border border-transparent [animation-duration:9s] [border-top-color:rgba(101,246,213,0.5)] group-hover:[animation-play-state:running]"
