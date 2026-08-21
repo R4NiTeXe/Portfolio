@@ -454,11 +454,11 @@ export function Celestial() {
             className="absolute top-[6%] right-[2%] hidden lg:block"
           />
           {[
-            { x: "6%", y: "38%", c: "rgba(230,237,243,0.5)", s: "2px" },
-            { x: "12%", y: "46%", c: "rgba(101,246,213,0.6)", s: "3px" },
-            { x: "93%", y: "30%", c: "rgba(139,124,255,0.55)", s: "3px" },
-            { x: "97%", y: "42%", c: "rgba(230,237,243,0.4)", s: "2px" },
-            { x: "50%", y: "12%", c: "rgba(101,246,213,0.45)", s: "2px" },
+            { x: "6%", y: "38%", c: "rgba(230,237,243,0.32)", s: "2px" },
+            { x: "12%", y: "46%", c: "rgba(101,246,213,0.36)", s: "2px" },
+            { x: "93%", y: "30%", c: "rgba(139,124,255,0.32)", s: "2px" },
+            { x: "97%", y: "42%", c: "rgba(230,237,243,0.26)", s: "1px" },
+            { x: "50%", y: "12%", c: "rgba(101,246,213,0.28)", s: "2px" },
           ].map((p, i) => (
             <span
               key={`cp-${i}`}
@@ -472,9 +472,9 @@ export function Celestial() {
                 height: p.s,
                 borderRadius: "9999px",
                 background: p.c,
-                boxShadow: `0 0 6px ${p.c}`,
-                "--tw-lo": "0.3",
-                "--tw-hi": "0.95",
+                boxShadow: `0 0 4px ${p.c}`,
+                "--tw-lo": "0.18",
+                "--tw-hi": "0.7",
                 "--tw-dur": `${5 + i * 1.3}s`,
               } as React.CSSProperties}
             />

@@ -24,23 +24,31 @@ const AMBER = new THREE.Color("#FFB86B");
 const RIM_START = Math.PI * 1.5 + 0.08;
 const RIM_LEN = Math.PI / 2 + 0.42;
 const PARTICLE_COUNT = 48;
+const BRIGHT_COUNT = 7;
 const DUST_COUNT = 22;
 
-function glowTexture(inner: string) {
+/* Soft multi-stop glow sprite texture — smoother, less geometric falloff */
+function glowTexture(core: string, mid: string) {
   const size = 256;
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext("2d")!;
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, inner);
-  g.addColorStop(0.38, inner);
+  g.addColorStop(0, core);
+  g.addColorStop(0.26, core);
+  g.addColorStop(0.58, mid);
   g.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
   return new THREE.CanvasTexture(canvas);
 }
 
+/*
+ * Accretion rim texture — radial gradient + bright arc segments on canvas,
+ * applied to circleGeometry with repeat.x=-1 to flip horizontally.
+ * Verified to place mint on the RIGHT / lower-right of the screen.
+ */
 function rimTexture() {
   const size = 256;
   const canvas = document.createElement("canvas");
@@ -53,23 +61,70 @@ function rimTexture() {
   g.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
-  return new THREE.CanvasTexture(canvas);
+  const arcs = [
+    { a: RIM_START + RIM_LEN * 0.06, len: RIM_LEN * 0.12, opacity: 0.35 },
+    { a: RIM_START + RIM_LEN * 0.9, len: RIM_LEN * 0.15, opacity: 0.28 },
+    { a: 2 * Math.PI + 0.1, len: 0.42, opacity: 0.22 },
+  ];
+  for (const arc of arcs) {
+    ctx.beginPath();
+    ctx.moveTo(size / 2, size / 2);
+    ctx.arc(size / 2, size / 2, size / 2, arc.a - arc.len / 2, arc.a + arc.len / 2);
+    ctx.lineTo(size / 2, size / 2);
+    ctx.fillStyle = `rgba(101,246,213,${arc.opacity})`;
+    ctx.fill();
+  }
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  return tex;
 }
 
+/*
+ * Black-hole disk texture — stays black, gains directional depth:
+ * off-center light source (upper-left violet, lower-right mint), darkest edge.
+ * No hard circular border: the rim dissolves into the void.
+ */
 function blackHoleTexture() {
   const size = 256;
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext("2d")!;
-  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, "#0B0F17");
-  g.addColorStop(0.5, "#05070C");
-  g.addColorStop(0.88, "#000000");
-  g.addColorStop(0.96, "#06080D");
+  const c = size / 2;
+
+  /* base body — light source pulled slightly up-left for directional depth */
+  const g = ctx.createRadialGradient(size * 0.42, size * 0.4, size * 0.04, c, c, c);
+  g.addColorStop(0, "#0E1422");
+  g.addColorStop(0.45, "#070A13");
+  g.addColorStop(0.8, "#03040A");
+  g.addColorStop(0.94, "#010207");
   g.addColorStop(1, "#000000");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
+
+  /* violet directional cast — upper-left limb */
+  const v = ctx.createRadialGradient(size * 0.26, size * 0.26, 0, size * 0.26, size * 0.26, size * 0.44);
+  v.addColorStop(0, "rgba(139,124,255,0.13)");
+  v.addColorStop(1, "rgba(139,124,255,0)");
+  ctx.fillStyle = v;
+  ctx.fillRect(0, 0, size, size);
+
+  /* faint mint cast — lower-right limb (ties the accretion to the disk) */
+  const m = ctx.createRadialGradient(size * 0.76, size * 0.78, 0, size * 0.76, size * 0.78, size * 0.5);
+  m.addColorStop(0, "rgba(101,246,213,0.08)");
+  m.addColorStop(1, "rgba(101,246,213,0)");
+  ctx.fillStyle = m;
+  ctx.fillRect(0, 0, size, size);
+
+  /* edge dissolve — soft darkening at the very rim, no bright border */
+  const e = ctx.createRadialGradient(c, c, c * 0.88, c, c, c);
+  e.addColorStop(0, "rgba(0,0,0,0)");
+  e.addColorStop(0.7, "rgba(0,0,0,0)");
+  e.addColorStop(1, "rgba(0,0,0,0.55)");
+  ctx.fillStyle = e;
+  ctx.fillRect(0, 0, size, size);
+
   return new THREE.CanvasTexture(canvas);
 }
 
@@ -100,8 +155,8 @@ function CameraRig({ reduced }: { reduced: boolean }) {
 
   useFrame(({ camera }, delta) => {
     if (reduced) return;
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, target.current.x * 0.18, 2.5, delta);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, -target.current.y * 0.13, 2.5, delta);
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, target.current.x * 0.16, 2.5, delta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, -target.current.y * 0.11, 2.5, delta);
     camera.lookAt(0, 0, 0);
   });
 
@@ -115,21 +170,24 @@ function OrbitParticles({
   reduced: boolean;
   pointer: { current: { x: number; y: number } };
 }) {
-  const ref = useRef<THREE.Points>(null);
   const { geometry, state } = useMemo(() => {
     const positions = new Float32Array(PARTICLE_COUNT * 3);
     const colors = new Float32Array(PARTICLE_COUNT * 3);
     const state = new Float32Array(PARTICLE_COUNT * 2);
     const palette = [WHITE, MINT, VIOLET, AMBER];
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const radius = 1.3 + Math.random() * 0.95;
+      /* bias toward the eclipse: denser just outside the disk edge */
+      const radius = 1.24 + Math.pow(Math.random(), 1.5) * 0.95;
       const angle = Math.random() * Math.PI * 2;
-      const speed = (Math.random() > 0.5 ? 1 : -1) * (0.035 + Math.random() * 0.08);
+      const speed = (Math.random() > 0.5 ? 1 : -1) * (0.03 + Math.random() * 0.07);
       state[i * 2] = radius;
       state[i * 2 + 1] = speed;
       positions[i * 3] = Math.cos(angle) * radius;
       positions[i * 3 + 1] = Math.sin(angle) * radius * 0.94;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 1.1;
+      /* multiple depth levels: some behind the disk, some in front */
+      const band = i % 4;
+      positions[i * 3 + 2] =
+        band === 0 ? -0.15 - Math.random() * 0.1 : band === 1 ? 0.08 + Math.random() * 0.08 : (Math.random() - 0.5) * 0.3;
       const c = palette[i % 4];
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
@@ -145,8 +203,8 @@ function OrbitParticles({
     if (reduced) return;
     const attr = geometry.getAttribute("position") as THREE.BufferAttribute;
     const arr = attr.array as Float32Array;
-    const px = pointer.current.x * 0.05;
-    const py = pointer.current.y * 0.04;
+    const px = pointer.current.x * 0.04;
+    const py = pointer.current.y * 0.03;
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const angle = Math.atan2(arr[i * 3 + 1], arr[i * 3]) + state[i * 2 + 1] * delta;
       const radius = state[i * 2];
@@ -157,13 +215,74 @@ function OrbitParticles({
   });
 
   return (
-    <points ref={ref} geometry={geometry}>
+    <points geometry={geometry}>
       <pointsMaterial
-        size={0.038}
+        size={0.032}
         sizeAttenuation
         vertexColors
         transparent
-        opacity={0.8}
+        opacity={0.75}
+        depthWrite={false}
+      />
+    </points>
+  );
+}
+
+/* A few restrained brighter foreground particles — highlights, not a starfield */
+function BrightParticles({
+  reduced,
+  pointer,
+}: {
+  reduced: boolean;
+  pointer: { current: { x: number; y: number } };
+}) {
+  const { geometry, state } = useMemo(() => {
+    const positions = new Float32Array(BRIGHT_COUNT * 3);
+    const colors = new Float32Array(BRIGHT_COUNT * 3);
+    const state = new Float32Array(BRIGHT_COUNT * 2);
+    const palette = [WHITE, MINT, WHITE, MINT, WHITE, VIOLET, MINT];
+    for (let i = 0; i < BRIGHT_COUNT; i++) {
+      const radius = 1.35 + Math.random() * 0.6;
+      const angle = Math.random() * Math.PI * 2;
+      state[i * 2] = radius;
+      state[i * 2 + 1] = (Math.random() > 0.5 ? 1 : -1) * (0.02 + Math.random() * 0.03);
+      positions[i * 3] = Math.cos(angle) * radius;
+      positions[i * 3 + 1] = Math.sin(angle) * radius * 0.94;
+      positions[i * 3 + 2] = 0.05 + Math.random() * 0.08;
+      const c = palette[i];
+      colors[i * 3] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    return { geometry, state };
+  }, []);
+
+  useFrame((_, delta) => {
+    if (reduced) return;
+    const attr = geometry.getAttribute("position") as THREE.BufferAttribute;
+    const arr = attr.array as Float32Array;
+    const px = pointer.current.x * 0.04;
+    const py = pointer.current.y * 0.03;
+    for (let i = 0; i < BRIGHT_COUNT; i++) {
+      const angle = Math.atan2(arr[i * 3 + 1], arr[i * 3]) + state[i * 2 + 1] * delta;
+      const radius = state[i * 2];
+      arr[i * 3] = Math.cos(angle) * radius + px;
+      arr[i * 3 + 1] = Math.sin(angle) * radius * 0.94 + py;
+    }
+    attr.needsUpdate = true;
+  });
+
+  return (
+    <points geometry={geometry}>
+      <pointsMaterial
+        size={0.055}
+        sizeAttenuation
+        vertexColors
+        transparent
+        opacity={0.9}
         depthWrite={false}
       />
     </points>
@@ -171,7 +290,6 @@ function OrbitParticles({
 }
 
 function DustField({ reduced }: { reduced: boolean }) {
-  const ref = useRef<THREE.Points>(null);
   const { geometry, state } = useMemo(() => {
     const positions = new Float32Array(DUST_COUNT * 3);
     const state = new Float32Array(DUST_COUNT);
@@ -181,7 +299,7 @@ function DustField({ reduced }: { reduced: boolean }) {
       state[i] = (Math.random() > 0.5 ? 1 : -1) * (0.012 + Math.random() * 0.02);
       positions[i * 3] = Math.cos(angle) * radius;
       positions[i * 3 + 1] = Math.sin(angle) * radius * 0.9;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 1.6;
+      positions[i * 3 + 2] = -0.12 - Math.random() * 0.1;
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -202,13 +320,13 @@ function DustField({ reduced }: { reduced: boolean }) {
   });
 
   return (
-    <points ref={ref} geometry={geometry}>
+    <points position={[0, 0, -0.12]} geometry={geometry}>
       <pointsMaterial
-        size={0.016}
+        size={0.015}
         sizeAttenuation
         color="#9fb4cc"
         transparent
-        opacity={0.3}
+        opacity={0.28}
         depthWrite={false}
       />
     </points>
@@ -217,18 +335,18 @@ function DustField({ reduced }: { reduced: boolean }) {
 
 function RimTraveler({ reduced }: { reduced: boolean }) {
   const ref = useRef<THREE.Sprite>(null);
-  const tex = useMemo(() => rimTexture(), []);
+  const tex = useMemo(() => glowTexture("rgba(101,246,213,0.6)", "rgba(101,246,213,0.18)"), []);
 
   useFrame(({ clock }) => {
     if (reduced || !ref.current) return;
     const t = ((clock.elapsedTime * 0.16) % 1 + 1) % 1;
     const angle = RIM_START + t * RIM_LEN;
-    const r = (1.16 + 1.48) / 2;
+    const r = 1.26;
     ref.current.position.set(Math.cos(angle) * r, Math.sin(angle) * r, 0.02);
   });
 
   return (
-    <sprite ref={ref} scale={[0.3, 0.3, 1]}>
+    <sprite ref={ref} scale={[0.24, 0.24, 1]}>
       <spriteMaterial map={tex} transparent depthWrite={false} />
     </sprite>
   );
@@ -241,29 +359,30 @@ function Scene() {
   const haloRef = useRef<THREE.Sprite>(null);
   const haloLayerRef = useRef<THREE.Sprite>(null);
   const coreRef = useRef<THREE.Sprite>(null);
-  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.5)"), []);
-  const violetLayerTex = useMemo(() => glowTexture("rgba(139,124,255,0.28)"), []);
-  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,255,0.72)"), []);
-  const rimPointTex = useMemo(() => glowTexture("rgba(101,246,213,0.85)"), []);
+  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.34)", "rgba(139,124,255,0.1)"), []);
+  const violetLayerTex = useMemo(() => glowTexture("rgba(139,124,255,0.44)", "rgba(139,124,255,0.14)"), []);
+  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,248,0.95)", "rgba(255,240,235,0.28)"), []);
+  const rimPointTex = useMemo(() => glowTexture("rgba(101,246,213,0.9)", "rgba(101,246,213,0.24)"), []);
   const diskTex = useMemo(() => blackHoleTexture(), []);
+  const rimTex = useMemo(() => rimTexture(), []);
 
   useFrame(({ clock }, delta) => {
     if (reduced || !groupRef.current) return;
     groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.05) * 0.02;
     if (coreRef.current) {
-      const s = 0.9 + Math.sin(clock.elapsedTime * 0.55) * 0.05;
+      const s = 0.58 + Math.sin(clock.elapsedTime * 0.55) * 0.05;
       coreRef.current.scale.setScalar(s);
     }
     if (haloRef.current) {
       haloRef.current.position.x = THREE.MathUtils.damp(
         haloRef.current.position.x,
-        -1.0 + pointer.current.x * 0.06,
+        -0.7 + pointer.current.x * 0.05,
         3,
         delta
       );
       haloRef.current.position.y = THREE.MathUtils.damp(
         haloRef.current.position.y,
-        0.28 - pointer.current.y * 0.05,
+        0.35 - pointer.current.y * 0.04,
         3,
         delta
       );
@@ -271,7 +390,27 @@ function Scene() {
     if (haloLayerRef.current) {
       haloLayerRef.current.position.x = THREE.MathUtils.damp(
         haloLayerRef.current.position.x,
-        -0.52 + pointer.current.x * 0.04,
+        -0.55 + pointer.current.x * 0.04,
+        3,
+        delta
+      );
+      haloLayerRef.current.position.y = THREE.MathUtils.damp(
+        haloLayerRef.current.position.y,
+        0.42 - pointer.current.y * 0.03,
+        3,
+        delta
+      );
+    }
+    if (coreRef.current) {
+      coreRef.current.position.x = THREE.MathUtils.damp(
+        coreRef.current.position.x,
+        -0.66 + pointer.current.x * 0.02,
+        3,
+        delta
+      );
+      coreRef.current.position.y = THREE.MathUtils.damp(
+        coreRef.current.position.y,
+        0.6 - pointer.current.y * 0.02,
         3,
         delta
       );
@@ -282,75 +421,58 @@ function Scene() {
     <>
       <CameraRig reduced={reduced} />
       <group ref={groupRef}>
-        <sprite ref={haloRef} position={[-1.0, 0.28, -0.15]} scale={[3.9, 3.9, 1]}>
-          <spriteMaterial map={violetTex} transparent depthWrite={false} />
+        {/* L1 — distant violet atmosphere, directional from upper-left */}
+        <sprite ref={haloRef} position={[-0.7, 0.35, -0.3]} scale={[4.6, 4.0, 1]}>
+          <spriteMaterial map={violetTex} transparent opacity={0.85} depthWrite={false} />
         </sprite>
-        <sprite ref={haloLayerRef} position={[-0.52, 0.9, -0.14]} scale={[2.1, 2.1, 1]}>
+        {/* L2 — violet glow close behind the disk */}
+        <sprite ref={haloLayerRef} position={[-0.55, 0.42, -0.18]} scale={[2.5, 2.3, 1]}>
           <spriteMaterial map={violetLayerTex} transparent depthWrite={false} />
         </sprite>
-        <sprite ref={coreRef} position={[-0.68, 0.95, -0.14]} scale={[0.9, 0.9, 1]}>
+        {/* L3 — distant dust, behind everything */}
+        <DustField reduced={reduced} />
+        {/* L4 — mint accretion light, wraps AROUND the disk from behind */}
+        <mesh position={[0, 0, -0.02]}>
+          <circleGeometry args={[1.6, 96]} />
+          <meshBasicMaterial map={rimTex} transparent depthWrite={false} />
+        </mesh>
+        {/* L5 — white-hot core, contained BEHIND the disk, peeking upper-left */}
+        <sprite ref={coreRef} position={[-0.66, 0.6, -0.14]} scale={[0.58, 0.58, 1]}>
           <spriteMaterial map={violetCoreTex} transparent depthWrite={false} />
         </sprite>
-        <mesh position={[0, 0, -0.02]}>
-          <ringGeometry args={[1.16, 1.48, 128, 1, RIM_START, RIM_LEN]} />
-          <meshBasicMaterial
-            color={MINT}
-            transparent
-            opacity={0.42}
-            depthWrite={false}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        <mesh position={[0, 0, -0.03]}>
-          <ringGeometry args={[1.48, 1.8, 128, 1, RIM_START, RIM_LEN]} />
-          <meshBasicMaterial
-            color={MINT}
-            transparent
-            opacity={0.08}
-            depthWrite={false}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        <mesh position={[0, 0, -0.021]}>
-          <ringGeometry args={[1.16, 1.48, 128, 1, Math.PI * 2 + 0.1, 0.42]} />
-          <meshBasicMaterial
-            color={MINT}
-            transparent
-            opacity={0.78}
-            depthWrite={false}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        <mesh position={[0, 0, -0.019]}>
-          <ringGeometry args={[1.48, 1.62, 128, 1, Math.PI * 2 + 0.1, 0.42]} />
-          <meshBasicMaterial
-            color={MINT}
-            transparent
-            opacity={0.2}
-            depthWrite={false}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        <sprite position={[1.33, 0.02, 0.02]} scale={[0.32, 0.32, 1]}>
-          <spriteMaterial map={rimPointTex} transparent depthWrite={false} />
-        </sprite>
+        {/* L6 — black eclipse disk */}
         <mesh position={[0, 0, 0.03]}>
           <circleGeometry args={[1, 128]} />
           <meshBasicMaterial map={diskTex} />
         </mesh>
+        {/* L7 — controlled foreground mint hot point (right/lower-right) */}
+        <sprite position={[1.28, -0.08, 0.02]} scale={[0.26, 0.26, 1]}>
+          <spriteMaterial map={rimPointTex} transparent depthWrite={false} />
+        </sprite>
+        {/* L8 — subtle energy pulse along the rim */}
         <RimTraveler reduced={reduced} />
+        {/* L9 — particles: orbit field + restrained bright highlights */}
         <OrbitParticles reduced={reduced} pointer={pointer} />
-        <DustField reduced={reduced} />
+        <BrightParticles reduced={reduced} pointer={pointer} />
       </group>
     </>
   );
 }
 
 export function EclipseCanvas() {
+  const [zoom, setZoom] = useState(100);
+
+  useEffect(() => {
+    const update = () => setZoom(window.innerWidth < 768 ? 64 : 100);
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   return (
     <Canvas
       orthographic
-      camera={{ position: [0, 0, 10], zoom: 100, near: 0.1, far: 50 }}
+      camera={{ position: [0, 0, 10], zoom, near: 0.1, far: 50 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true }}
       style={{ position: "absolute", inset: 0 }}
