@@ -11,6 +11,7 @@ export const site = {
   location: "Kolkata, West Bengal, India",
   education: "Diploma in CSE — Brainware University (Expected 2027)",
   languages: ["English", "Bengali", "Hindi"],
+  url: "https://ranitnaska.me",
 } as const;
 
 export const navLinks = [
