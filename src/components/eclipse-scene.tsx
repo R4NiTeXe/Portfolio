@@ -171,28 +171,28 @@ const diskFragmentShader = `
   varying vec3 vViewDir;
   void main() {
     vec3 tex = texture2D(uTex, vUv).rgb;
-    // lift base very slightly for curvature perception, keep dark
-    vec3 base = tex * 1.08 + vec3(0.015, 0.018, 0.03);
+    // keep base very dark — eclipse identity dominates
+    vec3 base = tex * 0.97;
     float NdotV = clamp(dot(normalize(vNormal), normalize(vViewDir)), 0.0, 1.0);
-    float fresnel = pow(1.0 - NdotV, 3.15);
+    float fresnel = pow(1.0 - NdotV, 4.4);
     vec3 lightVioletDir = normalize(vec3(-0.64, 0.56, 0.72));
     vec3 lightMintDir = normalize(vec3(0.88, -0.24, 0.58));
     float dirViolet = max(dot(normalize(vNormal), lightVioletDir), 0.0);
     float dirMint = max(dot(normalize(vNormal), lightMintDir), 0.0);
-    float maskViolet = smoothstep(0.14, 0.66, dirViolet);
-    float maskMint = smoothstep(0.10, 0.60, dirMint);
+    float maskViolet = smoothstep(0.18, 0.68, dirViolet);
+    float maskMint = smoothstep(0.14, 0.62, dirMint);
     float dist = length(vUv - 0.5) * 2.0;
-    float edge = smoothstep(0.32, 0.96, dist);
-    // violet upper-left, mint right/lower-right, both edge-masked
-    vec3 violetRim = uViolet * fresnel * maskViolet * edge * 0.46;
-    vec3 mintRim = uMint * fresnel * maskMint * edge * 0.42;
-    // keep center dark: attenuate fresnel inside 35%
-    float centerMask = smoothstep(0.0, 0.55, dist);
+    float edge = smoothstep(0.48, 0.94, dist);
+    // restrained asymmetric rim — was 0.46/0.42, now half for eclipse weight
+    vec3 violetRim = uViolet * fresnel * maskViolet * edge * 0.22;
+    vec3 mintRim = uMint * fresnel * maskMint * edge * 0.19;
+    // keep center extremely dark: only edge contributes
+    float centerMask = smoothstep(0.18, 0.68, dist);
     violetRim *= centerMask;
     mintRim *= centerMask;
     vec3 color = base + violetRim + mintRim;
-    // faint inner curvature luminance, very restrained
-    float curvature = pow(NdotV, 9.0) * 0.038;
+    // faint inner curvature, barely perceptible
+    float curvature = pow(NdotV, 11.0) * 0.014;
     color += curvature;
     gl_FragColor = vec4(color, 1.0);
   }
@@ -461,7 +461,7 @@ function Scene() {
     if (reduced || !groupRef.current) return;
     groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.05) * 0.02;
     if (coreRef.current) {
-      const s = 0.78 + Math.sin(clock.elapsedTime * 0.55) * 0.05;
+      const s = 0.72 + Math.sin(clock.elapsedTime * 0.55) * 0.045;
       coreRef.current.scale.setScalar(s);
     }
     if (haloRef.current) {
@@ -522,19 +522,19 @@ function Scene() {
         </sprite>
         {/* L3 — distant dust, behind everything */}
         <DustField reduced={reduced} />
-        {/* L4 — white-hot core, contained BEHIND the eclipse, now less occluded */}
-        <sprite ref={coreRef} position={[-0.52, 0.48, -0.05]} scale={[0.78, 0.78, 1]}>
+        {/* L4 — white-hot core, contained BEHIND the eclipse, restrained */}
+        <sprite ref={coreRef} position={[-0.52, 0.48, -0.05]} scale={[0.72, 0.72, 1]}>
           <spriteMaterial
             map={violetCoreTex}
             transparent
             depthWrite={false}
             blending={THREE.AdditiveBlending}
-            opacity={0.92}
+            opacity={0.62}
           />
         </sprite>
         {/* L5 — dimensional eclipse disk (shader Fresnel, center remains dark) */}
         <EclipseDisk diskTex={diskTex} />
-        {/* L6 — mint accretion light, wraps around the disk (front edge, asymmetric) */}
+        {/* L6 — mint accretion light, wraps around the disk (front edge, asymmetric, restrained) */}
         <mesh position={[0, 0, 0.04]}>
           <circleGeometry args={[1.6, 96]} />
           <meshBasicMaterial
@@ -542,7 +542,7 @@ function Scene() {
             transparent
             depthWrite={false}
             blending={THREE.AdditiveBlending}
-            opacity={0.68}
+            opacity={0.38}
           />
         </mesh>
         {/* L7 — controlled foreground mint hot point (right/lower-right) */}
@@ -563,7 +563,7 @@ export function EclipseCanvas() {
   const [zoom, setZoom] = useState(100);
 
   useEffect(() => {
-    const update = () => setZoom(window.innerWidth < 768 ? 64 : 100);
+    const update = () => setZoom(window.innerWidth < 768 ? 52 : 100);
     update();
     window.addEventListener("resize", update, { passive: true });
     return () => window.removeEventListener("resize", update);
