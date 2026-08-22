@@ -123,8 +123,8 @@ const bodyFragmentShader = `
     float maskViolet = smoothstep(0.16, 0.66, NdotLviolet);
     float maskMint = smoothstep(0.12, 0.60, NdotLmint);
     float centerMask = smoothstep(0.18, 0.70, dist);
-    vec3 violetLight = uViolet * termViolet * maskViolet * edge * 0.15 * (1.0 + vnoise(vUv*5.3)*0.08);
-    vec3 mintLight = uMint * termMint * maskMint * edge * 0.11 * (1.0 + vnoise(vUv*5.1+vec2(1.2,0.3))*0.07);
+    vec3 violetLight = uViolet * termViolet * maskViolet * edge * 0.20 * (1.0 + vnoise(vUv*5.3)*0.10);
+    vec3 mintLight = uMint * termMint * maskMint * edge * 0.17 * (1.0 + vnoise(vUv*5.1+vec2(1.2,0.3))*0.09);
     violetLight *= centerMask;
     mintLight *= centerMask;
     float terminator = smoothstep(0.0, 0.38, NdotLviolet * 0.6 + NdotLmint * 0.4);
@@ -243,64 +243,53 @@ function AtmosphereShell() {
 function HeroOrbits({ reduced }: { reduced: boolean }) {
   const gRef = useRef<THREE.Group>(null);
   const dotsRef = useRef<THREE.Points>(null);
-  // extremely slow — stable composition at 0/5/15/30s
   const dotState = useMemo(() => {
     return [
-      { rx: 1.50, ry: 1.36, inc: 0.33, speed: 0.032, t: Math.random() * Math.PI * 2 },
-      { rx: 1.86, ry: 1.60, inc: -0.20, speed: 0.022, t: Math.random() * Math.PI * 2 + 1.7 },
+      { rx: 1.48, ry: 1.34, inc: 0.34, speed: 0.13, t: Math.random() * Math.PI * 2 },
+      { rx: 1.88, ry: 1.58, inc: -0.19, speed: 0.095, t: Math.random() * Math.PI * 2 + 1.4 },
     ];
   }, []);
   const lineGeometries = useMemo(() => {
     const make = (rx: number, ry: number, inc: number, seed: number) => {
-      const pts = 140;
+      const pts = 128;
       const pos = new Float32Array(pts * 3);
-      const alphas = new Float32Array(pts);
       for (let i = 0; i < pts; i++) {
         const th = (i / pts) * Math.PI * 2;
-        const ecc = Math.cos(th * 2.0 + seed) * 0.035;
-        const incJitter = Math.sin(th * 1.3 + seed) * 0.012;
+        // slight eccentricity + inclination wobble for natural orbit
+        const ecc = Math.cos(th * 2.0 + seed) * 0.04;
+        const incJitter = Math.sin(th * 1.3 + seed) * 0.015;
         const curInc = inc + incJitter;
         const curRx = rx + ecc;
         const curRy = ry + ecc * 0.55;
         const x = Math.cos(th) * curRx;
         const y = Math.sin(th) * curRy * Math.cos(curInc);
-        const z = Math.sin(th) * curRy * Math.sin(curInc) + Math.cos(th * 3.0 + seed) * 0.010;
+        const z = Math.sin(th) * curRy * Math.sin(curInc) + Math.cos(th * 3.0 + seed) * 0.012;
         pos[i * 3] = x;
         pos[i * 3 + 1] = y;
         pos[i * 3 + 2] = z;
-        // depth-based alpha: front (z>0) more visible, behind nearly invisible, near body fade
-        const distToBody = Math.abs(Math.sqrt(x * x + y * y + z * z) - 1.0);
-        const nearFade = distToBody < 0.18 ? distToBody / 0.18 : 1.0; // fade when grazing sphere
-        const depthAlpha = z > 0 ? 0.22 + z * 0.08 : 0.018 + (z + 2) * 0.012;
-        alphas[i] = Math.max(0, Math.min(1, depthAlpha * nearFade));
       }
       const g = new THREE.BufferGeometry();
       g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-      g.setAttribute("alpha", new THREE.BufferAttribute(alphas, 1));
       return g;
     };
     return [
-      make(1.50, 1.36, 0.33, 0.7),
-      make(1.86, 1.60, -0.20, 2.1),
+      make(1.48, 1.34, 0.34, 0.7),
+      make(1.88, 1.58, -0.19, 2.1),
     ];
   }, []);
   const dotsGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
     const pos = new Float32Array(2 * 3);
-    const alphas = new Float32Array(2);
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    g.setAttribute("alpha", new THREE.BufferAttribute(alphas, 1));
     return g;
   }, []);
 
   useFrame((_, delta) => {
     if (reduced) return;
-    if (gRef.current) gRef.current.rotation.y += delta * 0.0035;
+    if (gRef.current) gRef.current.rotation.y += delta * 0.012;
     if (dotsRef.current) {
       const attr = dotsGeom.getAttribute("position") as THREE.BufferAttribute;
       const arr = attr.array as Float32Array;
-      const alphaAttr = dotsGeom.getAttribute("alpha") as THREE.BufferAttribute;
-      const aArr = alphaAttr.array as Float32Array;
       dotState.forEach((s, idx) => {
         s.t += s.speed * delta;
         const x = Math.cos(s.t) * s.rx;
@@ -309,89 +298,23 @@ function HeroOrbits({ reduced }: { reduced: boolean }) {
         arr[idx * 3] = x;
         arr[idx * 3 + 1] = y;
         arr[idx * 3 + 2] = z;
-        // depth-tested: disappear behind body
-        const dist = Math.sqrt(x * x + y * y + z * z);
-        const behind = z < -0.08 && dist < 1.08;
-        aArr[idx] = behind ? 0.0 : z > 0 ? 0.92 : 0.22;
       });
       attr.needsUpdate = true;
-      alphaAttr.needsUpdate = true;
     }
   });
 
-  const lineVertexShader = `
-    attribute float alpha;
-    varying float vAlpha;
-    void main() {
-      vAlpha = alpha;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `;
-  const lineFragmentShader = `
-    uniform vec3 color;
-    uniform float opacity;
-    varying float vAlpha;
-    void main() {
-      gl_FragColor = vec4(color, opacity * vAlpha);
-    }
-  `;
-
   return (
     <group ref={gRef}>
-      {/* 90% neutral/dark — barely visible, front slightly more */}
       <line>
         <primitive object={lineGeometries[0]} attach="geometry" />
-        <shaderMaterial
-          vertexShader={lineVertexShader}
-          fragmentShader={lineFragmentShader}
-          uniforms={{
-            color: { value: new THREE.Color("#3D4A5E") },
-            opacity: { value: 0.52 },
-          }}
-          transparent
-          depthWrite={false}
-          depthTest={true}
-        />
+        <lineBasicMaterial color="#65F6D5" transparent opacity={0.14} depthWrite={false} />
       </line>
       <line>
         <primitive object={lineGeometries[1]} attach="geometry" />
-        <shaderMaterial
-          vertexShader={lineVertexShader}
-          fragmentShader={lineFragmentShader}
-          uniforms={{
-            color: { value: new THREE.Color("#4A5568") },
-            opacity: { value: 0.44 },
-          }}
-          transparent
-          depthWrite={false}
-          depthTest={true}
-        />
+        <lineBasicMaterial color="#8B7CFF" transparent opacity={0.11} depthWrite={false} />
       </line>
-      {/* tiny beacons — mint + neutral, depth-tested, slow */}
       <points ref={dotsRef} geometry={dotsGeom}>
-        <shaderMaterial
-          vertexShader={`
-            attribute float alpha;
-            varying float vAlpha;
-            void main() {
-              vAlpha = alpha;
-              gl_PointSize = 4.2;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-          `}
-          fragmentShader={`
-            varying float vAlpha;
-            void main() {
-              float d = distance(gl_PointCoord, vec2(0.5));
-              if (d > 0.5) discard;
-              float a = (1.0 - smoothstep(0.35, 0.5, d)) * vAlpha;
-              gl_FragColor = vec4(vec3(0.40, 0.96, 0.84), a);
-            }
-          `}
-          transparent
-          depthWrite={false}
-          depthTest={true}
-        />
+        <pointsMaterial size={0.028} color="#65F6D5" transparent opacity={0.85} depthWrite={false} sizeAttenuation />
       </points>
     </group>
   );
