@@ -1,0 +1,20 @@
+
+> eclipse-portfolio@0.1.0 dev
+> next dev --turbopack --port 3002
+
+   ▲ Next.js 15.5.23 (Turbopack)
+   - Local:        http://localhost:3002
+   - Network:      http://10.224.192.68:3002
+
+ ✓ Starting...
+ ✓ Ready in 1703ms
+ ○ Compiling / ...
+ ✓ Compiled / in 8.3s
+ GET / 200 in 490ms
+ GET / 200 in 568ms
+ GET / 200 in 494ms
+ GET / 200 in 583ms
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET / 200 in 646ms
+ GET / 200 in 632ms

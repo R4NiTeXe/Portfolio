@@ -61,18 +61,24 @@ function rimTexture() {
   g.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
+  // soft outer arcs only — no pie wedge, no radial hard lines
   const arcs = [
-    { a: RIM_START + RIM_LEN * 0.06, len: RIM_LEN * 0.12, opacity: 0.35 },
-    { a: RIM_START + RIM_LEN * 0.9, len: RIM_LEN * 0.15, opacity: 0.28 },
-    { a: 2 * Math.PI + 0.1, len: 0.42, opacity: 0.22 },
+    { a: RIM_START + RIM_LEN * 0.06, len: RIM_LEN * 0.12, opacity: 0.22 },
+    { a: RIM_START + RIM_LEN * 0.9, len: RIM_LEN * 0.15, opacity: 0.18 },
+    { a: 2 * Math.PI + 0.1, len: 0.42, opacity: 0.14 },
   ];
+  ctx.lineCap = "round";
   for (const arc of arcs) {
     ctx.beginPath();
-    ctx.moveTo(size / 2, size / 2);
-    ctx.arc(size / 2, size / 2, size / 2, arc.a - arc.len / 2, arc.a + arc.len / 2);
-    ctx.lineTo(size / 2, size / 2);
-    ctx.fillStyle = `rgba(101,246,213,${arc.opacity})`;
-    ctx.fill();
+    // draw as soft ring segment near the perimeter, not a filled wedge
+    const r = size * 0.47;
+    ctx.arc(size / 2, size / 2, r, arc.a - arc.len / 2, arc.a + arc.len / 2);
+    ctx.strokeStyle = `rgba(101,246,213,${arc.opacity})`;
+    ctx.lineWidth = size * 0.06;
+    ctx.shadowColor = "rgba(101,246,213,0.55)";
+    ctx.shadowBlur = size * 0.04;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
   }
   const tex = new THREE.CanvasTexture(canvas);
   tex.wrapS = THREE.RepeatWrapping;
@@ -81,9 +87,10 @@ function rimTexture() {
 }
 
 /*
- * Black-hole disk texture — stays black, gains directional depth:
- * off-center light source (upper-left violet, lower-right mint), darkest edge.
- * No hard circular border: the rim dissolves into the void.
+ * Black-hole disk texture — lifted for dimensional depth:
+ * Center remains very dark but not pure black; directional casts
+ * are slightly stronger; edge dissolve is restrained so the rim
+ * light can define the silhouette instead of black-on-black.
  */
 function blackHoleTexture() {
   const size = 256;
@@ -93,39 +100,123 @@ function blackHoleTexture() {
   const ctx = canvas.getContext("2d")!;
   const c = size / 2;
 
-  /* base body — light source pulled slightly up-left for directional depth */
+  /* base body — lifted center for curvature perception */
   const g = ctx.createRadialGradient(size * 0.42, size * 0.4, size * 0.04, c, c, c);
-  g.addColorStop(0, "#0E1422");
-  g.addColorStop(0.45, "#070A13");
-  g.addColorStop(0.8, "#03040A");
-  g.addColorStop(0.94, "#010207");
-  g.addColorStop(1, "#000000");
+  g.addColorStop(0, "#1A2640");
+  g.addColorStop(0.32, "#132034");
+  g.addColorStop(0.55, "#0E182C");
+  g.addColorStop(0.78, "#0A1322");
+  g.addColorStop(0.92, "#070E1A");
+  g.addColorStop(1, "#050A14");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
 
-  /* violet directional cast — upper-left limb */
-  const v = ctx.createRadialGradient(size * 0.26, size * 0.26, 0, size * 0.26, size * 0.26, size * 0.44);
-  v.addColorStop(0, "rgba(139,124,255,0.13)");
+  /* violet directional cast — upper-left limb, slightly stronger */
+  const v = ctx.createRadialGradient(size * 0.26, size * 0.26, 0, size * 0.26, size * 0.26, size * 0.46);
+  v.addColorStop(0, "rgba(139,124,255,0.18)");
+  v.addColorStop(0.45, "rgba(139,124,255,0.06)");
   v.addColorStop(1, "rgba(139,124,255,0)");
   ctx.fillStyle = v;
   ctx.fillRect(0, 0, size, size);
 
-  /* faint mint cast — lower-right limb (ties the accretion to the disk) */
-  const m = ctx.createRadialGradient(size * 0.76, size * 0.78, 0, size * 0.76, size * 0.78, size * 0.5);
-  m.addColorStop(0, "rgba(101,246,213,0.08)");
+  /* mint cast — lower-right limb, restrained */
+  const m = ctx.createRadialGradient(size * 0.76, size * 0.78, 0, size * 0.76, size * 0.78, size * 0.52);
+  m.addColorStop(0, "rgba(101,246,213,0.11)");
+  m.addColorStop(0.5, "rgba(101,246,213,0.04)");
   m.addColorStop(1, "rgba(101,246,213,0)");
   ctx.fillStyle = m;
   ctx.fillRect(0, 0, size, size);
 
-  /* edge dissolve — soft darkening at the very rim, no bright border */
+  /* restrained edge falloff — was 0.55 black at rim, now subtle */
   const e = ctx.createRadialGradient(c, c, c * 0.88, c, c, c);
   e.addColorStop(0, "rgba(0,0,0,0)");
-  e.addColorStop(0.7, "rgba(0,0,0,0)");
-  e.addColorStop(1, "rgba(0,0,0,0.55)");
+  e.addColorStop(0.72, "rgba(0,0,0,0)");
+  e.addColorStop(1, "rgba(0,0,0,0.22)");
   ctx.fillStyle = e;
   ctx.fillRect(0, 0, size, size);
 
-  return new THREE.CanvasTexture(canvas);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/* Dimensional disk shader — fake hemisphere normal on a flat CircleGeometry,
+ * Fresnel rim driven by view direction, asymmetric violet (upper-left) / mint (right).
+ * Center stays very dark; edge Fresnel becomes visible, giving curvature
+ * without a full PBR light rig. */
+const diskVertexShader = `
+  varying vec2 vUv;
+  varying vec3 vNormal;
+  varying vec3 vViewDir;
+  void main() {
+    vUv = uv;
+    vec3 pos = position;
+    float r2 = dot(pos.xy, pos.xy);
+    float z = sqrt(max(0.0, 1.0 - r2));
+    // hemisphere normal, slightly flattened for restrained curvature
+    vec3 n = normalize(vec3(pos.xy * 0.62, z));
+    vNormal = normalize(normalMatrix * n);
+    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+    vViewDir = normalize(-mvPos.xyz);
+    gl_Position = projectionMatrix * mvPos;
+  }
+`;
+
+const diskFragmentShader = `
+  uniform sampler2D uTex;
+  uniform vec3 uViolet;
+  uniform vec3 uMint;
+  varying vec2 vUv;
+  varying vec3 vNormal;
+  varying vec3 vViewDir;
+  void main() {
+    vec3 tex = texture2D(uTex, vUv).rgb;
+    // lift base very slightly for curvature perception, keep dark
+    vec3 base = tex * 1.08 + vec3(0.015, 0.018, 0.03);
+    float NdotV = clamp(dot(normalize(vNormal), normalize(vViewDir)), 0.0, 1.0);
+    float fresnel = pow(1.0 - NdotV, 3.15);
+    vec3 lightVioletDir = normalize(vec3(-0.64, 0.56, 0.72));
+    vec3 lightMintDir = normalize(vec3(0.88, -0.24, 0.58));
+    float dirViolet = max(dot(normalize(vNormal), lightVioletDir), 0.0);
+    float dirMint = max(dot(normalize(vNormal), lightMintDir), 0.0);
+    float maskViolet = smoothstep(0.14, 0.66, dirViolet);
+    float maskMint = smoothstep(0.10, 0.60, dirMint);
+    float dist = length(vUv - 0.5) * 2.0;
+    float edge = smoothstep(0.32, 0.96, dist);
+    // violet upper-left, mint right/lower-right, both edge-masked
+    vec3 violetRim = uViolet * fresnel * maskViolet * edge * 0.46;
+    vec3 mintRim = uMint * fresnel * maskMint * edge * 0.42;
+    // keep center dark: attenuate fresnel inside 35%
+    float centerMask = smoothstep(0.0, 0.55, dist);
+    violetRim *= centerMask;
+    mintRim *= centerMask;
+    vec3 color = base + violetRim + mintRim;
+    // faint inner curvature luminance, very restrained
+    float curvature = pow(NdotV, 9.0) * 0.038;
+    color += curvature;
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
+
+function EclipseDisk({ diskTex }: { diskTex: THREE.Texture }) {
+  const uniforms = useMemo(
+    () => ({
+      uTex: { value: diskTex },
+      uViolet: { value: new THREE.Color("#8B7CFF") },
+      uMint: { value: new THREE.Color("#65F6D5") },
+    }),
+    [diskTex]
+  );
+  return (
+    <mesh position={[0, 0, 0.03]}>
+      <circleGeometry args={[1, 128]} />
+      <shaderMaterial
+        uniforms={uniforms}
+        vertexShader={diskVertexShader}
+        fragmentShader={diskFragmentShader}
+      />
+    </mesh>
+  );
 }
 
 function usePointer() {
@@ -370,7 +461,7 @@ function Scene() {
     if (reduced || !groupRef.current) return;
     groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.05) * 0.02;
     if (coreRef.current) {
-      const s = 0.58 + Math.sin(clock.elapsedTime * 0.55) * 0.05;
+      const s = 0.78 + Math.sin(clock.elapsedTime * 0.55) * 0.05;
       coreRef.current.scale.setScalar(s);
     }
     if (haloRef.current) {
@@ -404,13 +495,13 @@ function Scene() {
     if (coreRef.current) {
       coreRef.current.position.x = THREE.MathUtils.damp(
         coreRef.current.position.x,
-        -0.66 + pointer.current.x * 0.02,
+        -0.52 + pointer.current.x * 0.02,
         3,
         delta
       );
       coreRef.current.position.y = THREE.MathUtils.damp(
         coreRef.current.position.y,
-        0.6 - pointer.current.y * 0.02,
+        0.48 - pointer.current.y * 0.02,
         3,
         delta
       );
@@ -431,23 +522,32 @@ function Scene() {
         </sprite>
         {/* L3 — distant dust, behind everything */}
         <DustField reduced={reduced} />
-        {/* L4 — mint accretion light, wraps AROUND the disk from behind */}
-        <mesh position={[0, 0, -0.02]}>
-          <circleGeometry args={[1.6, 96]} />
-          <meshBasicMaterial map={rimTex} transparent depthWrite={false} />
-        </mesh>
-        {/* L5 — white-hot core, contained BEHIND the disk, peeking upper-left */}
-        <sprite ref={coreRef} position={[-0.66, 0.6, -0.14]} scale={[0.58, 0.58, 1]}>
-          <spriteMaterial map={violetCoreTex} transparent depthWrite={false} />
+        {/* L4 — white-hot core, contained BEHIND the eclipse, now less occluded */}
+        <sprite ref={coreRef} position={[-0.52, 0.48, -0.05]} scale={[0.78, 0.78, 1]}>
+          <spriteMaterial
+            map={violetCoreTex}
+            transparent
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            opacity={0.92}
+          />
         </sprite>
-        {/* L6 — black eclipse disk */}
-        <mesh position={[0, 0, 0.03]}>
-          <circleGeometry args={[1, 128]} />
-          <meshBasicMaterial map={diskTex} />
+        {/* L5 — dimensional eclipse disk (shader Fresnel, center remains dark) */}
+        <EclipseDisk diskTex={diskTex} />
+        {/* L6 — mint accretion light, wraps around the disk (front edge, asymmetric) */}
+        <mesh position={[0, 0, 0.04]}>
+          <circleGeometry args={[1.6, 96]} />
+          <meshBasicMaterial
+            map={rimTex}
+            transparent
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            opacity={0.68}
+          />
         </mesh>
         {/* L7 — controlled foreground mint hot point (right/lower-right) */}
-        <sprite position={[1.28, -0.08, 0.02]} scale={[0.26, 0.26, 1]}>
-          <spriteMaterial map={rimPointTex} transparent depthWrite={false} />
+        <sprite position={[1.28, -0.08, 0.035]} scale={[0.26, 0.26, 1]}>
+          <spriteMaterial map={rimPointTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
         </sprite>
         {/* L8 — subtle energy pulse along the rim */}
         <RimTraveler reduced={reduced} />
