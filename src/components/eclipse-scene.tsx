@@ -169,10 +169,26 @@ const diskFragmentShader = `
   varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vViewDir;
+  // --- subtle procedural microstructure — not visible as noise, only breaks perfect smoothness
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float vnoise(vec2 p){
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f*f*(3.0-2.0*f);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+  }
   void main() {
     vec3 tex = texture2D(uTex, vUv).rgb;
-    // keep base very dark — eclipse identity dominates
-    vec3 base = tex * 0.97;
+    // 95% dark base — add 4% micro variation (low freq + high freq) for realistic irregularity
+    float lowFreq = vnoise(vUv * 3.2) * 0.022 - 0.011;
+    float highFreq = vnoise(vUv * 16.0 + vec2(2.3, 1.7)) * 0.010 - 0.005;
+    float micro = lowFreq + highFreq; // ~ ±0.016, very subtle
+    vec3 base = tex * 0.97 + vec3(micro);
+    // keep center ~90-95% dark — micro does not brighten center noticeably
     float NdotV = clamp(dot(normalize(vNormal), normalize(vViewDir)), 0.0, 1.0);
     float fresnel = pow(1.0 - NdotV, 4.4);
     vec3 lightVioletDir = normalize(vec3(-0.64, 0.56, 0.72));
@@ -182,18 +198,25 @@ const diskFragmentShader = `
     float maskViolet = smoothstep(0.18, 0.68, dirViolet);
     float maskMint = smoothstep(0.14, 0.62, dirMint);
     float dist = length(vUv - 0.5) * 2.0;
-    float edge = smoothstep(0.48, 0.94, dist);
-    // restrained asymmetric rim — was 0.46/0.42, now half for eclipse weight
-    vec3 violetRim = uViolet * fresnel * maskViolet * edge * 0.22;
-    vec3 mintRim = uMint * fresnel * maskMint * edge * 0.19;
+    // irregular atmospheric edge — jitter edge falloff by lowFreq so limb is not perfect circle
+    float rimJitter = vnoise(vUv * 4.4 + vec2(0.7, 1.9)) * 0.16 - 0.08;
+    float edge = smoothstep(0.48, 0.94, dist + rimJitter * 0.55);
+    // density variation in illumination
+    float densityViolet = 1.0 + vnoise(vUv * 5.6) * 0.13 - 0.065;
+    float densityMint = 1.0 + vnoise(vUv * 5.2 + vec2(1.1, 0.4)) * 0.12 - 0.06;
+    // restrained asymmetric rim — was 0.46/0.42, now ~0.22/0.19, with density jitter
+    vec3 violetRim = uViolet * fresnel * maskViolet * edge * 0.22 * densityViolet;
+    vec3 mintRim = uMint * fresnel * maskMint * edge * 0.19 * densityMint;
     // keep center extremely dark: only edge contributes
     float centerMask = smoothstep(0.18, 0.68, dist);
     violetRim *= centerMask;
     mintRim *= centerMask;
     vec3 color = base + violetRim + mintRim;
-    // faint inner curvature, barely perceptible
-    float curvature = pow(NdotV, 11.0) * 0.014;
+    // faint inner curvature, barely perceptible, also micro-modulated
+    float curvature = pow(NdotV, 11.0) * (0.014 + lowFreq * 0.12);
     color += curvature;
+    // final irregular scattering at limb — very subtle
+    color += fresnel * edge * 0.006 * vnoise(vUv * 8.0);
     gl_FragColor = vec4(color, 1.0);
   }
 `;
