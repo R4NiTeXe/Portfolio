@@ -21,13 +21,10 @@ const WHITE = new THREE.Color("#FFFFFF");
 const VIOLET = new THREE.Color("#8B7CFF");
 const AMBER = new THREE.Color("#FFB86B");
 
-const RIM_START = Math.PI * 1.5 + 0.08;
-const RIM_LEN = Math.PI / 2 + 0.42;
 const PARTICLE_COUNT = 48;
 const BRIGHT_COUNT = 7;
 const DUST_COUNT = 22;
 
-/* Soft multi-stop glow sprite texture — smoother, less geometric falloff */
 function glowTexture(core: string, mid: string) {
   const size = 256;
   const canvas = document.createElement("canvas");
@@ -44,201 +41,260 @@ function glowTexture(core: string, mid: string) {
   return new THREE.CanvasTexture(canvas);
 }
 
-/*
- * Accretion rim texture — radial gradient + bright arc segments on canvas,
- * applied to circleGeometry with repeat.x=-1 to flip horizontally.
- * Verified to place mint on the RIGHT / lower-right of the screen.
- */
-function rimTexture() {
-  const size = 256;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d")!;
-  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, "rgba(101,246,213,0.55)");
-  g.addColorStop(0.25, "rgba(101,246,213,0.2)");
-  g.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, size, size);
-  // soft outer arcs only — no pie wedge, no radial hard lines
-  const arcs = [
-    { a: RIM_START + RIM_LEN * 0.06, len: RIM_LEN * 0.12, opacity: 0.22 },
-    { a: RIM_START + RIM_LEN * 0.9, len: RIM_LEN * 0.15, opacity: 0.18 },
-    { a: 2 * Math.PI + 0.1, len: 0.42, opacity: 0.14 },
-  ];
-  ctx.lineCap = "round";
-  for (const arc of arcs) {
-    ctx.beginPath();
-    // draw as soft ring segment near the perimeter, not a filled wedge
-    const r = size * 0.47;
-    ctx.arc(size / 2, size / 2, r, arc.a - arc.len / 2, arc.a + arc.len / 2);
-    ctx.strokeStyle = `rgba(101,246,213,${arc.opacity})`;
-    ctx.lineWidth = size * 0.06;
-    ctx.shadowColor = "rgba(101,246,213,0.55)";
-    ctx.shadowBlur = size * 0.04;
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-  }
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.ClampToEdgeWrapping;
-  return tex;
-}
 
-/*
- * Black-hole disk texture — lifted for dimensional depth:
- * Center remains very dark but not pure black; directional casts
- * are slightly stronger; edge dissolve is restrained so the rim
- * light can define the silhouette instead of black-on-black.
- */
-function blackHoleTexture() {
-  const size = 256;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d")!;
-  const c = size / 2;
 
-  /* base body — lifted center for curvature perception */
-  const g = ctx.createRadialGradient(size * 0.42, size * 0.4, size * 0.04, c, c, c);
-  g.addColorStop(0, "#1A2640");
-  g.addColorStop(0.32, "#132034");
-  g.addColorStop(0.55, "#0E182C");
-  g.addColorStop(0.78, "#0A1322");
-  g.addColorStop(0.92, "#070E1A");
-  g.addColorStop(1, "#050A14");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, size, size);
+// --- Real 3D celestial body: sphere geometry with natural material ---
 
-  /* violet directional cast — upper-left limb, slightly stronger */
-  const v = ctx.createRadialGradient(size * 0.26, size * 0.26, 0, size * 0.26, size * 0.26, size * 0.46);
-  v.addColorStop(0, "rgba(139,124,255,0.18)");
-  v.addColorStop(0.45, "rgba(139,124,255,0.06)");
-  v.addColorStop(1, "rgba(139,124,255,0)");
-  ctx.fillStyle = v;
-  ctx.fillRect(0, 0, size, size);
-
-  /* mint cast — lower-right limb, restrained */
-  const m = ctx.createRadialGradient(size * 0.76, size * 0.78, 0, size * 0.76, size * 0.78, size * 0.52);
-  m.addColorStop(0, "rgba(101,246,213,0.11)");
-  m.addColorStop(0.5, "rgba(101,246,213,0.04)");
-  m.addColorStop(1, "rgba(101,246,213,0)");
-  ctx.fillStyle = m;
-  ctx.fillRect(0, 0, size, size);
-
-  /* restrained edge falloff — was 0.55 black at rim, now subtle */
-  const e = ctx.createRadialGradient(c, c, c * 0.88, c, c, c);
-  e.addColorStop(0, "rgba(0,0,0,0)");
-  e.addColorStop(0.72, "rgba(0,0,0,0)");
-  e.addColorStop(1, "rgba(0,0,0,0.22)");
-  ctx.fillStyle = e;
-  ctx.fillRect(0, 0, size, size);
-
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
-/* Dimensional disk shader — fake hemisphere normal on a flat CircleGeometry,
- * Fresnel rim driven by view direction, asymmetric violet (upper-left) / mint (right).
- * Center stays very dark; edge Fresnel becomes visible, giving curvature
- * without a full PBR light rig. */
-const diskVertexShader = `
-  varying vec2 vUv;
+const bodyVertexShader = `
   varying vec3 vNormal;
   varying vec3 vViewDir;
+  varying vec3 vWorldPos;
+  varying vec2 vUv;
   void main() {
     vUv = uv;
-    vec3 pos = position;
-    float r2 = dot(pos.xy, pos.xy);
-    float z = sqrt(max(0.0, 1.0 - r2));
-    // hemisphere normal, slightly flattened for restrained curvature
-    vec3 n = normalize(vec3(pos.xy * 0.62, z));
-    vNormal = normalize(normalMatrix * n);
-    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+    vNormal = normalize(normalMatrix * normal);
+    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
     vViewDir = normalize(-mvPos.xyz);
+    vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
     gl_Position = projectionMatrix * mvPos;
   }
 `;
 
-const diskFragmentShader = `
-  uniform sampler2D uTex;
+const bodyFragmentShader = `
+  uniform vec3 uBase;
   uniform vec3 uViolet;
   uniform vec3 uMint;
-  varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vViewDir;
-  // --- subtle procedural microstructure — not visible as noise, only breaks perfect smoothness
-  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  varying vec3 vWorldPos;
+  varying vec2 vUv;
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
   float vnoise(vec2 p){
     vec2 i = floor(p);
     vec2 f = fract(p);
     f = f*f*(3.0-2.0*f);
     float a = hash(i);
-    float b = hash(i + vec2(1.0, 0.0));
-    float c = hash(i + vec2(0.0, 1.0));
-    float d = hash(i + vec2(1.0, 1.0));
+    float b = hash(i + vec2(1.0,0.0));
+    float c = hash(i + vec2(0.0,1.0));
+    float d = hash(i + vec2(1.0,1.0));
     return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
   }
   void main() {
-    vec3 tex = texture2D(uTex, vUv).rgb;
-    // 95% dark base — add 4% micro variation (low freq + high freq) for realistic irregularity
-    float lowFreq = vnoise(vUv * 3.2) * 0.022 - 0.011;
-    float highFreq = vnoise(vUv * 16.0 + vec2(2.3, 1.7)) * 0.010 - 0.005;
-    float micro = lowFreq + highFreq; // ~ ±0.016, very subtle
-    vec3 base = tex * 0.97 + vec3(micro);
-    // keep center ~90-95% dark — micro does not brighten center noticeably
-    float NdotV = clamp(dot(normalize(vNormal), normalize(vViewDir)), 0.0, 1.0);
-    float fresnel = pow(1.0 - NdotV, 4.4);
-    vec3 lightVioletDir = normalize(vec3(-0.64, 0.56, 0.72));
-    vec3 lightMintDir = normalize(vec3(0.88, -0.24, 0.58));
-    float dirViolet = max(dot(normalize(vNormal), lightVioletDir), 0.0);
-    float dirMint = max(dot(normalize(vNormal), lightMintDir), 0.0);
-    float maskViolet = smoothstep(0.18, 0.68, dirViolet);
-    float maskMint = smoothstep(0.14, 0.62, dirMint);
+    vec3 N = normalize(vNormal);
+    vec3 V = normalize(vViewDir);
+    // subtle procedural micro-structure — low freq density + high freq grain, very faint
+    float lowFreq = vnoise(vUv * 3.4 + vec2(0.6, 1.1)) * 0.022 - 0.011;
+    float highFreq = vnoise(vUv * 17.5 + vec2(2.8, 0.9)) * 0.009 - 0.0045;
+    float micro = lowFreq + highFreq; // ~ ±0.015
+    // base near-black charcoal with micro variation (95% dark)
+    vec3 base = uBase + vec3(micro) + vec3(0.006 * vnoise(vUv * 2.0));
+    // real directional lights
+    vec3 Lviolet = normalize(vec3(-0.58, 0.62, 0.72));
+    vec3 Lmint = normalize(vec3(0.84, -0.22, 0.62));
+    float NdotLviolet = max(dot(N, Lviolet), 0.0);
+    float NdotLmint = max(dot(N, Lmint), 0.0);
+    // terminator — soft
+    float termViolet = pow(NdotLviolet, 1.35);
+    float termMint = pow(NdotLmint, 1.25);
+    float NdotV = clamp(dot(N, V), 0.0, 1.0);
+    float fresnel = pow(1.0 - NdotV, 4.1);
+    // irregular atmospheric edge
+    float rimJitter = vnoise(vUv * 4.6 + vec2(0.9, 1.4)) * 0.14 - 0.07;
     float dist = length(vUv - 0.5) * 2.0;
-    // irregular atmospheric edge — jitter edge falloff by lowFreq so limb is not perfect circle
-    float rimJitter = vnoise(vUv * 4.4 + vec2(0.7, 1.9)) * 0.16 - 0.08;
-    float edge = smoothstep(0.48, 0.94, dist + rimJitter * 0.55);
-    // density variation in illumination
-    float densityViolet = 1.0 + vnoise(vUv * 5.6) * 0.13 - 0.065;
-    float densityMint = 1.0 + vnoise(vUv * 5.2 + vec2(1.1, 0.4)) * 0.12 - 0.06;
-    // restrained asymmetric rim — was 0.46/0.42, now ~0.22/0.19, with density jitter
-    vec3 violetRim = uViolet * fresnel * maskViolet * edge * 0.22 * densityViolet;
-    vec3 mintRim = uMint * fresnel * maskMint * edge * 0.19 * densityMint;
-    // keep center extremely dark: only edge contributes
-    float centerMask = smoothstep(0.18, 0.68, dist);
-    violetRim *= centerMask;
-    mintRim *= centerMask;
-    vec3 color = base + violetRim + mintRim;
-    // faint inner curvature, barely perceptible, also micro-modulated
-    float curvature = pow(NdotV, 11.0) * (0.014 + lowFreq * 0.12);
+    float edge = smoothstep(0.46, 0.93, dist + rimJitter * 0.48);
+    // directional masks
+    float maskViolet = smoothstep(0.16, 0.66, NdotLviolet);
+    float maskMint = smoothstep(0.12, 0.60, NdotLmint);
+    float centerMask = smoothstep(0.18, 0.70, dist);
+    vec3 violetLight = uViolet * termViolet * maskViolet * edge * 0.20 * (1.0 + vnoise(vUv*5.3)*0.10);
+    vec3 mintLight = uMint * termMint * maskMint * edge * 0.17 * (1.0 + vnoise(vUv*5.1+vec2(1.2,0.3))*0.09);
+    violetLight *= centerMask;
+    mintLight *= centerMask;
+    // terminator softness — dark hemisphere
+    float terminator = smoothstep(0.0, 0.38, NdotLviolet * 0.6 + NdotLmint * 0.4);
+    vec3 color = base * (0.22 + terminator * 0.14) + violetLight + mintLight;
+    // faint curvature luminance, micro-modulated
+    float curvature = pow(NdotV, 11.0) * (0.012 + lowFreq * 0.08);
     color += curvature;
-    // final irregular scattering at limb — very subtle
-    color += fresnel * edge * 0.006 * vnoise(vUv * 8.0);
+    // very faint scattering at limb
+    color += fresnel * edge * 0.005 * vnoise(vUv*7.5);
     gl_FragColor = vec4(color, 1.0);
   }
 `;
 
-function EclipseDisk({ diskTex }: { diskTex: THREE.Texture }) {
+const atmosphereVertexShader = `
+  varying vec3 vNormal;
+  varying vec3 vViewDir;
+  void main() {
+    vNormal = normalize(normalMatrix * normal);
+    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+    vViewDir = normalize(-mvPos.xyz);
+    gl_Position = projectionMatrix * mvPos;
+  }
+`;
+
+const atmosphereFragmentShader = `
+  uniform vec3 uMint;
+  uniform vec3 uViolet;
+  varying vec3 vNormal;
+  varying vec3 vViewDir;
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+  float vnoise(vec2 p){
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f*f*(3.0-2.0*f);
+    float a = hash(i);
+    float b = hash(i+vec2(1.0,0.0));
+    float c = hash(i+vec2(0.0,1.0));
+    float d = hash(i+vec2(1.0,1.0));
+    return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+  }
+  void main() {
+    vec3 N = normalize(vNormal);
+    vec3 V = normalize(vViewDir);
+    float fresnel = pow(1.0 - max(dot(N,V),0.0), 3.2);
+    // directional light for atmosphere — violet upper-left + mint lower-right
+    float dirViolet = max(dot(N, normalize(vec3(-0.62,0.55,0.68))), 0.0);
+    float dirMint = max(dot(N, normalize(vec3(0.86,-0.24,0.60))), 0.0);
+    float mintMask = smoothstep(0.12, 0.62, dirMint);
+    float violetMask = smoothstep(0.16, 0.66, dirViolet);
+    // irregular density
+    float n = vnoise(gl_FragCoord.xy * 0.008);
+    float density = 1.0 + (n - 0.5) * 0.22;
+    vec3 col = uMint * fresnel * mintMask * 0.38 * density + uViolet * fresnel * violetMask * 0.16 * density;
+    // thin shell — fade inside
+    float inside = smoothstep(0.18, 0.62, fresnel);
+    col *= inside;
+    // irregular corona — not perfect ring
+    col *= (0.92 + vnoise(gl_FragCoord.xy * 0.012) * 0.18);
+    float alpha = fresnel * (mintMask*0.62 + violetMask*0.32) * 0.55;
+    alpha *= inside;
+    // keep very subtle, not neon
+    gl_FragColor = vec4(col, alpha * 0.72);
+  }
+`;
+
+function CelestialBody({ reduced }: { reduced: boolean }) {
   const uniforms = useMemo(
     () => ({
-      uTex: { value: diskTex },
+      uBase: { value: new THREE.Color("#080C14") },
       uViolet: { value: new THREE.Color("#8B7CFF") },
       uMint: { value: new THREE.Color("#65F6D5") },
     }),
-    [diskTex]
+    []
   );
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((_, delta) => {
+    if (reduced || !ref.current) return;
+    ref.current.rotation.y += delta * 0.018;
+  });
   return (
-    <mesh position={[0, 0, 0.03]}>
-      <circleGeometry args={[1, 128]} />
+    <mesh ref={ref} position={[0, 0, 0.02]}>
+      <sphereGeometry args={[1, 64, 64]} />
       <shaderMaterial
         uniforms={uniforms}
-        vertexShader={diskVertexShader}
-        fragmentShader={diskFragmentShader}
+        vertexShader={bodyVertexShader}
+        fragmentShader={bodyFragmentShader}
       />
     </mesh>
+  );
+}
+
+function AtmosphereShell() {
+  const uniforms = useMemo(
+    () => ({
+      uMint: { value: new THREE.Color("#65F6D5") },
+      uViolet: { value: new THREE.Color("#8B7CFF") },
+    }),
+    []
+  );
+  return (
+    <mesh position={[0, 0, 0.02]} scale={[1.06, 1.06, 1.06]}>
+      <sphereGeometry args={[1, 48, 48]} />
+      <shaderMaterial
+        uniforms={uniforms}
+        vertexShader={atmosphereVertexShader}
+        fragmentShader={atmosphereFragmentShader}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </mesh>
+  );
+}
+
+function HeroOrbits({ reduced }: { reduced: boolean }) {
+  const gRef = useRef<THREE.Group>(null);
+  const dotsRef = useRef<THREE.Points>(null);
+  const dotState = useMemo(() => {
+    // two orbits, two dots each
+    return [
+      { rx: 1.52, ry: 1.38, inc: 0.31, speed: 0.14, t: Math.random() * Math.PI * 2 },
+      { rx: 1.84, ry: 1.62, inc: -0.22, speed: 0.11, t: Math.random() * Math.PI * 2 + 1.2 },
+    ];
+  }, []);
+  const lineGeometries = useMemo(() => {
+    const make = (rx: number, ry: number, inc: number) => {
+      const pts = 128;
+      const pos = new Float32Array(pts * 3);
+      for (let i = 0; i < pts; i++) {
+        const th = (i / pts) * Math.PI * 2;
+        const x = Math.cos(th) * rx;
+        const y = Math.sin(th) * ry * Math.cos(inc);
+        const z = Math.sin(th) * ry * Math.sin(inc);
+        pos[i * 3] = x;
+        pos[i * 3 + 1] = y;
+        pos[i * 3 + 2] = z;
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      return g;
+    };
+    return [
+      make(1.52, 1.38, 0.31),
+      make(1.84, 1.62, -0.22),
+    ];
+  }, []);
+  const dotsGeom = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(2 * 3);
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    return g;
+  }, []);
+
+  useFrame((_, delta) => {
+    if (reduced) return;
+    if (gRef.current) gRef.current.rotation.y += delta * 0.012;
+    if (dotsRef.current) {
+      const attr = dotsGeom.getAttribute("position") as THREE.BufferAttribute;
+      const arr = attr.array as Float32Array;
+      dotState.forEach((s, idx) => {
+        s.t += s.speed * delta;
+        const x = Math.cos(s.t) * s.rx;
+        const y = Math.sin(s.t) * s.ry * Math.cos(s.inc);
+        const z = Math.sin(s.t) * s.ry * Math.sin(s.inc);
+        arr[idx * 3] = x;
+        arr[idx * 3 + 1] = y;
+        arr[idx * 3 + 2] = z;
+      });
+      attr.needsUpdate = true;
+    }
+  });
+
+  return (
+    <group ref={gRef}>
+      <line>
+        <primitive object={lineGeometries[0]} attach="geometry" />
+        <lineBasicMaterial color="#65F6D5" transparent opacity={0.14} depthWrite={false} />
+      </line>
+      <line>
+        <primitive object={lineGeometries[1]} attach="geometry" />
+        <lineBasicMaterial color="#8B7CFF" transparent opacity={0.11} depthWrite={false} />
+      </line>
+      <points ref={dotsRef} geometry={dotsGeom}>
+        <pointsMaterial size={0.028} color="#65F6D5" transparent opacity={0.85} depthWrite={false} sizeAttenuation />
+      </points>
+    </group>
   );
 }
 
@@ -257,7 +313,6 @@ function usePointer() {
 
 function CameraRig({ reduced }: { reduced: boolean }) {
   const target = useRef({ x: 0, y: 0 });
-
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
       target.current.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -266,14 +321,12 @@ function CameraRig({ reduced }: { reduced: boolean }) {
     window.addEventListener("pointermove", onMove);
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
-
   useFrame(({ camera }, delta) => {
     if (reduced) return;
     camera.position.x = THREE.MathUtils.damp(camera.position.x, target.current.x * 0.16, 2.5, delta);
     camera.position.y = THREE.MathUtils.damp(camera.position.y, -target.current.y * 0.11, 2.5, delta);
     camera.lookAt(0, 0, 0);
   });
-
   return null;
 }
 
@@ -290,18 +343,16 @@ function OrbitParticles({
     const state = new Float32Array(PARTICLE_COUNT * 2);
     const palette = [WHITE, MINT, VIOLET, AMBER];
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      /* bias toward the eclipse: denser just outside the disk edge */
-      const radius = 1.24 + Math.pow(Math.random(), 1.5) * 0.95;
+      const radius = 1.28 + Math.pow(Math.random(), 1.5) * 0.92;
       const angle = Math.random() * Math.PI * 2;
       const speed = (Math.random() > 0.5 ? 1 : -1) * (0.03 + Math.random() * 0.07);
       state[i * 2] = radius;
       state[i * 2 + 1] = speed;
       positions[i * 3] = Math.cos(angle) * radius;
       positions[i * 3 + 1] = Math.sin(angle) * radius * 0.94;
-      /* multiple depth levels: some behind the disk, some in front */
       const band = i % 4;
       positions[i * 3 + 2] =
-        band === 0 ? -0.15 - Math.random() * 0.1 : band === 1 ? 0.08 + Math.random() * 0.08 : (Math.random() - 0.5) * 0.3;
+        band === 0 ? -0.18 - Math.random() * 0.12 : band === 1 ? 0.07 + Math.random() * 0.08 : (Math.random() - 0.5) * 0.28;
       const c = palette[i % 4];
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
@@ -331,18 +382,17 @@ function OrbitParticles({
   return (
     <points geometry={geometry}>
       <pointsMaterial
-        size={0.032}
+        size={0.028}
         sizeAttenuation
         vertexColors
         transparent
-        opacity={0.75}
+        opacity={0.62}
         depthWrite={false}
       />
     </points>
   );
 }
 
-/* A few restrained brighter foreground particles — highlights, not a starfield */
 function BrightParticles({
   reduced,
   pointer,
@@ -392,11 +442,11 @@ function BrightParticles({
   return (
     <points geometry={geometry}>
       <pointsMaterial
-        size={0.055}
+        size={0.048}
         sizeAttenuation
         vertexColors
         transparent
-        opacity={0.9}
+        opacity={0.78}
         depthWrite={false}
       />
     </points>
@@ -440,29 +490,10 @@ function DustField({ reduced }: { reduced: boolean }) {
         sizeAttenuation
         color="#9fb4cc"
         transparent
-        opacity={0.28}
+        opacity={0.22}
         depthWrite={false}
       />
     </points>
-  );
-}
-
-function RimTraveler({ reduced }: { reduced: boolean }) {
-  const ref = useRef<THREE.Sprite>(null);
-  const tex = useMemo(() => glowTexture("rgba(101,246,213,0.6)", "rgba(101,246,213,0.18)"), []);
-
-  useFrame(({ clock }) => {
-    if (reduced || !ref.current) return;
-    const t = ((clock.elapsedTime * 0.16) % 1 + 1) % 1;
-    const angle = RIM_START + t * RIM_LEN;
-    const r = 1.26;
-    ref.current.position.set(Math.cos(angle) * r, Math.sin(angle) * r, 0.02);
-  });
-
-  return (
-    <sprite ref={ref} scale={[0.24, 0.24, 1]}>
-      <spriteMaterial map={tex} transparent depthWrite={false} />
-    </sprite>
   );
 }
 
@@ -473,30 +504,27 @@ function Scene() {
   const haloRef = useRef<THREE.Sprite>(null);
   const haloLayerRef = useRef<THREE.Sprite>(null);
   const coreRef = useRef<THREE.Sprite>(null);
-  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.34)", "rgba(139,124,255,0.1)"), []);
-  const violetLayerTex = useMemo(() => glowTexture("rgba(139,124,255,0.44)", "rgba(139,124,255,0.14)"), []);
-  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,248,0.95)", "rgba(255,240,235,0.28)"), []);
-  const rimPointTex = useMemo(() => glowTexture("rgba(101,246,213,0.9)", "rgba(101,246,213,0.24)"), []);
-  const diskTex = useMemo(() => blackHoleTexture(), []);
-  const rimTex = useMemo(() => rimTexture(), []);
+  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.30)", "rgba(139,124,255,0.08)"), []);
+  const violetLayerTex = useMemo(() => glowTexture("rgba(139,124,255,0.40)", "rgba(139,124,255,0.11)"), []);
+  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,248,0.92)", "rgba(255,240,235,0.24)"), []);
 
   useFrame(({ clock }, delta) => {
     if (reduced || !groupRef.current) return;
-    groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.05) * 0.02;
+    groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.04) * 0.012;
     if (coreRef.current) {
-      const s = 0.72 + Math.sin(clock.elapsedTime * 0.55) * 0.045;
+      const s = 0.68 + Math.sin(clock.elapsedTime * 0.50) * 0.035;
       coreRef.current.scale.setScalar(s);
     }
     if (haloRef.current) {
       haloRef.current.position.x = THREE.MathUtils.damp(
         haloRef.current.position.x,
-        -0.7 + pointer.current.x * 0.05,
+        -0.62 + pointer.current.x * 0.045,
         3,
         delta
       );
       haloRef.current.position.y = THREE.MathUtils.damp(
         haloRef.current.position.y,
-        0.35 - pointer.current.y * 0.04,
+        0.32 - pointer.current.y * 0.035,
         3,
         delta
       );
@@ -504,13 +532,13 @@ function Scene() {
     if (haloLayerRef.current) {
       haloLayerRef.current.position.x = THREE.MathUtils.damp(
         haloLayerRef.current.position.x,
-        -0.55 + pointer.current.x * 0.04,
+        -0.48 + pointer.current.x * 0.035,
         3,
         delta
       );
       haloLayerRef.current.position.y = THREE.MathUtils.damp(
         haloLayerRef.current.position.y,
-        0.42 - pointer.current.y * 0.03,
+        0.38 - pointer.current.y * 0.028,
         3,
         delta
       );
@@ -518,13 +546,13 @@ function Scene() {
     if (coreRef.current) {
       coreRef.current.position.x = THREE.MathUtils.damp(
         coreRef.current.position.x,
-        -0.52 + pointer.current.x * 0.02,
+        -0.48 + pointer.current.x * 0.018,
         3,
         delta
       );
       coreRef.current.position.y = THREE.MathUtils.damp(
         coreRef.current.position.y,
-        0.48 - pointer.current.y * 0.02,
+        0.42 - pointer.current.y * 0.018,
         3,
         delta
       );
@@ -535,46 +563,33 @@ function Scene() {
     <>
       <CameraRig reduced={reduced} />
       <group ref={groupRef}>
-        {/* L1 — distant violet atmosphere, directional from upper-left */}
-        <sprite ref={haloRef} position={[-0.7, 0.35, -0.3]} scale={[4.6, 4.0, 1]}>
-          <spriteMaterial map={violetTex} transparent opacity={0.85} depthWrite={false} />
+        {/* L1 — distant violet atmosphere */}
+        <sprite ref={haloRef} position={[-0.62, 0.32, -0.32]} scale={[4.2, 3.6, 1]}>
+          <spriteMaterial map={violetTex} transparent opacity={0.72} depthWrite={false} />
         </sprite>
-        {/* L2 — violet glow close behind the disk */}
-        <sprite ref={haloLayerRef} position={[-0.55, 0.42, -0.18]} scale={[2.5, 2.3, 1]}>
-          <spriteMaterial map={violetLayerTex} transparent depthWrite={false} />
+        {/* L2 — closer violet haze */}
+        <sprite ref={haloLayerRef} position={[-0.48, 0.38, -0.18]} scale={[2.3, 2.1, 1]}>
+          <spriteMaterial map={violetLayerTex} transparent opacity={0.82} depthWrite={false} />
         </sprite>
-        {/* L3 — distant dust, behind everything */}
+        {/* L3 — dust */}
         <DustField reduced={reduced} />
-        {/* L4 — white-hot core, contained BEHIND the eclipse, restrained */}
-        <sprite ref={coreRef} position={[-0.52, 0.48, -0.05]} scale={[0.72, 0.72, 1]}>
+        {/* L4 — hero orbits — 3D inclined ellipses */}
+        <HeroOrbits reduced={reduced} />
+        {/* L5 — light behind eclipse — occluded, leaks around limb */}
+        <sprite ref={coreRef} position={[-0.48, 0.42, -0.09]} scale={[0.68, 0.68, 1]}>
           <spriteMaterial
             map={violetCoreTex}
             transparent
             depthWrite={false}
             blending={THREE.AdditiveBlending}
-            opacity={0.62}
+            opacity={0.52}
           />
         </sprite>
-        {/* L5 — dimensional eclipse disk (shader Fresnel, center remains dark) */}
-        <EclipseDisk diskTex={diskTex} />
-        {/* L6 — mint accretion light, wraps around the disk (front edge, asymmetric, restrained) */}
-        <mesh position={[0, 0, 0.04]}>
-          <circleGeometry args={[1.6, 96]} />
-          <meshBasicMaterial
-            map={rimTex}
-            transparent
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-            opacity={0.38}
-          />
-        </mesh>
-        {/* L7 — controlled foreground mint hot point (right/lower-right) */}
-        <sprite position={[1.28, -0.08, 0.035]} scale={[0.26, 0.26, 1]}>
-          <spriteMaterial map={rimPointTex} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
-        </sprite>
-        {/* L8 — subtle energy pulse along the rim */}
-        <RimTraveler reduced={reduced} />
-        {/* L9 — particles: orbit field + restrained bright highlights */}
+        {/* L6 — real 3D celestial body */}
+        <CelestialBody reduced={reduced} />
+        {/* L7 — thin atmospheric shell */}
+        <AtmosphereShell />
+        {/* L8 — particles with depth occlusion */}
         <OrbitParticles reduced={reduced} pointer={pointer} />
         <BrightParticles reduced={reduced} pointer={pointer} />
       </group>
