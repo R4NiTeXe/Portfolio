@@ -79,30 +79,47 @@ const bodyFragmentShader = `
     float d = hash(i + vec2(1.0,1.0));
     return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
   }
+  float fbm(vec2 p){
+    float v = 0.0;
+    float a = 0.5;
+    for(int i=0;i<3;i++){
+      v += a * vnoise(p);
+      p *= 2.18;
+      a *= 0.46;
+    }
+    return v;
+  }
   void main() {
-    vec3 N = normalize(vNormal);
+    vec3 N0 = normalize(vNormal);
     vec3 V = normalize(vViewDir);
-    // subtle procedural micro-structure — low freq density + high freq grain, very faint
-    float lowFreq = vnoise(vUv * 3.4 + vec2(0.6, 1.1)) * 0.022 - 0.011;
-    float highFreq = vnoise(vUv * 17.5 + vec2(2.8, 0.9)) * 0.009 - 0.0045;
-    float micro = lowFreq + highFreq; // ~ ±0.015
-    // base near-black charcoal with micro variation (95% dark)
-    vec3 base = uBase + vec3(micro) + vec3(0.006 * vnoise(vUv * 2.0));
-    // real directional lights
+    // layered FBM — large form (broad density) + mid structure + micro grain
+    float largeForm = fbm(vUv * 2.2 + vec2(0.4, 0.9)) * 0.055 - 0.022; // ~ ±0.028 large
+    float midStruct = fbm(vUv * 5.8 + vec2(1.3, 0.7)) * 0.032 - 0.016; // mid
+    float microGrain = vnoise(vUv * 18.0 + vec2(2.8, 0.9)) * 0.010 - 0.005;
+    float density = largeForm + midStruct * 0.7; // broad variation
+    // bump — perturb normal by noise derivatives (cheap)
+    vec2 e = vec2(0.008, 0.0);
+    float n1 = vnoise(vUv * 6.0);
+    float n2 = vnoise(vUv * 6.0 + e.xy);
+    float n3 = vnoise(vUv * 6.0 + e.yx);
+    vec3 bump = vec3((n2 - n1), (n3 - n1), 0.0) * 0.85;
+    vec3 N = normalize(N0 + bump * 0.42);
+    // base near-black charcoal with visible but subtle material variation
+    vec3 base = uBase + vec3(density * 0.9 + microGrain) + vec3(0.007 * vnoise(vUv*2.0));
+    // roughness varies with density — darker patches slightly rougher, lighter slightly smoother -> light breakup
+    float roughVar = clamp(0.78 + density * 1.2, 0.72, 0.92);
+    // real directional lights — affected by bumped normal
     vec3 Lviolet = normalize(vec3(-0.58, 0.62, 0.72));
     vec3 Lmint = normalize(vec3(0.84, -0.22, 0.62));
     float NdotLviolet = max(dot(N, Lviolet), 0.0);
     float NdotLmint = max(dot(N, Lmint), 0.0);
-    // terminator — soft
-    float termViolet = pow(NdotLviolet, 1.35);
-    float termMint = pow(NdotLmint, 1.25);
+    float termViolet = pow(NdotLviolet, 1.35 / (0.92 + roughVar*0.18));
+    float termMint = pow(NdotLmint, 1.25 / (0.90 + roughVar*0.16));
     float NdotV = clamp(dot(N, V), 0.0, 1.0);
     float fresnel = pow(1.0 - NdotV, 4.1);
-    // irregular atmospheric edge
     float rimJitter = vnoise(vUv * 4.6 + vec2(0.9, 1.4)) * 0.14 - 0.07;
     float dist = length(vUv - 0.5) * 2.0;
     float edge = smoothstep(0.46, 0.93, dist + rimJitter * 0.48);
-    // directional masks
     float maskViolet = smoothstep(0.16, 0.66, NdotLviolet);
     float maskMint = smoothstep(0.12, 0.60, NdotLmint);
     float centerMask = smoothstep(0.18, 0.70, dist);
@@ -110,14 +127,14 @@ const bodyFragmentShader = `
     vec3 mintLight = uMint * termMint * maskMint * edge * 0.17 * (1.0 + vnoise(vUv*5.1+vec2(1.2,0.3))*0.09);
     violetLight *= centerMask;
     mintLight *= centerMask;
-    // terminator softness — dark hemisphere
     float terminator = smoothstep(0.0, 0.38, NdotLviolet * 0.6 + NdotLmint * 0.4);
-    vec3 color = base * (0.22 + terminator * 0.14) + violetLight + mintLight;
-    // faint curvature luminance, micro-modulated
-    float curvature = pow(NdotV, 11.0) * (0.012 + lowFreq * 0.08);
+    // base responds to terminator with roughness
+    vec3 color = base * (0.20 + terminator * (0.14 + (1.0-roughVar)*0.06)) + violetLight + mintLight;
+    float curvature = pow(NdotV, 11.0) * (0.012 + largeForm * 0.10);
     color += curvature;
-    // very faint scattering at limb
     color += fresnel * edge * 0.005 * vnoise(vUv*7.5);
+    // subtle large-scale banding (event-horizon density)
+    color += largeForm * 0.018;
     gl_FragColor = vec4(color, 1.0);
   }
 `;
@@ -227,21 +244,26 @@ function HeroOrbits({ reduced }: { reduced: boolean }) {
   const gRef = useRef<THREE.Group>(null);
   const dotsRef = useRef<THREE.Points>(null);
   const dotState = useMemo(() => {
-    // two orbits, two dots each
     return [
-      { rx: 1.52, ry: 1.38, inc: 0.31, speed: 0.14, t: Math.random() * Math.PI * 2 },
-      { rx: 1.84, ry: 1.62, inc: -0.22, speed: 0.11, t: Math.random() * Math.PI * 2 + 1.2 },
+      { rx: 1.48, ry: 1.34, inc: 0.34, speed: 0.13, t: Math.random() * Math.PI * 2 },
+      { rx: 1.88, ry: 1.58, inc: -0.19, speed: 0.095, t: Math.random() * Math.PI * 2 + 1.4 },
     ];
   }, []);
   const lineGeometries = useMemo(() => {
-    const make = (rx: number, ry: number, inc: number) => {
+    const make = (rx: number, ry: number, inc: number, seed: number) => {
       const pts = 128;
       const pos = new Float32Array(pts * 3);
       for (let i = 0; i < pts; i++) {
         const th = (i / pts) * Math.PI * 2;
-        const x = Math.cos(th) * rx;
-        const y = Math.sin(th) * ry * Math.cos(inc);
-        const z = Math.sin(th) * ry * Math.sin(inc);
+        // slight eccentricity + inclination wobble for natural orbit
+        const ecc = Math.cos(th * 2.0 + seed) * 0.04;
+        const incJitter = Math.sin(th * 1.3 + seed) * 0.015;
+        const curInc = inc + incJitter;
+        const curRx = rx + ecc;
+        const curRy = ry + ecc * 0.55;
+        const x = Math.cos(th) * curRx;
+        const y = Math.sin(th) * curRy * Math.cos(curInc);
+        const z = Math.sin(th) * curRy * Math.sin(curInc) + Math.cos(th * 3.0 + seed) * 0.012;
         pos[i * 3] = x;
         pos[i * 3 + 1] = y;
         pos[i * 3 + 2] = z;
@@ -251,8 +273,8 @@ function HeroOrbits({ reduced }: { reduced: boolean }) {
       return g;
     };
     return [
-      make(1.52, 1.38, 0.31),
-      make(1.84, 1.62, -0.22),
+      make(1.48, 1.34, 0.34, 0.7),
+      make(1.88, 1.58, -0.19, 2.1),
     ];
   }, []);
   const dotsGeom = useMemo(() => {
