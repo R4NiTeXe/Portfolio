@@ -1,0 +1,18 @@
+
+> eclipse-portfolio@0.1.0 dev
+> next dev --turbopack --port 3002
+
+   ▲ Next.js 15.5.23 (Turbopack)
+   - Local:        http://localhost:3002
+   - Network:      http://10.224.192.68:3002
+
+ ✓ Starting...
+ ✓ Ready in 2s
+ ○ Compiling / ...
+ ✓ Compiled / in 6.9s
+ GET / 200 in 8275ms
+ GET / 200 in 544ms
+ GET / 200 in 916ms
+ GET / 200 in 758ms
+ GET / 200 in 531ms
+ GET / 200 in 573ms

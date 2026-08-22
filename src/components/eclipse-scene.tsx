@@ -3,6 +3,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import gsap from "gsap";
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -64,6 +65,7 @@ const bodyFragmentShader = `
   uniform vec3 uBase;
   uniform vec3 uViolet;
   uniform vec3 uMint;
+  uniform float uReveal;
   varying vec3 vNormal;
   varying vec3 vViewDir;
   varying vec3 vWorldPos;
@@ -135,6 +137,8 @@ const bodyFragmentShader = `
     color += fresnel * edge * 0.005 * vnoise(vUv*7.5);
     // subtle large-scale banding (event-horizon density)
     color += largeForm * 0.018;
+    // reveal — subtle atmospheric fade-in (0.45 → 1.0 over 30s)
+    color *= (0.68 + uReveal * 0.32);
     gl_FragColor = vec4(color, 1.0);
   }
 `;
@@ -153,6 +157,7 @@ const atmosphereVertexShader = `
 const atmosphereFragmentShader = `
   uniform vec3 uMint;
   uniform vec3 uViolet;
+  uniform float uReveal;
   varying vec3 vNormal;
   varying vec3 vViewDir;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
@@ -186,20 +191,27 @@ const atmosphereFragmentShader = `
     col *= (0.92 + vnoise(gl_FragCoord.xy * 0.012) * 0.18);
     float alpha = fresnel * (mintMask*0.62 + violetMask*0.32) * 0.55;
     alpha *= inside;
+    // subtle reveal — atmosphere fades in too
+    col *= (0.62 + uReveal * 0.38);
+    alpha *= (0.55 + uReveal * 0.45);
     // keep very subtle, not neon
     gl_FragColor = vec4(col, alpha * 0.72);
   }
 `;
 
-function CelestialBody({ reduced }: { reduced: boolean }) {
+function CelestialBody({ reduced, revealRef }: { reduced: boolean; revealRef: React.MutableRefObject<number> }) {
   const uniforms = useMemo(
     () => ({
       uBase: { value: new THREE.Color("#080C14") },
       uViolet: { value: new THREE.Color("#8B7CFF") },
       uMint: { value: new THREE.Color("#65F6D5") },
+      uReveal: { value: 0.45 },
     }),
     []
   );
+  useFrame(() => {
+    uniforms.uReveal.value = revealRef.current;
+  });
   const ref = useRef<THREE.Mesh>(null);
   useFrame((_, delta) => {
     if (reduced || !ref.current) return;
@@ -217,14 +229,18 @@ function CelestialBody({ reduced }: { reduced: boolean }) {
   );
 }
 
-function AtmosphereShell() {
+function AtmosphereShell({ revealRef }: { revealRef: React.MutableRefObject<number> }) {
   const uniforms = useMemo(
     () => ({
       uMint: { value: new THREE.Color("#65F6D5") },
       uViolet: { value: new THREE.Color("#8B7CFF") },
+      uReveal: { value: 0.45 },
     }),
     []
   );
+  useFrame(() => {
+    uniforms.uReveal.value = revealRef.current;
+  });
   return (
     <mesh position={[0, 0, 0.02]} scale={[1.06, 1.06, 1.06]}>
       <sphereGeometry args={[1, 48, 48]} />
@@ -526,9 +542,29 @@ function Scene() {
   const haloRef = useRef<THREE.Sprite>(null);
   const haloLayerRef = useRef<THREE.Sprite>(null);
   const coreRef = useRef<THREE.Sprite>(null);
+  const revealRef = useRef(reduced ? 1 : 0.45);
   const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.30)", "rgba(139,124,255,0.08)"), []);
   const violetLayerTex = useMemo(() => glowTexture("rgba(139,124,255,0.40)", "rgba(139,124,255,0.11)"), []);
   const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,248,0.92)", "rgba(255,240,235,0.24)"), []);
+
+  useEffect(() => {
+    if (reduced) {
+      revealRef.current = 1;
+      return;
+    }
+    const obj = { v: 0.45 };
+    const tween = gsap.to(obj, {
+      v: 1,
+      duration: 30,
+      ease: "power1.inOut",
+      onUpdate: () => {
+        revealRef.current = obj.v;
+      },
+    });
+    return () => {
+      tween.kill();
+    };
+  }, [reduced]);
 
   useFrame(({ clock }, delta) => {
     if (reduced || !groupRef.current) return;
@@ -579,6 +615,12 @@ function Scene() {
         delta
       );
     }
+    // 30s reveal — subtle fade-in of celestial group
+    const rv = revealRef.current;
+    if (haloRef.current) (haloRef.current.material as THREE.SpriteMaterial).opacity = 0.72 * (0.48 + rv * 0.52);
+    if (haloLayerRef.current)
+      (haloLayerRef.current.material as THREE.SpriteMaterial).opacity = 0.82 * (0.48 + rv * 0.52);
+    if (coreRef.current) (coreRef.current.material as THREE.SpriteMaterial).opacity = 0.52 * (0.48 + rv * 0.52);
   });
 
   return (
@@ -595,7 +637,7 @@ function Scene() {
         </sprite>
         {/* L3 — dust */}
         <DustField reduced={reduced} />
-        {/* L4 — hero orbits — 3D inclined ellipses */}
+        {/* L4 — hero orbits — 3D inclined ellipses, visible moving */}
         <HeroOrbits reduced={reduced} />
         {/* L5 — light behind eclipse — occluded, leaks around limb */}
         <sprite ref={coreRef} position={[-0.48, 0.42, -0.09]} scale={[0.68, 0.68, 1]}>
@@ -608,9 +650,9 @@ function Scene() {
           />
         </sprite>
         {/* L6 — real 3D celestial body */}
-        <CelestialBody reduced={reduced} />
+        <CelestialBody reduced={reduced} revealRef={revealRef} />
         {/* L7 — thin atmospheric shell */}
-        <AtmosphereShell />
+        <AtmosphereShell revealRef={revealRef} />
         {/* L8 — particles with depth occlusion */}
         <OrbitParticles reduced={reduced} pointer={pointer} />
         <BrightParticles reduced={reduced} pointer={pointer} />
