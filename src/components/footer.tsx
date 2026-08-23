@@ -10,8 +10,8 @@ const BUILD_LOG = [
   { version: "v3.0", note: "ORBIT — mini game, easter egg, live telemetry" },
   { version: "v2.1", note: "Terminal mode, command palette, project modals" },
   { version: "v2.0", note: "Celestial system, section rebuild, verified data" },
-  { version: "v1.9", note: "ECLIPSE identity, reference layout alignment" },
-  { version: "v1.0", note: "Initial ECLIPSE portfolio launch" },
+  { version: "v1.9", note: "Portfolio identity, reference layout alignment" },
+  { version: "v1.0", note: "Initial portfolio launch" },
 ] as const;
 
 const SYS_LOG = [
