@@ -24,7 +24,7 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: `${site.name} — Software Developer | ${site.brand}`,
+  title: `${site.name} — Software Developer`,
   description:
     "Portfolio of Ranit Naskar — Software Developer from Kolkata, India crafting full-stack web experiences with React, Node.js, MongoDB, Three.js and modern tooling. Explore projects, journey and contact.",
   keywords: [
@@ -56,11 +56,11 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: `${site.name} — Software Developer | ${site.brand}`,
+    title: `${site.name} — Software Developer`,
     description:
       "Software Developer from Kolkata, India — building deliberate software at the edge of light.",
     url: site.url,
-    siteName: site.brand,
+    siteName: site.name,
     locale: "en_US",
     type: "website",
     images: [
@@ -68,13 +68,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: `${site.name} — Software Developer | ${site.brand} Portfolio`,
+        alt: `${site.name} — Software Developer Portfolio`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — Software Developer | ${site.brand}`,
+    title: `${site.name} — Software Developer`,
     description:
       "Software Developer from Kolkata, India — building deliberate software at the edge of light.",
     images: ["/opengraph-image"],
