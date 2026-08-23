@@ -32,7 +32,7 @@ export function StructuredData() {
         "@type": "WebSite",
         "@id": `${site.url}/#website`,
         url: site.url,
-        name: `${site.name} — ${site.role} | ${site.brand}`,
+        name: `${site.name} — ${site.role}`,
         description:
           "Portfolio of Ranit Naskar — Software Developer from Kolkata, India crafting full-stack web experiences with React, Node.js, MongoDB, Three.js and modern tooling.",
         publisher: {
@@ -44,7 +44,7 @@ export function StructuredData() {
         "@type": "ProfilePage",
         "@id": `${site.url}/#profile`,
         url: site.url,
-        name: `${site.name} — ${site.role} | ${site.brand}`,
+        name: `${site.name} — ${site.role}`,
         isPartOf: {
           "@id": `${site.url}/#website`,
         },
