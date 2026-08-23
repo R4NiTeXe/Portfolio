@@ -3,8 +3,8 @@ import { site } from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${site.name} — ${site.brand} Portfolio`,
-    short_name: site.brand,
+    name: `${site.name} — Portfolio`,
+    short_name: site.name.split(" ")[0],
     description:
       "Portfolio of Ranit Naskar — Software Developer from Kolkata, India crafting deliberate software at the edge of light.",
     start_url: "/",
