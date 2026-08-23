@@ -348,10 +348,24 @@ function ProjectModal({
           data-modal-stagger
           className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/5 pt-5"
         >
+          {project.live && (
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Live Demo for ${project.name}`}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-mint px-3.5 py-2 text-xs font-medium text-[#04141a] shadow-[0_0_16px_-6px_rgba(101,246,213,0.5)] transition-colors hover:bg-mint/90"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Live Demo
+              <ArrowUpRight className="h-3 w-3" />
+            </a>
+          )}
           <a
             href={project.repo ?? project.href}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`Source code for ${project.name}`}
             className="inline-flex items-center gap-1.5 rounded-lg border border-mint/30 bg-mint/10 px-3.5 py-2 text-xs text-mint transition-colors hover:bg-mint/20"
           >
             <GithubIcon className="h-3.5 w-3.5" />
@@ -475,17 +489,33 @@ export function Work() {
                     </span>
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
-                    <a
-                      href={project.repo ?? project.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-mint"
-                    >
-                      <GithubIcon className="h-3.5 w-3.5" />
-                      {project.repo ? "Source" : "GitHub profile"}
-                    </a>
+                  <div className="mt-5 flex items-center justify-between gap-2 border-t border-white/5 pt-4">
+                    <div className="flex items-center gap-2">
+                      {project.live && (
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`Live Demo for ${project.name}`}
+                          className="inline-flex items-center gap-1 rounded-md bg-mint px-2.5 py-1 text-[10px] font-medium text-[#04141a] transition-colors hover:bg-mint/90"
+                        >
+                          Live Demo
+                          <ArrowUpRight className="ml-1 h-3 w-3" />
+                        </a>
+                      )}
+                      <a
+                        href={project.repo ?? project.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`Source code for ${project.name}`}
+                        className="inline-flex items-center gap-1 rounded-md border border-white/10 px-2.5 py-1 text-[10px] tracking-wide text-muted-foreground transition-colors hover:border-mint/30 hover:text-mint"
+                      >
+                        <GithubIcon className="h-3 w-3" />
+                        Source
+                      </a>
+                    </div>
                     <span className="mono-label inline-flex items-center gap-1.5 !text-[9px] text-muted-foreground/60 transition-colors group-hover:text-mint">
                       Details
                       <ArrowUpRight className="h-3 w-3" />
