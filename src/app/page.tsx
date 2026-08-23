@@ -9,7 +9,7 @@ import { Hero } from "@/components/hero";
 import { Journey } from "@/components/journey";
 import { Marquee } from "@/components/marquee";
 import { Nav } from "@/components/nav";
-import { OrbitLab } from "@/components/orbit-lab";
+import { Games } from "@/components/games";
 import { Preloader } from "@/components/preloader";
 import { Reveal } from "@/components/reveal";
 import { Skills } from "@/components/skills";
@@ -49,7 +49,7 @@ export default function Home() {
           <Contact />
         </Reveal>
         <Reveal>
-          <OrbitLab />
+          <Games />
         </Reveal>
       </main>
 
