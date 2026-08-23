@@ -55,14 +55,16 @@ export default function AppleIcon() {
         />
         <div
           style={{
-            fontSize: 28,
-            fontWeight: 700,
-            color: "white",
-            letterSpacing: "0.12em",
+            fontSize: 26,
+            fontWeight: 800,
+            letterSpacing: "-0.02em",
             display: "flex",
+            alignItems: "center",
+            gap: 1,
           }}
         >
-          E
+          <span style={{ color: "white", display: "flex" }}>R</span>
+          <span style={{ color: "#65F6D5", display: "flex" }}>N</span>
         </div>
       </div>
     </div>,
