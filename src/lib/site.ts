@@ -1,6 +1,6 @@
 export const site = {
   name: "Ranit Naskar",
-  brand: "ECLIPSE",
+  brand: "Ranit Naskar",
   role: "Software Developer",
   tagline: "Full-stack development at the edge of light.",
   email: "ranitnaskar09032007@gmail.com",
@@ -19,6 +19,7 @@ export const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "Work", href: "#work" },
   { label: "Journey", href: "#journey" },
+  { label: "Games", href: "#games" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
