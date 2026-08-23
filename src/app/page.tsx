@@ -46,10 +46,10 @@ export default function Home() {
           <Journey />
         </Reveal>
         <Reveal>
-          <Contact />
+          <Games />
         </Reveal>
         <Reveal>
-          <Games />
+          <Contact />
         </Reveal>
       </main>
 
