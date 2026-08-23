@@ -37,9 +37,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             <span className="flex h-4 w-4 items-center justify-center rounded-full bg-mint/15">
               <Check className="h-2.5 w-2.5 text-mint" />
             </span>
-            <span className="mono-label !text-[10px] text-white/90">
-              {toast.message}
-            </span>
+            <span className="mono-label !text-[10px] text-white/90">{toast.message}</span>
           </div>
         ))}
       </div>

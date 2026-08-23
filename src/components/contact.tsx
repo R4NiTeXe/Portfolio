@@ -1,16 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  Check,
-  Copy,
-  Download,
-  Mail,
-  MapPin,
-  Phone,
-  Send,
-} from "lucide-react";
+import { ArrowUpRight, Check, Copy, Download, Mail, MapPin, Phone, Send } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { Magnetic } from "@/components/magnetic";
 import { useToast } from "@/components/toast";
@@ -61,8 +52,7 @@ function TransmissionForm() {
     if (!email.trim()) next.email = "EMAIL IS REQUIRED";
     else if (!EMAIL_RE.test(email.trim())) next.email = "ENTER A VALID EMAIL ADDRESS";
     if (!message.trim()) next.message = "MESSAGE IS REQUIRED";
-    else if (message.trim().length < 10)
-      next.message = "MESSAGE MUST BE AT LEAST 10 CHARACTERS";
+    else if (message.trim().length < 10) next.message = "MESSAGE MUST BE AT LEAST 10 CHARACTERS";
     setErrors(next);
     return !next.name && !next.email && !next.message;
   };
@@ -107,9 +97,7 @@ function TransmissionForm() {
         className="absolute top-0 left-0 h-[3px] w-24 bg-gradient-to-r from-mint to-transparent"
       />
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="mono-label text-mint">
-          {"// "}DIRECT TRANSMISSION — MESSAGE FORM
-        </p>
+        <p className="mono-label text-mint">{"// "}DIRECT TRANSMISSION — MESSAGE FORM</p>
         <p className="mono-label !text-[9px] text-muted-foreground/60">
           VALIDATED LOCALLY — NOTHING LEAVES YOUR BROWSER
         </p>
@@ -117,10 +105,7 @@ function TransmissionForm() {
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         <div>
-          <label
-            htmlFor="tx-name"
-            className="mono-label block !text-[9px] text-muted-foreground"
-          >
+          <label htmlFor="tx-name" className="mono-label block !text-[9px] text-muted-foreground">
             Name <span className="text-destructive">*</span>
           </label>
           <input
@@ -140,20 +125,14 @@ function TransmissionForm() {
             className={`mt-2 h-11 ${fieldClass(!!errors.name)}`}
           />
           {errors.name && (
-            <p
-              id="tx-name-error"
-              className="mono-label mt-1.5 !text-[9px] text-destructive"
-            >
+            <p id="tx-name-error" className="mono-label mt-1.5 !text-[9px] text-destructive">
               {errors.name}
             </p>
           )}
         </div>
 
         <div>
-          <label
-            htmlFor="tx-email"
-            className="mono-label block !text-[9px] text-muted-foreground"
-          >
+          <label htmlFor="tx-email" className="mono-label block !text-[9px] text-muted-foreground">
             Email <span className="text-destructive">*</span>
           </label>
           <input
@@ -173,10 +152,7 @@ function TransmissionForm() {
             className={`mt-2 h-11 ${fieldClass(!!errors.email)}`}
           />
           {errors.email && (
-            <p
-              id="tx-email-error"
-              className="mono-label mt-1.5 !text-[9px] text-destructive"
-            >
+            <p id="tx-email-error" className="mono-label mt-1.5 !text-[9px] text-destructive">
               {errors.email}
             </p>
           )}
@@ -184,10 +160,7 @@ function TransmissionForm() {
       </div>
 
       <div className="mt-5">
-        <label
-          htmlFor="tx-message"
-          className="mono-label block !text-[9px] text-muted-foreground"
-        >
+        <label htmlFor="tx-message" className="mono-label block !text-[9px] text-muted-foreground">
           Message <span className="text-destructive">*</span>
         </label>
         <textarea
@@ -206,10 +179,7 @@ function TransmissionForm() {
           className={`mt-2 min-h-32 resize-y py-3 ${fieldClass(!!errors.message)}`}
         />
         {errors.message && (
-          <p
-            id="tx-message-error"
-            className="mono-label mt-1.5 !text-[9px] text-destructive"
-          >
+          <p id="tx-message-error" className="mono-label mt-1.5 !text-[9px] text-destructive">
             {errors.message}
           </p>
         )}
@@ -222,9 +192,7 @@ function TransmissionForm() {
           data-cursor-label="SEND"
           className="relative inline-flex h-11 items-center justify-center gap-2 overflow-hidden rounded-lg border border-mint/40 bg-mint/10 px-6 text-sm font-medium text-mint transition-all hover:bg-mint/20 hover:shadow-[0_0_24px_-8px_rgba(101,246,213,0.6)] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {ripple > 0 && (
-            <span key={ripple} aria-hidden="true" className="transmission-ripple" />
-          )}
+          {ripple > 0 && <span key={ripple} aria-hidden="true" className="transmission-ripple" />}
           {status === "transmitting" ? (
             <>
               <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-mint" />
@@ -249,8 +217,8 @@ function TransmissionForm() {
         >
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-mint" />
           <p className="mono-label !text-[9px] text-mint">
-            TRANSMISSION READY — YOUR EMAIL CLIENT SHOULD HAVE OPENED. COMPLETE
-            THE SEND THERE; NO EMAIL HAS BEEN SENT YET.
+            TRANSMISSION READY — YOUR EMAIL CLIENT SHOULD HAVE OPENED. COMPLETE THE SEND THERE; NO
+            EMAIL HAS BEEN SENT YET.
           </p>
           <a
             href={composeUrl}
@@ -267,8 +235,7 @@ function TransmissionForm() {
           className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border border-destructive/40 bg-destructive/[0.06] px-4 py-3"
         >
           <p className="mono-label !text-[9px] text-destructive">
-            COULD NOT OPEN YOUR EMAIL CLIENT — COMPOSE MANUALLY OR COPY THE
-            ADDRESS.
+            COULD NOT OPEN YOUR EMAIL CLIENT — COMPOSE MANUALLY OR COPY THE ADDRESS.
           </p>
           <a
             href={composeUrl}
@@ -313,26 +280,20 @@ export function Contact() {
   };
 
   return (
-    <section
-      id="contact"
-      aria-label="Contact"
-      className="relative scroll-mt-24"
-    >
+    <section id="contact" aria-label="Contact" className="relative scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
-        <p className="mono-label text-mint">05 // Contact</p>
+        <p className="mono-label text-mint">06 // Contact</p>
         <div className="mt-10 grid gap-14 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
           <div data-reveal-item>
             <h2 className="font-display text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
               INITIATE
               <br />
-              <span className="text-glow-mint text-mint">
-                TRANSMISSION.
-              </span>
+              <span className="text-glow-mint text-mint">TRANSMISSION.</span>
             </h2>
             <p className="mt-8 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              I&apos;m open to internships, freelance work and interesting
-              collaborations. The eclipse is always accepting new orbits —
-              send a signal and I usually respond within a day.
+              I&apos;m open to internships, freelance work and interesting collaborations. The
+              eclipse is always accepting new orbits — send a signal and I usually respond within a
+              day.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-3 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-2">
@@ -382,24 +343,16 @@ export function Contact() {
                 className="eclipse-card group flex w-full items-center gap-4 p-4 text-left transition-all active:scale-[0.98]"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 text-mint/80 transition-colors group-hover:border-mint/40 group-hover:text-mint">
-                  {copied ? (
-                    <Check className="h-4 w-4 text-mint" />
-                  ) : (
-                    <Mail className="h-4 w-4" />
-                  )}
+                  {copied ? <Check className="h-4 w-4 text-mint" /> : <Mail className="h-4 w-4" />}
                 </span>
                 <span className="min-w-0">
-                  <span className="mono-label block text-muted-foreground">
-                    Email
-                  </span>
+                  <span className="mono-label block text-muted-foreground">Email</span>
                   <span className="block truncate text-sm text-white transition-colors group-hover:text-mint">
                     {site.email}
                   </span>
                 </span>
                 {copied ? (
-                  <span className="mono-label shrink-0 text-mint">
-                    COPIED
-                  </span>
+                  <span className="mono-label shrink-0 text-mint">COPIED</span>
                 ) : (
                   <Copy className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-mint" />
                 )}
@@ -430,11 +383,7 @@ export function Contact() {
                 key={channel.label}
                 href={channel.href}
                 target={channel.href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  channel.href.startsWith("http")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
+                rel={channel.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 data-reveal-item
                 data-cursor-label="OPEN"
                 className="eclipse-card group flex items-center gap-4 p-4 transition-all active:scale-[0.98]"
@@ -443,9 +392,7 @@ export function Contact() {
                   {channel.icon}
                 </span>
                 <span className="min-w-0">
-                  <span className="mono-label block text-muted-foreground">
-                    {channel.label}
-                  </span>
+                  <span className="mono-label block text-muted-foreground">{channel.label}</span>
                   <span className="block truncate text-sm text-white transition-colors group-hover:text-mint">
                     {channel.value}
                   </span>

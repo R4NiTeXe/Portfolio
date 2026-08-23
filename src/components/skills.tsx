@@ -37,7 +37,7 @@ function Constellation() {
           stagger: 0.09,
           ease: "back.out(2)",
           scrollTrigger: { trigger: svg, start: "top 78%", once: true },
-        },
+        }
       );
     }, svg);
 
@@ -80,13 +80,7 @@ function Constellation() {
           cx={node.x}
           cy={node.y}
           r={i % 3 === 0 ? "1" : "0.6"}
-          fill={
-            i % 4 === 1
-              ? "#8B7CFF"
-              : i % 4 === 2
-                ? "#65F6D5"
-                : "#E6EDF3"
-          }
+          fill={i % 4 === 1 ? "#8B7CFF" : i % 4 === 2 ? "#65F6D5" : "#E6EDF3"}
           opacity={i % 3 === 0 ? "0.7" : "0.45"}
         />
       ))}
@@ -126,8 +120,7 @@ export function Skills() {
   const groups = skills.filter((group) => group.title !== "AI-Assisted Development");
   const aiGroup = skills.find((group) => group.title === "AI-Assisted Development");
 
-  const showGroup = (title: string) =>
-    filter === "All" || filter === title;
+  const showGroup = (title: string) => filter === "All" || filter === title;
 
   const showAI = filter === "All" || filter === "AI-Assisted Development";
   const showFoundations = filter === "All" || filter === "Foundations";
@@ -150,7 +143,7 @@ export function Skills() {
         ease: "power2.out",
         stagger: 0.06,
         overwrite: "auto",
-      },
+      }
     );
   }, [filter]);
 
@@ -159,18 +152,15 @@ export function Skills() {
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
         <Constellation />
         <p className="mono-label text-mint">02 // Skills</p>
-        <div
-          data-reveal-item
-          className="mt-10 flex flex-wrap items-end justify-between gap-6"
-        >
+        <div data-reveal-item className="mt-10 flex flex-wrap items-end justify-between gap-6">
           <h2 className="font-display max-w-xl text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
             The stack behind
             <br />
             <span className="text-glow-mint text-mint">what i build.</span>
           </h2>
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Tools I reach for daily — from bare C to typed React, from
-            localhost to deployed containers.
+            Tools I reach for daily — from bare C to typed React, from localhost to deployed
+            containers.
           </p>
         </div>
 
@@ -201,50 +191,45 @@ export function Skills() {
         </div>
 
         <div ref={gridRef} className="mt-8">
-          {filter !== "AI-Assisted Development" &&
-            filter !== "Foundations" && (
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {groups
-                  .filter((group) => showGroup(group.title))
-                  .map((group) => {
-                    const tone =
-                      (group.tone as "mint" | "violet") === "violet"
-                        ? violetTone
-                        : mintTone;
-                    return (
+          {filter !== "AI-Assisted Development" && filter !== "Foundations" && (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {groups
+                .filter((group) => showGroup(group.title))
+                .map((group) => {
+                  const tone =
+                    (group.tone as "mint" | "violet") === "violet" ? violetTone : mintTone;
+                  return (
+                    <div
+                      key={group.title}
+                      data-skill-card
+                      className="card-spotlight eclipse-card group relative overflow-hidden p-6"
+                    >
                       <div
-                        key={group.title}
-                        data-skill-card
-                        className="card-spotlight eclipse-card group relative overflow-hidden p-6"
+                        aria-hidden="true"
+                        className="orbit-rotate absolute -top-6 -right-6 h-14 w-14 rounded-full border border-white/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                       >
-                        <div
-                          aria-hidden="true"
-                          className="orbit-rotate absolute -top-6 -right-6 h-14 w-14 rounded-full border border-white/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                        >
-                          <span
-                            className={`absolute top-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full ${tone.text} shadow-[0_0_6px_currentColor]`}
-                          />
-                        </div>
-                        <p
-                          className={`mono-label transition-colors duration-300 ${tone.text}`}
-                        >
-                          {group.title}
-                        </p>
-                        <div className="mt-5 flex flex-wrap gap-2">
-                          {group.items.map((item) => (
-                            <span
-                              key={item}
-                              className={`rounded-md border px-2.5 py-1 text-xs text-muted-foreground transition-all duration-300 ${tone.chip}`}
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
+                        <span
+                          className={`absolute top-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full ${tone.text} shadow-[0_0_6px_currentColor]`}
+                        />
                       </div>
-                    );
-                  })}
-              </div>
-            )}
+                      <p className={`mono-label transition-colors duration-300 ${tone.text}`}>
+                        {group.title}
+                      </p>
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {group.items.map((item) => (
+                          <span
+                            key={item}
+                            className={`rounded-md border px-2.5 py-1 text-xs text-muted-foreground transition-all duration-300 ${tone.chip}`}
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
 
           {showAI && aiGroup && (
             <div
@@ -256,17 +241,14 @@ export function Skills() {
                 className="absolute top-0 left-0 h-[3px] w-full bg-gradient-to-r from-violet via-violet/40 to-transparent"
               />
               <div className="flex flex-wrap items-baseline justify-between gap-3">
-                <p className={`mono-label ${violetTone.text}`}>
-                  {aiGroup.title}
-                </p>
+                <p className={`mono-label ${violetTone.text}`}>{aiGroup.title}</p>
                 <p className="mono-label !text-[9px] text-muted-foreground">
                   WORKFLOW TOOLING — NOT CORE-SKILL CLAIMS
                 </p>
               </div>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                The AI-assisted loop — plan, build, review, debug — runs across
-                every project above. Each tool serves the stack, never the
-                other way around.
+                The AI-assisted loop — plan, build, review, debug — runs across every project above.
+                Each tool serves the stack, never the other way around.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {aiGroup.items.map((item) => (
@@ -292,8 +274,7 @@ export function Skills() {
               />
               <p className="mono-label text-amber">Foundations</p>
               <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                The ground layer — algorithms, data and structure behind every
-                stack choice.
+                The ground layer — algorithms, data and structure behind every stack choice.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {foundations.map((item) => (

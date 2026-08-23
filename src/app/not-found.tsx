@@ -21,17 +21,15 @@ export default function NotFound() {
         <span className="absolute top-0 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-violet/60 shadow-[0_0_8px_rgba(139,124,255,0.6)]" />
       </div>
 
-      <p className="mono-label relative z-10 text-mint">
-        404 — SIGNAL LOST
-      </p>
+      <p className="mono-label relative z-10 text-mint">404 — SIGNAL LOST</p>
       <h1 className="font-display relative z-10 mt-4 text-6xl leading-[1.02] font-semibold tracking-tight text-white md:text-8xl">
         ORBIT
         <br />
         <span className="text-glow-mint text-mint">LOST.</span>
       </h1>
       <p className="relative z-10 mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
-        This coordinate doesn&apos;t exist in the current map — the probe
-        drifted off its trajectory. Returning to a known orbit.
+        This coordinate doesn&apos;t exist in the current map — the probe drifted off its
+        trajectory. Returning to a known orbit.
       </p>
       <Link
         href="/"
@@ -40,9 +38,7 @@ export default function NotFound() {
         Re-enter orbit
         <ArrowDown className="h-4 w-4 rotate-180" />
       </Link>
-      <p className="mono-label relative z-10 mt-8 text-white/30">
-        SYSTEM // NAVIGATION CORE
-      </p>
+      <p className="mono-label relative z-10 mt-8 text-white/30">SYSTEM // NAVIGATION CORE</p>
     </div>
   );
 }

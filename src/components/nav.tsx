@@ -4,13 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Menu } from "lucide-react";
 import gsap from "gsap";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { navLinks, site } from "@/lib/site";
 
 export function Nav() {
@@ -48,7 +42,7 @@ export function Nav() {
           }
         }
       },
-      { rootMargin: "-38% 0px -55% 0px", threshold: 0 },
+      { rootMargin: "-38% 0px -55% 0px", threshold: 0 }
     );
 
     sections.forEach((s) => observer.observe(s));
@@ -62,9 +56,7 @@ export function Nav() {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const position = () => {
-      const link = active
-        ? list.querySelector<HTMLAnchorElement>(`a[href="${active}"]`)
-        : null;
+      const link = active ? list.querySelector<HTMLAnchorElement>(`a[href="${active}"]`) : null;
       if (!link) {
         gsap.to(indicator, { opacity: 0, duration: reduced ? 0 : 0.25 });
         return;
@@ -154,9 +146,7 @@ export function Nav() {
               {site.availability}
             </span>
           </span>
-          <span className="mono-label !text-[8px] text-mint/50">
-            ORBIT // STABLE
-          </span>
+          <span className="mono-label !text-[8px] text-mint/50">ORBIT // STABLE</span>
         </div>
 
         <Sheet>

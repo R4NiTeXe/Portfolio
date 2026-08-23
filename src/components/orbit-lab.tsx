@@ -393,18 +393,14 @@ export function OrbitLab() {
           startLoop();
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.1 }
     );
     observer.observe(canvas);
     document.addEventListener("visibilitychange", onVisibility);
 
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable
-      ) {
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
         return;
       }
       if (modeRef.current === "idle") return;
@@ -495,50 +491,37 @@ export function OrbitLab() {
               <span className="text-glow-mint text-mint">LAB.</span>
             </h2>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
-              A tiny probe simulator. Thrust to steer the orbit, sweep up
-              beacons before they drift, and dodge the hazard diamonds.
-              Captures build combo multipliers — collisions decay the orbit.
+              A tiny probe simulator. Thrust to steer the orbit, sweep up beacons before they drift,
+              and dodge the hazard diamonds. Captures build combo multipliers — collisions decay the
+              orbit.
             </p>
 
             <div className="mt-6 grid grid-cols-4 gap-4">
               <div>
-                <p className="font-display text-2xl font-semibold text-mint md:text-3xl">
-                  {score}
-                </p>
-                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">
-                  SCORE
-                </p>
+                <p className="font-display text-2xl font-semibold text-mint md:text-3xl">{score}</p>
+                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">SCORE</p>
               </div>
               <div>
                 <p className="font-display text-2xl font-semibold text-white/60 md:text-3xl">
                   {best}
                 </p>
-                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">
-                  BEST
-                </p>
+                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">BEST</p>
               </div>
               <div>
                 <p className="font-display text-2xl font-semibold text-violet md:text-3xl">
                   {combo > 1 ? `×${combo}` : "—"}
                 </p>
-                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">
-                  COMBO
-                </p>
+                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">COMBO</p>
               </div>
               <div>
                 <p className="font-display text-2xl font-semibold text-amber md:text-3xl">
                   {level}
                 </p>
-                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">
-                  LEVEL
-                </p>
+                <p className="mono-label mt-1 !text-[9px] text-muted-foreground">LEVEL</p>
               </div>
             </div>
 
-            <p
-              aria-live="polite"
-              className="mono-label mt-5 min-h-4 !text-[9px] text-mint"
-            >
+            <p aria-live="polite" className="mono-label mt-5 min-h-4 !text-[9px] text-mint">
               {"// "}
               {message}
             </p>
@@ -576,29 +559,25 @@ export function OrbitLab() {
 
             {showHelp && (
               <div className="eclipse-card mt-5 max-w-md rounded-xl p-4">
-                <p className="mono-label !text-[9px] text-mint">
-                  ORBITAL PROTOCOL
-                </p>
+                <p className="mono-label !text-[9px] text-mint">ORBITAL PROTOCOL</p>
                 <ul className="mt-3 space-y-1.5 text-xs leading-relaxed text-muted-foreground">
                   <li>
-                    <span className="text-white/80">CONTROL</span> — SPACE / W /
-                    ↑ (hold) = thrust · S / ↓ = brake · tap canvas on touch
+                    <span className="text-white/80">CONTROL</span> — SPACE / W / ↑ (hold) = thrust ·
+                    S / ↓ = brake · tap canvas on touch
                   </li>
                   <li>
-                    <span className="text-white/80">COLLECT</span> — pass
-                    through mint beacon rings
+                    <span className="text-white/80">COLLECT</span> — pass through mint beacon rings
                   </li>
                   <li>
-                    <span className="text-white/80">AVOID</span> — amber hazard
-                    diamonds — collision decays the orbit
+                    <span className="text-white/80">AVOID</span> — amber hazard diamonds — collision
+                    decays the orbit
                   </li>
                   <li>
-                    <span className="text-white/80">SCORE</span> — fast
-                    consecutive captures stack a combo multiplier (×2, ×3…)
+                    <span className="text-white/80">SCORE</span> — fast consecutive captures stack a
+                    combo multiplier (×2, ×3…)
                   </li>
                   <li>
-                    <span className="text-white/80">PAUSE</span> — P key ·
-                    auto-pauses off-screen
+                    <span className="text-white/80">PAUSE</span> — P key · auto-pauses off-screen
                   </li>
                 </ul>
               </div>
@@ -620,9 +599,8 @@ export function OrbitLab() {
               aria-describedby="lab-guide"
             />
             <p id="lab-guide" className="sr-only">
-              Thrust the probe around the orbit to collect mint beacon rings.
-              Avoid amber hazard diamonds. Combo multipliers build with fast
-              consecutive captures.
+              Thrust the probe around the orbit to collect mint beacon rings. Avoid amber hazard
+              diamonds. Combo multipliers build with fast consecutive captures.
             </p>
           </div>
         </div>

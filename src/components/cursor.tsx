@@ -50,10 +50,7 @@ export function Cursor() {
       }
       const isLink = !!interactive?.closest("a[href]");
       ring.classList.toggle("cursor-ring-link", !!interactive && !labeled && !project && isLink);
-      ring.classList.toggle(
-        "cursor-ring-button",
-        !!interactive && !labeled && !project && !isLink
-      );
+      ring.classList.toggle("cursor-ring-button", !!interactive && !labeled && !project && !isLink);
       ring.classList.toggle("cursor-ring-project", !!project);
       ring.classList.toggle("cursor-ring-active", !!labeled);
       ring.classList.toggle("cursor-ring-labeling", !!labeled);

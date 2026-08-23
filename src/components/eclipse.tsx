@@ -2,13 +2,10 @@
 
 import dynamic from "next/dynamic";
 
-const EclipseCanvas = dynamic(
-  () => import("./eclipse-scene").then((m) => m.EclipseCanvas),
-  {
-    ssr: false,
-    loading: () => <div className="h-full w-full rounded-full bg-white/[0.02]" />,
-  }
-);
+const EclipseCanvas = dynamic(() => import("./eclipse-scene").then((m) => m.EclipseCanvas), {
+  ssr: false,
+  loading: () => <div className="h-full w-full rounded-full bg-white/[0.02]" />,
+});
 
 export function Eclipse() {
   return (

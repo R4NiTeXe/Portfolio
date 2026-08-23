@@ -12,16 +12,10 @@ function InfoPanel({ project }: { project: Project }) {
   return (
     <div className="pointer-events-none absolute left-1/2 z-20 w-60 -translate-x-1/2 rounded-xl border border-white/10 bg-[#0A0F1A]/95 p-4 opacity-0 shadow-xl backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
       <div className="flex items-center justify-between gap-2">
-        <p className="mono-label !text-[8px] text-white/40">
-          PROJECT {project.index}
-        </p>
-        <p className={`mono-label shrink-0 !text-[8px] ${tone.chip}`}>
-          {project.status}
-        </p>
+        <p className="mono-label !text-[8px] text-white/40">PROJECT {project.index}</p>
+        <p className={`mono-label shrink-0 !text-[8px] ${tone.chip}`}>{project.status}</p>
       </div>
-      <p className="mt-1.5 font-display text-sm font-semibold text-white">
-        {project.name}
-      </p>
+      <p className="mt-1.5 font-display text-sm font-semibold text-white">{project.name}</p>
       <p className="mt-2 line-clamp-3 text-[11px] leading-relaxed text-muted-foreground">
         {project.description}
       </p>
@@ -60,9 +54,7 @@ export function ProjectConstellation({
   return (
     <div data-reveal-item className="mt-8">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <p className="mono-label !text-[10px] text-mint">
-          {"// "}PROJECT ARCHIVE — ORBITAL MAP
-        </p>
+        <p className="mono-label !text-[10px] text-mint">{"// "}PROJECT ARCHIVE — ORBITAL MAP</p>
         <p className="mono-label hidden !text-[8px] text-muted-foreground/50 sm:block">
           HOVER TO INSPECT · CLICK TO OPEN
         </p>
@@ -123,12 +115,8 @@ export function ProjectConstellation({
         </svg>
 
         <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center">
-          <span className="font-display block text-sm font-semibold text-white/25">
-            ARCHIVE
-          </span>
-          <span className="mono-label block !text-[8px] text-muted-foreground/40">
-            CORE
-          </span>
+          <span className="font-display block text-sm font-semibold text-white/25">ARCHIVE</span>
+          <span className="mono-label block !text-[8px] text-muted-foreground/40">CORE</span>
         </span>
 
         {projects.map((project, i) => {
@@ -141,10 +129,7 @@ export function ProjectConstellation({
               className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
               style={{ left: `${pos.left}%`, top: `${pos.top}%` }}
             >
-              <div
-                className="constellation-drift"
-                style={{ animationDelay: `${i * 3}s` }}
-              >
+              <div className="constellation-drift" style={{ animationDelay: `${i * 3}s` }}>
                 <button
                   type="button"
                   onClick={(e) => onOpen(project, e.currentTarget as HTMLElement)}
@@ -166,7 +151,9 @@ export function ProjectConstellation({
                       </span>
                     )}
                   </span>
-                  <span className={`mono-label !text-[9px] transition-colors ${isCurrent ? "text-violet" : "text-white/70 group-hover:text-white"}`}>
+                  <span
+                    className={`mono-label !text-[9px] transition-colors ${isCurrent ? "text-violet" : "text-white/70 group-hover:text-white"}`}
+                  >
                     {project.index} · {project.name} {isCurrent && " — CURRENT"}
                   </span>
                   <span
@@ -208,7 +195,9 @@ export function ProjectConstellation({
                   </span>
                 </span>
               </span>
-              <span className={`mono-label shrink-0 rounded border px-2 py-0.5 !text-[8px] ${tone.chip}`}>
+              <span
+                className={`mono-label shrink-0 rounded border px-2 py-0.5 !text-[8px] ${tone.chip}`}
+              >
                 {project.status}
               </span>
             </button>

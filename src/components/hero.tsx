@@ -168,13 +168,9 @@ export function Hero() {
           >
             {site.tagline}
           </p>
-          <p
-            data-hero-item
-            className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground"
-          >
-            Full-stack developer from Kolkata — React, Node.js and MongoDB on
-            the front lines of real projects. Currently building AnatomiaX, a
-            3D AI-powered anatomy learning platform.
+          <p data-hero-item className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+            Full-stack developer from Kolkata — React, Node.js and MongoDB on the front lines of
+            real projects. Currently building AnatomiaX, a 3D AI-powered anatomy learning platform.
           </p>
           <p data-hero-item className="mono-label mt-4 text-mint">
             {"// "}React · Node.js · MongoDB · Docker
@@ -233,20 +229,12 @@ export function Hero() {
             </dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-              Mode
-            </dt>
-            <dd className="mono-label !text-[9px] text-white/80">
-              Full-Stack
-            </dd>
+            <dt className="text-[10px] tracking-[0.18em] text-muted-foreground uppercase">Mode</dt>
+            <dd className="mono-label !text-[9px] text-white/80">Full-Stack</dd>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <dt className="text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-              Focus
-            </dt>
-            <dd className="mono-label !text-[9px] text-violet">
-              AnatomiaX
-            </dd>
+            <dt className="text-[10px] tracking-[0.18em] text-muted-foreground uppercase">Focus</dt>
+            <dd className="mono-label !text-[9px] text-violet">AnatomiaX</dd>
           </div>
         </dl>
       </aside>

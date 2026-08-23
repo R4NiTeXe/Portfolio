@@ -220,11 +220,15 @@
 }
 
 @utility shadow-mint {
-  box-shadow: 0 0 0 1px rgba(101, 246, 213, 0.25), 0 12px 40px -12px rgba(101, 246, 213, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(101, 246, 213, 0.25),
+    0 12px 40px -12px rgba(101, 246, 213, 0.35);
 }
 
 @utility shadow-violet {
-  box-shadow: 0 0 0 1px rgba(139, 124, 255, 0.22), 0 12px 44px -12px rgba(139, 124, 255, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(139, 124, 255, 0.22),
+    0 12px 44px -12px rgba(139, 124, 255, 0.4);
 }
 
 @keyframes constellation-drift {
@@ -491,12 +495,7 @@
 /* Dark planet body — directional rim lighting */
 @utility planet-body {
   border-radius: 9999px;
-  background: radial-gradient(
-    circle at 32% 28%,
-    #131c2e 0%,
-    #0b1120 45%,
-    #05070d 100%
-  );
+  background: radial-gradient(circle at 32% 28%, #131c2e 0%, #0b1120 45%, #05070d 100%);
   box-shadow:
     inset -3px 3px 10px rgba(0, 0, 0, 0.95),
     inset 3px -3px 10px rgba(139, 124, 255, 0.18),
@@ -804,12 +803,24 @@
 }
 
 .arc-fade-a {
-  -webkit-mask-image: linear-gradient(115deg, transparent 0%, black 32%, black 62%, transparent 92%);
+  -webkit-mask-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    black 32%,
+    black 62%,
+    transparent 92%
+  );
   mask-image: linear-gradient(115deg, transparent 0%, black 32%, black 62%, transparent 92%);
 }
 
 .arc-fade-b {
-  -webkit-mask-image: linear-gradient(250deg, transparent 0%, black 28%, black 55%, transparent 85%);
+  -webkit-mask-image: linear-gradient(
+    250deg,
+    transparent 0%,
+    black 28%,
+    black 55%,
+    transparent 85%
+  );
   mask-image: linear-gradient(250deg, transparent 0%, black 28%, black 55%, transparent 85%);
 }
 

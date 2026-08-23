@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  ChevronUp,
-  Download,
-  Mail,
-  Search,
-  TerminalSquare,
-  Zap,
-} from "lucide-react";
+import { ArrowUpRight, ChevronUp, Download, Mail, Search, TerminalSquare, Zap } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { site } from "@/lib/site";
 import { navLinks } from "@/lib/site";
@@ -118,7 +110,7 @@ export function CommandPalette() {
     const q = query.trim().toLowerCase();
     if (!q) return commands;
     return commands.filter(
-      (c) => c.label.toLowerCase().includes(q) || c.hint.toLowerCase().includes(q),
+      (c) => c.label.toLowerCase().includes(q) || c.hint.toLowerCase().includes(q)
     );
   }, [commands, query]);
 
@@ -194,9 +186,7 @@ export function CommandPalette() {
             aria-label="Command input"
             className="h-12 flex-1 bg-transparent text-sm text-white placeholder:text-white/30 focus:outline-none"
           />
-          <span className="mono-label shrink-0 !text-[9px] text-muted-foreground/50">
-            ESC
-          </span>
+          <span className="mono-label shrink-0 !text-[9px] text-muted-foreground/50">ESC</span>
         </div>
         <ul
           ref={listRef}
@@ -205,9 +195,7 @@ export function CommandPalette() {
           aria-activedescendant={`command-${filtered[selected]?.id}`}
         >
           {filtered.length === 0 && (
-            <li className="mono-label px-3 py-4 text-muted-foreground/60">
-              NO MATCHING COMMANDS
-            </li>
+            <li className="mono-label px-3 py-4 text-muted-foreground/60">NO MATCHING COMMANDS</li>
           )}
           {filtered.map((command, i) => {
             const showGroup = command.group !== lastGroup;
@@ -230,9 +218,7 @@ export function CommandPalette() {
                     setOpen(false);
                   }}
                   className={`flex min-h-11 w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/40 ${
-                    i === selected
-                      ? "bg-mint/10 text-white"
-                      : "text-muted-foreground"
+                    i === selected ? "bg-mint/10 text-white" : "text-muted-foreground"
                   }`}
                 >
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center">
@@ -242,9 +228,7 @@ export function CommandPalette() {
                   <span className="mono-label !text-[9px] text-muted-foreground/50">
                     {command.hint}
                   </span>
-                  {i === selected && (
-                    <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-mint" />
-                  )}
+                  {i === selected && <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-mint" />}
                 </button>
               </li>
             );

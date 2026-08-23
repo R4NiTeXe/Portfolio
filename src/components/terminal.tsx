@@ -11,12 +11,34 @@ const LINES: { prefix?: string; text: string; color?: string }[] = [
   { prefix: "TYPE     ", text: "Software Developer · Fullstack", color: "text-mint" },
   { prefix: "LOC      ", text: "Kolkata, West Bengal, India" },
   { prefix: "EDU      ", text: "Diploma CSE — Brainware University · 2027 · CGPA 7.01" },
-  { prefix: "EXPER    ", text: "MAGANAL rover mission — Team Project Intern, Agnirath Aerospace · Completed Aug 2026 (20.04.2026 — 07.08.2026)" },
-  { prefix: "MISSION  ", text: "MAGANAL — Mars Autonomous Ground Analyser with Navigation and Life-Assessment Logic", color: "text-violet" },
-  { prefix: "SKILLS   ", text: "C / C++ · React.js · Node.js · Express.js · MongoDB · MySQL · Docker · Linux" },
-  { prefix: "AI       ", text: "ChatGPT · Gemini · Claude · OpenCode · Kimi Code · MiMo · Nimotron · DeepSeek", color: "text-violet" },
-  { prefix: "PROJECTS ", text: "Video_Tube [SHIPPED] · Dukaan_Sathi [TOP 6] · AnatomiaX [IN DEV]", color: "text-amber" },
-  { prefix: "CONTACT  ", text: "ranitnaskar09032007@gmail.com · github.com/R4NiTeXe", color: "text-mint" },
+  {
+    prefix: "EXPER    ",
+    text: "MAGANAL rover mission — Team Project Intern, Agnirath Aerospace · Completed Aug 2026 (20.04.2026 — 07.08.2026)",
+  },
+  {
+    prefix: "MISSION  ",
+    text: "MAGANAL — Mars Autonomous Ground Analyser with Navigation and Life-Assessment Logic",
+    color: "text-violet",
+  },
+  {
+    prefix: "SKILLS   ",
+    text: "C / C++ · React.js · Node.js · Express.js · MongoDB · MySQL · Docker · Linux",
+  },
+  {
+    prefix: "AI       ",
+    text: "ChatGPT · Gemini · Claude · OpenCode · Kimi Code · MiMo · Nimotron · DeepSeek",
+    color: "text-violet",
+  },
+  {
+    prefix: "PROJECTS ",
+    text: "Video_Tube [SHIPPED] · Dukaan_Sathi [TOP 6] · AnatomiaX [IN DEV]",
+    color: "text-amber",
+  },
+  {
+    prefix: "CONTACT  ",
+    text: "ranitnaskar09032007@gmail.com · github.com/R4NiTeXe",
+    color: "text-mint",
+  },
   { prefix: "", text: "> SYSTEM STATUS: OPERATIONAL — OPEN TO NEW PROJECTS", color: "text-mint" },
 ];
 
@@ -29,9 +51,7 @@ export function Terminal() {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       const typing =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (typing) return;
       if (e.key.toLowerCase() === "g") {
         setOpen((prev) => !prev);
@@ -110,9 +130,7 @@ export function Terminal() {
             </p>
           ))}
         </div>
-        <p className="mono-label mt-6 text-white/40">
-          [G] / [ESC] — close terminal
-        </p>
+        <p className="mono-label mt-6 text-white/40">[G] / [ESC] — close terminal</p>
       </div>
     </div>
   );

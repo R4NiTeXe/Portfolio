@@ -7,15 +7,7 @@ export const skills = [
   {
     title: "Frontend",
     tone: "mint" as const,
-    items: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "React.js",
-      "Tailwind CSS",
-      "GSAP",
-      "Three.js",
-    ],
+    items: ["HTML", "CSS", "JavaScript", "React.js", "Tailwind CSS", "GSAP", "Three.js"],
   },
   {
     title: "Backend",
@@ -30,30 +22,12 @@ export const skills = [
   {
     title: "Tools & Platforms",
     tone: "mint" as const,
-    items: [
-      "Git",
-      "GitHub",
-      "Linux",
-      "VS Code",
-      "Postman",
-      "Docker",
-      "Vercel",
-      "Render",
-    ],
+    items: ["Git", "GitHub", "Linux", "VS Code", "Postman", "Docker", "Vercel", "Render"],
   },
   {
     title: "AI-Assisted Development",
     tone: "violet" as const,
-    items: [
-      "ChatGPT",
-      "Gemini",
-      "Claude",
-      "OpenCode",
-      "Kimi Code",
-      "MiMo",
-      "Nimotron",
-      "DeepSeek",
-    ],
+    items: ["ChatGPT", "Gemini", "Claude", "OpenCode", "Kimi Code", "MiMo", "Nimotron", "DeepSeek"],
   },
 ] as const;
 
@@ -131,8 +105,7 @@ export const milestones = [
     period: "2022",
     role: "Secondary Education",
     title: "WBBSE — Class X",
-    description:
-      "Foundations of mathematics and science before the engineering path.",
+    description: "Foundations of mathematics and science before the engineering path.",
   },
   {
     period: "2024",
@@ -145,8 +118,7 @@ export const milestones = [
     role: "Diploma in CSE",
     title: "Brainware University",
     tag: "active",
-    description:
-      "CGPA 7.01 through the 4th semester — DSA, DBMS, OOP and systems foundations.",
+    description: "CGPA 7.01 through the 4th semester — DSA, DBMS, OOP and systems foundations.",
   },
   {
     period: "2026",
@@ -174,8 +146,7 @@ export const milestones = [
     role: "Target",
     title: "Diploma Completion",
     tag: "target",
-    description:
-      "Completing the Diploma in CSE — and continuing to ship software on the way.",
+    description: "Completing the Diploma in CSE — and continuing to ship software on the way.",
   },
 ] as const;
 

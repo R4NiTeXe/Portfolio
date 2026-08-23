@@ -23,7 +23,9 @@ export function EasterEgg() {
   const progress = useRef(0);
   const wordProgress = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particles = useRef<{ x: number; y: number; vx: number; vy: number; life: number; size: number }[]>([]);
+  const particles = useRef<
+    { x: number; y: number; vx: number; vy: number; life: number; size: number }[]
+  >([]);
 
   const burst = (colors: string[], count: number) => {
     const canvas = canvasRef.current;
@@ -45,7 +47,14 @@ export function EasterEgg() {
     const step = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.current = particles.current
-        .map((p) => ({ ...p, x: p.x + p.vx, y: p.y + p.vy, vx: p.vx * 0.97, vy: p.vy * 0.97, life: p.life - 0.012 }))
+        .map((p) => ({
+          ...p,
+          x: p.x + p.vx,
+          y: p.y + p.vy,
+          vx: p.vx * 0.97,
+          vy: p.vy * 0.97,
+          life: p.life - 0.012,
+        }))
         .filter((p) => p.life > 0);
       for (const p of particles.current) {
         ctx.globalAlpha = p.life;
@@ -70,11 +79,7 @@ export function EasterEgg() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable
-      ) {
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
         return;
       }
       const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;

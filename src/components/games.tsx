@@ -7,7 +7,9 @@ import { GitChallenge } from "@/components/git-challenge";
 
 const OrbitLab = dynamic(() => import("@/components/orbit-lab").then((m) => m.OrbitLab), {
   ssr: false,
-  loading: () => <div className="eclipse-card h-[340px] w-full animate-pulse rounded-2xl border border-white/5 bg-white/[0.02]" />,
+  loading: () => (
+    <div className="eclipse-card h-[340px] w-full animate-pulse rounded-2xl border border-white/5 bg-white/[0.02]" />
+  ),
 });
 
 type Tab = "orbit" | "debug" | "git";
@@ -26,7 +28,8 @@ export function Games() {
             <span className="text-glow-mint text-mint">playground.</span>
           </h2>
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Small interactive experiments — probe orbits, debugging logic, and Git workflows. Built for fun, not leaderboards.
+            Small interactive experiments — probe orbits, debugging logic, and Git workflows. Built
+            for fun, not leaderboards.
           </p>
         </div>
 
@@ -43,7 +46,9 @@ export function Games() {
               aria-controls={`game-${t.id}`}
               onClick={() => setTab(t.id)}
               className={`rounded-full border px-4 py-2 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 ${
-                tab === t.id ? "border-mint bg-mint text-[#04141a] font-medium" : "border-white/10 text-muted-foreground hover:border-white/20 hover:text-white"
+                tab === t.id
+                  ? "border-mint bg-mint text-[#04141a] font-medium"
+                  : "border-white/10 text-muted-foreground hover:border-white/20 hover:text-white"
               }`}
             >
               {t.label} <span className="opacity-60">— {t.desc}</span>
@@ -52,13 +57,28 @@ export function Games() {
         </div>
 
         <div className="mt-8">
-          <div id="game-orbit" role="tabpanel" hidden={tab !== "orbit"} className={tab !== "orbit" ? "hidden" : ""}>
+          <div
+            id="game-orbit"
+            role="tabpanel"
+            hidden={tab !== "orbit"}
+            className={tab !== "orbit" ? "hidden" : ""}
+          >
             <OrbitLab />
           </div>
-          <div id="game-debug" role="tabpanel" hidden={tab !== "debug"} className={tab !== "debug" ? "hidden" : ""}>
+          <div
+            id="game-debug"
+            role="tabpanel"
+            hidden={tab !== "debug"}
+            className={tab !== "debug" ? "hidden" : ""}
+          >
             <CodeDebugger />
           </div>
-          <div id="game-git" role="tabpanel" hidden={tab !== "git"} className={tab !== "git" ? "hidden" : ""}>
+          <div
+            id="game-git"
+            role="tabpanel"
+            hidden={tab !== "git"}
+            className={tab !== "git" ? "hidden" : ""}
+          >
             <GitChallenge />
           </div>
         </div>

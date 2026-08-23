@@ -31,13 +31,7 @@ export const toneStyles = {
 
 type Tone = (typeof toneStyles)[keyof typeof toneStyles];
 
-function MiniPreview({
-  variant,
-  tone,
-}: {
-  variant: "video" | "retail" | "anatomy";
-  tone: Tone;
-}) {
+function MiniPreview({ variant, tone }: { variant: "video" | "retail" | "anatomy"; tone: Tone }) {
   if (variant === "video") {
     return (
       <div className="flex gap-2 p-2.5">
@@ -50,17 +44,12 @@ function MiniPreview({
             aria-hidden="true"
             className="absolute bottom-1.5 left-1/2 h-0.5 w-4/5 -translate-x-1/2 rounded-full bg-white/15"
           >
-            <span
-              className={`absolute left-0 top-0 h-full w-1/3 rounded-full ${tone.bar}`}
-            />
+            <span className={`absolute left-0 top-0 h-full w-1/3 rounded-full ${tone.bar}`} />
           </span>
         </div>
         <div className="flex w-16 flex-col gap-1.5">
           {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="flex-1 rounded-md border border-white/10 bg-white/[0.03] p-1"
-            >
+            <div key={i} className="flex-1 rounded-md border border-white/10 bg-white/[0.03] p-1">
               <div className="h-3/5 rounded-sm bg-gradient-to-br from-white/15 to-white/5" />
               <div className="mt-1 h-0.5 w-3/4 rounded-full bg-white/15" />
             </div>
@@ -119,14 +108,32 @@ function MiniPreview({
 
   return (
     <div className="relative flex items-center justify-center p-2.5">
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 120 64"
-        className="h-full w-full"
-      >
-        <ellipse cx="60" cy="32" rx="26" ry="30" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="1" />
-        <circle cx="60" cy="27" r="11" fill="none" stroke={tone.glow === "text-violet" ? "rgba(139,124,255,0.65)" : "rgba(101,246,213,0.65)"} strokeWidth="1" />
-        <line x1="60" y1="10" x2="60" y2="54" stroke="rgba(255,255,255,0.1)" strokeDasharray="2 3" />
+      <svg aria-hidden="true" viewBox="0 0 120 64" className="h-full w-full">
+        <ellipse
+          cx="60"
+          cy="32"
+          rx="26"
+          ry="30"
+          fill="none"
+          stroke="rgba(255,255,255,0.22)"
+          strokeWidth="1"
+        />
+        <circle
+          cx="60"
+          cy="27"
+          r="11"
+          fill="none"
+          stroke={tone.glow === "text-violet" ? "rgba(139,124,255,0.65)" : "rgba(101,246,213,0.65)"}
+          strokeWidth="1"
+        />
+        <line
+          x1="60"
+          y1="10"
+          x2="60"
+          y2="54"
+          stroke="rgba(255,255,255,0.1)"
+          strokeDasharray="2 3"
+        />
         <circle cx="51" cy="37" r="1.5" fill="rgba(255,255,255,0.35)" />
         <circle cx="69" cy="37" r="1.5" fill="rgba(255,255,255,0.35)" />
         <path d="M60 54 L60 60" stroke="rgba(255,255,255,0.15)" />
@@ -171,13 +178,7 @@ function TiltCard({ children }: { children: React.ReactNode }) {
 
 export type Project = (typeof projects)[number];
 
-function ProjectModal({
-  project,
-  onClose,
-}: {
-  project: Project;
-  onClose: () => void;
-}) {
+function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -207,26 +208,24 @@ function ProjectModal({
       gsap.fromTo(
         overlayRef.current,
         { opacity: 0 },
-        { opacity: 1, duration: 0.25, ease: "power1.out" },
+        { opacity: 1, duration: 0.25, ease: "power1.out" }
       );
       gsap.fromTo(
         panelRef.current,
         { scale: 0.94, y: 18, opacity: 0 },
-        { scale: 1, y: 0, opacity: 1, duration: 0.45, ease: "power3.out", delay: 0.05 },
+        { scale: 1, y: 0, opacity: 1, duration: 0.45, ease: "power3.out", delay: 0.05 }
       );
       gsap.fromTo(
         "[data-modal-stagger]",
         { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.35, stagger: 0.05, ease: "power2.out", delay: 0.2 },
+        { opacity: 1, y: 0, duration: 0.35, stagger: 0.05, ease: "power2.out", delay: 0.2 }
       );
     }, panelRef);
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
       if (e.key === "Tab") {
-        const focusables = panelRef.current?.querySelectorAll<HTMLElement>(
-          "a[href], button",
-        );
+        const focusables = panelRef.current?.querySelectorAll<HTMLElement>("a[href], button");
         if (!focusables?.length) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
@@ -305,7 +304,10 @@ function ProjectModal({
           CURRENT STATE — {project.status.toUpperCase()}
         </p>
 
-        <div data-modal-stagger className="preview-grid mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">
+        <div
+          data-modal-stagger
+          className="preview-grid mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]"
+        >
           <div className="h-full w-full">
             <MiniPreview variant={project.preview} tone={tone} />
           </div>
@@ -398,10 +400,7 @@ export function Work() {
     <section id="work" aria-label="Work" className="relative scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
         <p className="mono-label text-mint">03 // Work</p>
-        <div
-          data-reveal-item
-          className="mt-10 flex flex-wrap items-end justify-between gap-6"
-        >
+        <div data-reveal-item className="mt-10 flex flex-wrap items-end justify-between gap-6">
           <h2 className="font-display max-w-xl text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
             Selected
             <br />
@@ -530,9 +529,7 @@ export function Work() {
             data-reveal-item
             className="card-spotlight flex min-h-48 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 p-6 text-center transition-colors hover:border-mint/40"
           >
-            <p className="font-display text-sm font-semibold text-white/40">
-              04 — NEXT ORBIT
-            </p>
+            <p className="font-display text-sm font-semibold text-white/40">04 — NEXT ORBIT</p>
             <div
               aria-hidden="true"
               className="orbit-rotate relative h-10 w-10 [animation-duration:14s]"
@@ -543,9 +540,7 @@ export function Work() {
             <p className="text-sm text-muted-foreground">
               Locked — transmission pending.
               <br />
-              <span className="text-mint">
-                Your project could take this slot.
-              </span>
+              <span className="text-mint">Your project could take this slot.</span>
             </p>
           </div>
         </div>
@@ -553,12 +548,10 @@ export function Work() {
           data-reveal-item
           className="card-spotlight mt-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-violet/25 bg-violet/[0.06] px-6 py-4"
         >
-          <p className="mono-label !text-[10px] text-violet">
-            {"// "}NOW ON THE BUILD BENCH
-          </p>
+          <p className="mono-label !text-[10px] text-violet">{"// "}NOW ON THE BUILD BENCH</p>
           <p className="text-sm text-white/85">
-            <span className="text-violet">AnatomiaX</span> — 3D AI-powered
-            anatomy learning platform. Watch this orbit.
+            <span className="text-violet">AnatomiaX</span> — 3D AI-powered anatomy learning
+            platform. Watch this orbit.
           </p>
           <span
             aria-hidden="true"

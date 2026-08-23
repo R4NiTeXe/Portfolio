@@ -6,13 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function Reveal({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export function Reveal({ children, className }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,7 +28,7 @@ export function Reveal({
           ease: "power2.out",
           stagger: items.length ? 0.07 : 0,
           scrollTrigger: { trigger: el, start: "top 82%", once: true },
-        },
+        }
       );
     }, el);
 

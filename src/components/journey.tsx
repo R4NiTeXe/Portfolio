@@ -65,20 +65,15 @@ export function Journey() {
             <h2 className="font-display text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
               The path so far —
               <br />
-              <span className="text-glow-mint text-mint">
-                one orbit at a time.
-              </span>
+              <span className="text-glow-mint text-mint">one orbit at a time.</span>
             </h2>
             <p className="mt-8 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
-              From classroom fundamentals to aerospace telemetry — every stop
-              sharpened the same edge: build fast, build clean, ship it.
+              From classroom fundamentals to aerospace telemetry — every stop sharpened the same
+              edge: build fast, build clean, ship it.
             </p>
           </div>
 
-          <ol
-            ref={listRef}
-            className="relative space-y-12 border-l border-white/10 pl-8"
-          >
+          <ol ref={listRef} className="relative space-y-12 border-l border-white/10 pl-8">
             <span
               aria-hidden="true"
               ref={fillRef}
@@ -98,9 +93,7 @@ export function Journey() {
                   }`}
                 />
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="mono-label text-mint">
-                    ORBIT {String(index + 1).padStart(2, "0")}
-                  </p>
+                  <p className="mono-label text-mint">ORBIT {String(index + 1).padStart(2, "0")}</p>
                   {"tag" in milestone && milestone.tag === "active" && (
                     <span className="mono-label rounded border border-mint/30 bg-mint/10 !text-[8px] text-mint">
                       ACTIVE ORBIT
@@ -112,9 +105,7 @@ export function Journey() {
                     </span>
                   )}
                 </div>
-                <p className="mono-label mt-2 text-muted-foreground">
-                  {milestone.period}
-                </p>
+                <p className="mono-label mt-2 text-muted-foreground">{milestone.period}</p>
                 <p className="mt-2 text-xs tracking-[0.18em] text-mint uppercase">
                   {milestone.role}
                 </p>

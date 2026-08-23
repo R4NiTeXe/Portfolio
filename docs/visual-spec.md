@@ -5,14 +5,14 @@ Extracted programmatically (System.Drawing pixel sampling) — every number belo
 
 ## 1. Colors (measured)
 
-| Token | Measured hex | Note |
-|---|---|---|
-| Page void (darkest) | `#070A0F`-family (lum 3-12) | top/bottom corners near `#101010` |
-| Background avg per band | `#060811` ... `#12162A` | blue-tinted black |
-| Primary accent (mint) | `#10F0D0`-family (bright mint pixels) | matches `#65F6D5` intent |
-| Violet glow | `#301070`-family (bright violet) | matches `#8B7CFF` intent |
-| Amber | sparse, ~62 px | matches `#FFB86B` |
-| White text | `#909090`-`#FFFFFF` | headline bright white |
+| Token                   | Measured hex                          | Note                              |
+| ----------------------- | ------------------------------------- | --------------------------------- |
+| Page void (darkest)     | `#070A0F`-family (lum 3-12)           | top/bottom corners near `#101010` |
+| Background avg per band | `#060811` ... `#12162A`               | blue-tinted black                 |
+| Primary accent (mint)   | `#10F0D0`-family (bright mint pixels) | matches `#65F6D5` intent          |
+| Violet glow             | `#301070`-family (bright violet)      | matches `#8B7CFF` intent          |
+| Amber                   | sparse, ~62 px                        | matches `#FFB86B`                 |
+| White text              | `#909090`-`#FFFFFF`                   | headline bright white             |
 
 ## 2. Composition (1536x1024 px canvas)
 
@@ -40,27 +40,27 @@ y 880-1024  FOOTER: mint text x 296-456 (y 896), amber bits y 928,
 
 ## 3. Key geometry ratios (relative to 1536x1024)
 
-| Element | X center | Y center | Size |
-|---|---|---|---|
-| Eclipse disk | 50.1% | 19.1% | r ≈ 6.6% of width |
-| Eclipse bbox | 43.5-57.0% | 8.6-30.1% | 208x220px |
-| Hero text block | 18.2% | 18.0% | 130x180px |
-| Nav | — | 3.2-7.0% | 140px tall zone |
+| Element         | X center   | Y center  | Size              |
+| --------------- | ---------- | --------- | ----------------- |
+| Eclipse disk    | 50.1%      | 19.1%     | r ≈ 6.6% of width |
+| Eclipse bbox    | 43.5-57.0% | 8.6-30.1% | 208x220px         |
+| Hero text block | 18.2%      | 18.0%     | 130x180px         |
+| Nav             | —          | 3.2-7.0%  | 140px tall zone   |
 
 ## 4. Implementation mapping
 
-| Visual element | Technique |
-|---|---|
-| Eclipse disk | three.js: SOLID BLACK sphere (no emissive core) |
-| Violet halo (upper-left) | R3F glow sprite / shader, violet, above-left of disk |
-| Mint rim (right/bottom) | R3F crescent/rim glow sprite, mint, wrapping right-bottom |
-| Aurora atmosphere | CSS radial-gradient blobs, slow drift |
-| Technical grid | CSS repeating-linear-gradient, 1px, faint |
-| Glass panels/cards | `bg-white/8 + border-white/10 + backdrop-blur` |
-| Headline | Space Grotesk, white, ~clamp(40px, 8vw, 72px) |
-| Mono labels | JetBrains Mono, mint, ~11-12px uppercase |
-| Amber availability | nav right, pulsing dot + text |
-| Projects (desktop) | 4 cards |
+| Visual element           | Technique                                                 |
+| ------------------------ | --------------------------------------------------------- |
+| Eclipse disk             | three.js: SOLID BLACK sphere (no emissive core)           |
+| Violet halo (upper-left) | R3F glow sprite / shader, violet, above-left of disk      |
+| Mint rim (right/bottom)  | R3F crescent/rim glow sprite, mint, wrapping right-bottom |
+| Aurora atmosphere        | CSS radial-gradient blobs, slow drift                     |
+| Technical grid           | CSS repeating-linear-gradient, 1px, faint                 |
+| Glass panels/cards       | `bg-white/8 + border-white/10 + backdrop-blur`            |
+| Headline                 | Space Grotesk, white, ~clamp(40px, 8vw, 72px)             |
+| Mono labels              | JetBrains Mono, mint, ~11-12px uppercase                  |
+| Amber availability       | nav right, pulsing dot + text                             |
+| Projects (desktop)       | 4 cards                                                   |
 
 ## 5. Uncertain (needs visual confirmation during refinement)
 

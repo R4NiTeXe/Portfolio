@@ -7,9 +7,9 @@ const challenges = [
     id: 1,
     code: `function sum(a, b) {\n  return a + b;\n}\n// What does sum(2, "3") return?`,
     question: "sum(2, '3') returns?",
-    options: ["5", "\"23\"", "NaN", "TypeError"],
+    options: ["5", '"23"', "NaN", "TypeError"],
     correct: 1,
-    explain: "JS coerces number to string when + with string → \"23\".",
+    explain: 'JS coerces number to string when + with string → "23".',
   },
   {
     id: 2,
@@ -39,7 +39,9 @@ export function CodeDebugger() {
 
   return (
     <div className="eclipse-card p-5 md:p-6">
-      <p className="mono-label text-mint">Code Debugger — {index + 1}/{challenges.length}</p>
+      <p className="mono-label text-mint">
+        Code Debugger — {index + 1}/{challenges.length}
+      </p>
       <pre className="mt-3 overflow-x-auto rounded-lg border border-white/10 bg-black/40 p-3 font-mono text-xs leading-relaxed text-white/80">
         {ch.code}
       </pre>
@@ -76,14 +78,21 @@ export function CodeDebugger() {
           <div className="mt-3 flex gap-2">
             {index < challenges.length - 1 ? (
               <button
-                onClick={() => { setIndex((v) => v + 1); setPicked(null); }}
+                onClick={() => {
+                  setIndex((v) => v + 1);
+                  setPicked(null);
+                }}
                 className="rounded-md bg-mint px-3 py-1.5 text-xs font-medium text-[#04141a]"
               >
                 Next
               </button>
             ) : (
               <button
-                onClick={() => { setIndex(0); setPicked(null); setScore(0); }}
+                onClick={() => {
+                  setIndex(0);
+                  setPicked(null);
+                  setScore(0);
+                }}
                 className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-muted-foreground"
               >
                 Restart — Score {score}/{challenges.length}
@@ -92,7 +101,9 @@ export function CodeDebugger() {
           </div>
         </div>
       )}
-      <p className="mono-label mt-3 !text-[9px] text-muted-foreground/60">Score {score}/{challenges.length} — local only</p>
+      <p className="mono-label mt-3 !text-[9px] text-muted-foreground/60">
+        Score {score}/{challenges.length} — local only
+      </p>
     </div>
   );
 }

@@ -32,7 +32,7 @@ export function HeroIntro({ children }: { children: React.ReactNode }) {
             ease: "power2.out",
             stagger: 0.09,
             delay: 0.15,
-          },
+          }
         );
         if (lines.length) {
           gsap.fromTo(
@@ -44,7 +44,7 @@ export function HeroIntro({ children }: { children: React.ReactNode }) {
               ease: "power4.out",
               stagger: 0.12,
               delay: 0.4,
-            },
+            }
           );
         }
       }, el);

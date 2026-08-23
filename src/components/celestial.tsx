@@ -48,11 +48,7 @@ function Planet({
   }[variant];
 
   return (
-    <div
-      data-celestial-obj
-      aria-hidden="true"
-      className={className}
-    >
+    <div data-celestial-obj aria-hidden="true" className={className}>
       <div aria-hidden="true" className={`absolute -inset-6 rounded-full blur-xl ${glow}`} />
       <div className={`planet-${variant} float-slow ${size}`} style={{ willChange: "transform" }} />
     </div>
@@ -228,14 +224,7 @@ export function Celestial() {
       drift(arcsRef.current, 55);
       drift(nearRef.current, 85);
 
-      const sections = [
-        "hero",
-        "about",
-        "skills",
-        "work",
-        "journey",
-        "contact",
-      ] as const;
+      const sections = ["hero", "about", "skills", "work", "journey", "contact"] as const;
       sections.forEach((id) => {
         const group = root.querySelector<HTMLElement>(`[data-group="${id}"]`);
         const section = document.getElementById(id);
@@ -272,10 +261,7 @@ export function Celestial() {
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#070A0F]"
     >
       {/* L1 — distant star field (3 depths + rare signal stars) */}
-      <div
-        ref={starsRef}
-        className="absolute inset-0 will-change-transform"
-      >
+      <div ref={starsRef} className="absolute inset-0 will-change-transform">
         {stars.tier1.map((s, i) => (
           <span
             key={`t1-${i}`}
@@ -287,56 +273,57 @@ export function Celestial() {
           <span
             key={`t2-${i}`}
             className={`star-s2 float-slow ${s.mobile ? "" : "hidden md:block"} ${s.twinkle ? "star-twinkle" : ""}`}
-            style={{
-              left: s.left,
-              top: s.top,
-              opacity: 0.3,
-              animationDuration: `${s.dur}s`,
-              "--tw-lo": "0.2",
-              "--tw-hi": "0.8",
-              "--tw-dur": `${5 + (i % 5)}s`,
-            } as React.CSSProperties}
+            style={
+              {
+                left: s.left,
+                top: s.top,
+                opacity: 0.3,
+                animationDuration: `${s.dur}s`,
+                "--tw-lo": "0.2",
+                "--tw-hi": "0.8",
+                "--tw-dur": `${5 + (i % 5)}s`,
+              } as React.CSSProperties
+            }
           />
         ))}
         {stars.tier3.map((s, i) => (
           <span
             key={`t3-${i}`}
             className={`star-s3 star-twinkle ${s.mobile ? "" : "hidden md:block"}`}
-            style={{
-              left: s.left,
-              top: s.top,
-              background: s.violet
-                ? "rgba(185,174,255,0.9)"
-                : "rgba(101,246,213,0.85)",
-              boxShadow: s.violet
-                ? "0 0 6px rgba(139,124,255,0.5)"
-                : "0 0 6px rgba(101,246,213,0.5)",
-              "--tw-lo": "0.35",
-              "--tw-hi": "1",
-              "--tw-dur": `${6 + (i % 4)}s`,
-            } as React.CSSProperties}
+            style={
+              {
+                left: s.left,
+                top: s.top,
+                background: s.violet ? "rgba(185,174,255,0.9)" : "rgba(101,246,213,0.85)",
+                boxShadow: s.violet
+                  ? "0 0 6px rgba(139,124,255,0.5)"
+                  : "0 0 6px rgba(101,246,213,0.5)",
+                "--tw-lo": "0.35",
+                "--tw-hi": "1",
+                "--tw-dur": `${6 + (i % 4)}s`,
+              } as React.CSSProperties
+            }
           />
         ))}
         {stars.signals.map((s, i) => (
           <span
             key={`sig-${i}`}
             className="star-signal star-twinkle hidden md:block"
-            style={{
-              left: s.left,
-              top: s.top,
-              "--tw-lo": "0.35",
-              "--tw-hi": "1",
-              "--tw-dur": "5s",
-            } as React.CSSProperties}
+            style={
+              {
+                left: s.left,
+                top: s.top,
+                "--tw-lo": "0.35",
+                "--tw-hi": "1",
+                "--tw-dur": "5s",
+              } as React.CSSProperties
+            }
           />
         ))}
       </div>
 
       {/* L2 — micro dust + rare foreground specks */}
-      <div
-        ref={dustRef}
-        className="absolute inset-0 will-change-transform"
-      >
+      <div ref={dustRef} className="absolute inset-0 will-change-transform">
         {dust.dots.map((d, i) => (
           <span
             key={`d-${i}`}
@@ -363,10 +350,7 @@ export function Celestial() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_50%_105%,rgba(101,246,213,0.035),transparent_60%)]" />
 
       {/* L5 — near celestial objects (stronger parallax) */}
-      <div
-        ref={nearRef}
-        className="absolute inset-0 will-change-transform"
-      >
+      <div ref={nearRef} className="absolute inset-0 will-change-transform">
         {/* HERO */}
         <div data-group="hero" className="absolute inset-0" style={{ opacity: 0 }}>
           <div className="aurora-violet float-slow absolute -top-[10%] left-[-12%] h-[52vh] w-[62vw] rounded-full opacity-50 blur-2xl [animation-duration:64s] max-md:opacity-25" />
@@ -464,19 +448,21 @@ export function Celestial() {
               key={`cp-${i}`}
               aria-hidden="true"
               className="star-twinkle hidden md:block"
-              style={{
-                position: "absolute",
-                left: p.x,
-                top: p.y,
-                width: p.s,
-                height: p.s,
-                borderRadius: "9999px",
-                background: p.c,
-                boxShadow: `0 0 4px ${p.c}`,
-                "--tw-lo": "0.18",
-                "--tw-hi": "0.7",
-                "--tw-dur": `${5 + i * 1.3}s`,
-              } as React.CSSProperties}
+              style={
+                {
+                  position: "absolute",
+                  left: p.x,
+                  top: p.y,
+                  width: p.s,
+                  height: p.s,
+                  borderRadius: "9999px",
+                  background: p.c,
+                  boxShadow: `0 0 4px ${p.c}`,
+                  "--tw-lo": "0.18",
+                  "--tw-hi": "0.7",
+                  "--tw-dur": `${5 + i * 1.3}s`,
+                } as React.CSSProperties
+              }
             />
           ))}
         </div>
@@ -542,10 +528,7 @@ export function Celestial() {
       </div>
 
       {/* L4 — distant orbital paths (slower parallax) */}
-      <div
-        ref={arcsRef}
-        className="absolute inset-0 will-change-transform"
-      >
+      <div ref={arcsRef} className="absolute inset-0 will-change-transform">
         <Arc
           width="w-[220px]"
           height="h-[100px]"
@@ -567,10 +550,7 @@ export function Celestial() {
       </div>
 
       {/* L3 — distant celestial bodies (barely visible) */}
-      <div
-        ref={distantRef}
-        className="absolute inset-0 will-change-transform"
-      >
+      <div ref={distantRef} className="absolute inset-0 will-change-transform">
         <Planet
           variant="atmo"
           size="h-28 w-28"

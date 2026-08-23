@@ -74,7 +74,7 @@ function useFps() {
         if (entries[0]?.isIntersecting) start();
         else stop();
       },
-      { threshold: 0 },
+      { threshold: 0 }
     );
     observer.observe(el);
     return () => {
@@ -90,10 +90,7 @@ function useSessionUptime() {
   const [uptime, setUptime] = useState(0);
   useEffect(() => {
     const start = Date.now();
-    const id = window.setInterval(
-      () => setUptime(Math.floor((Date.now() - start) / 1000)),
-      1000,
-    );
+    const id = window.setInterval(() => setUptime(Math.floor((Date.now() - start) / 1000)), 1000);
     return () => window.clearInterval(id);
   }, []);
   const mm = String(Math.floor(uptime / 60)).padStart(2, "0");
@@ -111,15 +108,12 @@ export function Footer() {
       <div className="mx-auto max-w-5xl px-6 py-12 md:py-16">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <p className="font-display text-2xl font-semibold text-white">
-              {site.brand}
-            </p>
+            <p className="font-display text-2xl font-semibold text-white">{site.brand}</p>
             <p className="mono-label mt-3 text-muted-foreground">
               R4NiTeXe © {new Date().getFullYear()}
             </p>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Full-stack development at the edge of light. Crafted in Kolkata,
-              India.
+              Full-stack development at the edge of light. Crafted in Kolkata, India.
             </p>
             <p className="mono-label mt-5 flex items-center gap-2 !text-[10px] text-mint">
               <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-mint" />
@@ -159,9 +153,7 @@ export function Footer() {
                     key={entry.tag}
                     className="flex items-baseline gap-2 text-[11px] text-muted-foreground"
                   >
-                    <span className="mono-label shrink-0 !text-[9px] text-mint">
-                      [{entry.tag}]
-                    </span>
+                    <span className="mono-label shrink-0 !text-[9px] text-mint">[{entry.tag}]</span>
                     <span className="truncate">{entry.text}</span>
                   </li>
                 ))}
@@ -242,9 +234,7 @@ export function Footer() {
               data-cursor-label="UP"
               className="group inline-flex items-center gap-3 text-xs text-muted-foreground transition-colors hover:text-mint"
             >
-              <span className="mono-label !text-[10px] !tracking-[0.14em]">
-                Return to orbit
-              </span>
+              <span className="mono-label !text-[10px] !tracking-[0.14em]">Return to orbit</span>
               <span className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 transition-colors group-hover:border-mint/50">
                 <span
                   aria-hidden="true"

@@ -42,8 +42,6 @@ function glowTexture(core: string, mid: string) {
   return new THREE.CanvasTexture(canvas);
 }
 
-
-
 // --- Real 3D celestial body: sphere geometry with natural material ---
 
 const bodyVertexShader = `
@@ -199,7 +197,13 @@ const atmosphereFragmentShader = `
   }
 `;
 
-function CelestialBody({ reduced, revealRef }: { reduced: boolean; revealRef: React.MutableRefObject<number> }) {
+function CelestialBody({
+  reduced,
+  revealRef,
+}: {
+  reduced: boolean;
+  revealRef: React.MutableRefObject<number>;
+}) {
   const uniforms = useMemo(
     () => ({
       uBase: { value: new THREE.Color("#080C14") },
@@ -288,10 +292,7 @@ function HeroOrbits({ reduced }: { reduced: boolean }) {
       g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
       return g;
     };
-    return [
-      make(1.48, 1.34, 0.34, 0.7),
-      make(1.88, 1.58, -0.19, 2.1),
-    ];
+    return [make(1.48, 1.34, 0.34, 0.7), make(1.88, 1.58, -0.19, 2.1)];
   }, []);
   const dotsGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -330,7 +331,14 @@ function HeroOrbits({ reduced }: { reduced: boolean }) {
         <lineBasicMaterial color="#8B7CFF" transparent opacity={0.11} depthWrite={false} />
       </line>
       <points ref={dotsRef} geometry={dotsGeom}>
-        <pointsMaterial size={0.028} color="#65F6D5" transparent opacity={0.85} depthWrite={false} sizeAttenuation />
+        <pointsMaterial
+          size={0.028}
+          color="#65F6D5"
+          transparent
+          opacity={0.85}
+          depthWrite={false}
+          sizeAttenuation
+        />
       </points>
     </group>
   );
@@ -361,8 +369,18 @@ function CameraRig({ reduced }: { reduced: boolean }) {
   }, []);
   useFrame(({ camera }, delta) => {
     if (reduced) return;
-    camera.position.x = THREE.MathUtils.damp(camera.position.x, target.current.x * 0.16, 2.5, delta);
-    camera.position.y = THREE.MathUtils.damp(camera.position.y, -target.current.y * 0.11, 2.5, delta);
+    camera.position.x = THREE.MathUtils.damp(
+      camera.position.x,
+      target.current.x * 0.16,
+      2.5,
+      delta
+    );
+    camera.position.y = THREE.MathUtils.damp(
+      camera.position.y,
+      -target.current.y * 0.11,
+      2.5,
+      delta
+    );
     camera.lookAt(0, 0, 0);
   });
   return null;
@@ -390,7 +408,11 @@ function OrbitParticles({
       positions[i * 3 + 1] = Math.sin(angle) * radius * 0.94;
       const band = i % 4;
       positions[i * 3 + 2] =
-        band === 0 ? -0.18 - Math.random() * 0.12 : band === 1 ? 0.07 + Math.random() * 0.08 : (Math.random() - 0.5) * 0.28;
+        band === 0
+          ? -0.18 - Math.random() * 0.12
+          : band === 1
+            ? 0.07 + Math.random() * 0.08
+            : (Math.random() - 0.5) * 0.28;
       const c = palette[i % 4];
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
@@ -543,9 +565,18 @@ function Scene() {
   const haloLayerRef = useRef<THREE.Sprite>(null);
   const coreRef = useRef<THREE.Sprite>(null);
   const revealRef = useRef(reduced ? 1 : 0.45);
-  const violetTex = useMemo(() => glowTexture("rgba(139,124,255,0.30)", "rgba(139,124,255,0.08)"), []);
-  const violetLayerTex = useMemo(() => glowTexture("rgba(139,124,255,0.40)", "rgba(139,124,255,0.11)"), []);
-  const violetCoreTex = useMemo(() => glowTexture("rgba(255,252,248,0.92)", "rgba(255,240,235,0.24)"), []);
+  const violetTex = useMemo(
+    () => glowTexture("rgba(139,124,255,0.30)", "rgba(139,124,255,0.08)"),
+    []
+  );
+  const violetLayerTex = useMemo(
+    () => glowTexture("rgba(139,124,255,0.40)", "rgba(139,124,255,0.11)"),
+    []
+  );
+  const violetCoreTex = useMemo(
+    () => glowTexture("rgba(255,252,248,0.92)", "rgba(255,240,235,0.24)"),
+    []
+  );
 
   useEffect(() => {
     if (reduced) {
@@ -570,7 +601,7 @@ function Scene() {
     if (reduced || !groupRef.current) return;
     groupRef.current.rotation.z = Math.sin(clock.elapsedTime * 0.04) * 0.012;
     if (coreRef.current) {
-      const s = 0.68 + Math.sin(clock.elapsedTime * 0.50) * 0.035;
+      const s = 0.68 + Math.sin(clock.elapsedTime * 0.5) * 0.035;
       coreRef.current.scale.setScalar(s);
     }
     if (haloRef.current) {
@@ -617,10 +648,12 @@ function Scene() {
     }
     // 30s reveal — subtle fade-in of celestial group
     const rv = revealRef.current;
-    if (haloRef.current) (haloRef.current.material as THREE.SpriteMaterial).opacity = 0.72 * (0.48 + rv * 0.52);
+    if (haloRef.current)
+      (haloRef.current.material as THREE.SpriteMaterial).opacity = 0.72 * (0.48 + rv * 0.52);
     if (haloLayerRef.current)
       (haloLayerRef.current.material as THREE.SpriteMaterial).opacity = 0.82 * (0.48 + rv * 0.52);
-    if (coreRef.current) (coreRef.current.material as THREE.SpriteMaterial).opacity = 0.52 * (0.48 + rv * 0.52);
+    if (coreRef.current)
+      (coreRef.current.material as THREE.SpriteMaterial).opacity = 0.52 * (0.48 + rv * 0.52);
   });
 
   return (
