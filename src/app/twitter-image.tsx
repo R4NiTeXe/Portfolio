@@ -3,7 +3,7 @@ import { site } from "@/lib/site";
 
 export const runtime = "edge";
 
-export const alt = "Ranit Naskar — Software Developer | ECLIPSE";
+export const alt = "Ranit Naskar — Software Developer";
 export const size = {
   width: 1200,
   height: 630,
@@ -89,7 +89,7 @@ export default function Image() {
                 boxShadow: "0 0 10px rgba(101,246,213,0.9)",
               }}
             />
-            ECLIPSE
+            RANIT NASKAR
           </div>
           <div
             style={{
