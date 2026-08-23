@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const LINES: { prefix?: string; text: string; color?: string }[] = [
-  { prefix: "", text: "ECLIPSE OS v3.0 — PORTFOLIO TERMINAL", color: "text-mint" },
+  { prefix: "", text: "PORTFOLIO TERMINAL v3.0", color: "text-mint" },
   { prefix: "", text: "> boot sequence initiated" },
   { prefix: "", text: "> loading core modules ......... OK" },
   { prefix: "", text: "> loading mission data ......... OK" },
@@ -91,10 +91,10 @@ export function Terminal() {
         className="eclipse-card h-[70vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-mint/20 p-6 font-mono text-[12.5px] leading-relaxed shadow-[0_0_60px_-20px_rgba(101,246,213,0.4)] md:p-8"
         onClick={() => setOpen(false)}
         role="dialog"
-        aria-label="ECLIPSE OS terminal"
+        aria-label="Portfolio terminal"
       >
         <p className="text-muted-foreground">
-          ECLIPSE-OS://<span className="text-mint">portfolio</span>$
+          portfolio://<span className="text-mint">ranit</span>$
           <span className="blink-cursor ml-1 inline-block h-3.5 w-2 bg-mint align-middle" />
         </p>
         <div className="mt-3 space-y-0.5">
