@@ -134,6 +134,7 @@ export function ProjectConstellation({
         {projects.map((project, i) => {
           const pos = nodePos[i];
           const tone = toneStyles[project.tone];
+          const isCurrent = project.name === "AnatomiaX";
           return (
             <div
               key={project.name}
@@ -148,19 +149,25 @@ export function ProjectConstellation({
                   type="button"
                   onClick={(e) => onOpen(project, e.currentTarget as HTMLElement)}
                   data-cursor-label="OPEN"
-                  aria-label={`${project.name} — ${project.status}. Open project details.`}
-                  className="group relative flex min-h-[44px] min-w-[44px] flex-col items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F] rounded-lg p-1"
+                  aria-label={`${project.name} — ${project.status}${isCurrent ? " — Current focus" : ""}. Open project details.`}
+                  aria-current={isCurrent ? "true" : undefined}
+                  className={`group relative flex min-h-[44px] min-w-[44px] flex-col items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F] rounded-lg p-1 ${isCurrent ? "ring-1 ring-violet/30" : ""}`}
                 >
                   <span className="relative flex h-12 w-12 items-center justify-center">
                     <span
-                      className={`absolute inset-0 rounded-full border transition-all duration-300 group-hover:scale-110 ${tone.chip}`}
+                      className={`absolute inset-0 rounded-full border transition-all duration-300 group-hover:scale-110 ${tone.chip} ${isCurrent ? "border-violet/40 bg-violet/[0.06] shadow-[0_0_12px_rgba(139,124,255,0.25)]" : ""}`}
                     />
                     <span
-                      className={`h-2.5 w-2.5 rounded-full transition-shadow duration-300 group-hover:shadow-[0_0_14px_currentColor] ${tone.bar}`}
+                      className={`h-2.5 w-2.5 rounded-full transition-shadow duration-300 group-hover:shadow-[0_0_14px_currentColor] ${tone.bar} ${isCurrent ? "animate-pulse-dot" : ""}`}
                     />
+                    {isCurrent && (
+                      <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-violet text-[6px] font-bold text-white">
+                        •
+                      </span>
+                    )}
                   </span>
-                  <span className="mono-label !text-[9px] text-white/70 transition-colors group-hover:text-white">
-                    {project.index} · {project.name}
+                  <span className={`mono-label !text-[9px] transition-colors ${isCurrent ? "text-violet" : "text-white/70 group-hover:text-white"}`}>
+                    {project.index} · {project.name} {isCurrent && " — CURRENT"}
                   </span>
                   <span
                     className={`absolute top-14 left-1/2 hidden flex-col items-center sm:flex ${
