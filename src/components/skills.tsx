@@ -166,7 +166,7 @@ export function Skills() {
           <h2 className="font-display max-w-xl text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
             The stack behind
             <br />
-            <span className="text-glow-mint text-mint">the eclipse.</span>
+            <span className="text-glow-mint text-mint">what i build.</span>
           </h2>
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
             Tools I reach for daily — from bare C to typed React, from

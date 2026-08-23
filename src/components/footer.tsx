@@ -234,7 +234,7 @@ export function Footer() {
             SESSION {uptime}
           </p>
           <p className="mono-label !text-[10px] !tracking-[0.14em] text-muted-foreground/60">
-            ENGINEERED WITH AI ASSISTANCE · OPENCODE
+            ENGINEERED WITH AI ASSISTANCE
           </p>
           <Magnetic strength={0.35}>
             <a
