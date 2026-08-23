@@ -36,7 +36,7 @@ export function Preloader() {
         <div className="h-10 w-10 rounded-full bg-black shadow-[0_0_40px_rgba(101,246,213,0.25)] ring-1 ring-mint/60" />
       </div>
       <p className="mono-label mt-8 animate-pulse text-mint">
-        Initializing ECLIPSE
+        Initializing
       </p>
     </div>
   );
