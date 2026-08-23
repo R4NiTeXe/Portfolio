@@ -81,7 +81,7 @@ export const projects = [
     stack: ["React.js", "Node.js", "Express.js", "MongoDB"],
     href: "https://github.com/R4NiTeXe",
     repo: "https://github.com/R4NiTeXe/Video-Tube",
-    live: null,
+    live: "https://video-tube044.vercel.app/",
     preview: "video",
   },
   {
@@ -101,7 +101,7 @@ export const projects = [
     stack: ["React.js", "Express.js", "MongoDB"],
     href: "https://github.com/R4NiTeXe",
     repo: "https://github.com/R4NiTeXe/Dukaan_Sathi",
-    live: null,
+    live: "https://dukaansathi-ai.vercel.app/",
     preview: "retail",
   },
   {
@@ -137,8 +137,8 @@ export const milestones = [
   {
     period: "2024",
     role: "Higher Secondary",
-    title: "WBCHSE — Class XII (Arts)",
-    description: "Completed Class XII with 66% — the turn toward computing.",
+    title: "WBCHSE — Class XII",
+    description: "Completed Class XII — the turn toward computing.",
   },
   {
     period: "2024 — 2027",
@@ -149,7 +149,7 @@ export const milestones = [
       "CGPA 7.01 through the 4th semester — DSA, DBMS, OOP and systems foundations.",
   },
   {
-    period: "2025",
+    period: "2026",
     role: "Hackathon — Top 6 Finalist",
     title: "Digontom Pvt. Ltd.",
     description:
