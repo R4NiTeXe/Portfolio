@@ -18,7 +18,7 @@ const stats = [
 
 const systemLog = [
   { when: "2024 — 2027", what: "DIPLOMA CSE — BRAINWARE UNIVERSITY" },
-  { when: "2025", what: "HACKATHON TOP 6 — DIGONTOM PVT. LTD." },
+  { when: "2026", what: "HACKATHON TOP 6 — DIGONTOM PVT. LTD." },
   { when: "20.04 — 07.08.2026", what: "MAGANAL ROVER — AGNIRATH AEROSPACE" },
 ] as const;
 
