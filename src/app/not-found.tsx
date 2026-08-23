@@ -41,7 +41,7 @@ export default function NotFound() {
         <ArrowDown className="h-4 w-4 rotate-180" />
       </Link>
       <p className="mono-label relative z-10 mt-8 text-white/30">
-        ECLIPSE-OS // NAVIGATION CORE
+        SYSTEM // NAVIGATION CORE
       </p>
     </div>
   );
