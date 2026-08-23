@@ -124,11 +124,10 @@ export function Hero() {
         <p className="mono-label text-mint">{"// "}CURRENT ORBIT</p>
         <div className="mt-4 border-l-2 border-mint/30 pl-4">
           <p className="text-sm leading-relaxed text-white/90">
-            MAGANAL rover mission — Team Project Intern, Agnirath Aerospace
+            AnatomiaX — 3D AI-powered anatomy learning platform
           </p>
           <p className="mt-2 text-sm leading-relaxed text-white/90">
-            Completed Aug 2026 — autonomous navigation · obstacle detection ·
-            environmental sensing
+            In Development — interactive 3D models · AI-assisted learning
           </p>
         </div>
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -174,8 +173,8 @@ export function Hero() {
             className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground"
           >
             Full-stack developer from Kolkata — React, Node.js and MongoDB on
-            the front lines of real projects, including the MAGANAL rover
-            mission at Agnirath Aerospace.
+            the front lines of real projects. Currently building AnatomiaX, a
+            3D AI-powered anatomy learning platform.
           </p>
           <p data-hero-item className="mono-label mt-4 text-mint">
             {"// "}React · Node.js · MongoDB · Docker
@@ -243,10 +242,10 @@ export function Hero() {
           </div>
           <div className="flex items-center justify-between gap-3">
             <dt className="text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-              Mission
+              Focus
             </dt>
             <dd className="mono-label !text-[9px] text-violet">
-              MAGANAL
+              AnatomiaX
             </dd>
           </div>
         </dl>
