@@ -94,9 +94,9 @@ export const projects = [
     ],
     stack: ["Three.js", "React.js", "AI tooling"],
     href: "https://github.com/R4NiTeXe",
-    repo: null,
+    repo: "https://github.com/R4NiTeXe/AnatomiaX",
     live: null,
-    preview: "anatomy",
+    preview: "anatomia",
   },
 ] as const;
 
