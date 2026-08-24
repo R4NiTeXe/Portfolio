@@ -364,7 +364,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             </a>
           )}
           <a
-            href={project.repo ?? project.href}
+            href={(project.repo as string | null) ?? project.href}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Source code for ${project.name}`}
@@ -504,7 +504,7 @@ export function Work() {
                         </a>
                       )}
                       <a
-                        href={project.repo ?? project.href}
+                        href={(project.repo as string | null) ?? project.href}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
