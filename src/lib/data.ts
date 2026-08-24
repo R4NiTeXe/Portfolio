@@ -96,7 +96,7 @@ export const projects = [
     href: "https://github.com/R4NiTeXe",
     repo: "https://github.com/R4NiTeXe/AnatomiaX",
     live: null,
-    preview: "anatomia",
+    preview: "anatomy",
   },
 ] as const;
 
