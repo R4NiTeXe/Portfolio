@@ -1,4 +1,4 @@
-# 🌑 ECLIPSE — Developer Portfolio
+# 🌑 Personal Portfolio
 
 > **Full-stack development at the edge of light.**  
 > A high-performance, celestial-themed personal portfolio built with Next.js 15, React 19, Three.js custom shaders, and real-time physics simulations.
