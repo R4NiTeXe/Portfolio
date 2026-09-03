@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { GithubIcon } from "@/components/icons";
 import { projects } from "@/lib/data";
 import { site } from "@/lib/site";
-import { ProjectConstellation } from "@/components/constellation";
+import { ProjectConstellation } from "./constellation";
 
 export const toneStyles = {
   mint: {

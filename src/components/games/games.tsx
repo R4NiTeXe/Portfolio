@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { CodeDebugger } from "@/components/code-debugger";
-import { GitChallenge } from "@/components/git-challenge";
+import { CodeDebugger } from "./code-debugger";
+import { GitChallenge } from "./git-challenge";
 
-const OrbitLab = dynamic(() => import("@/components/orbit-lab").then((m) => m.OrbitLab), {
+const OrbitLab = dynamic(() => import("./orbit-lab").then((m) => m.OrbitLab), {
   ssr: false,
   loading: () => (
     <div className="eclipse-card h-[340px] w-full animate-pulse rounded-2xl border border-white/5 bg-white/[0.02]" />

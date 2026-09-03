@@ -6,8 +6,8 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
-import { Eclipse } from "@/components/eclipse";
-import { HeroIntro } from "@/components/hero-intro";
+import { Eclipse } from "./eclipse";
+import { HeroIntro } from "./hero-intro";
 import { Magnetic } from "@/components/magnetic";
 import { site } from "@/lib/site";
 

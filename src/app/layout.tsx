@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { StructuredData } from "@/components/structured-data";
+import { StructuredData } from "@/components/seo";
 import { site } from "@/lib/site";
 
 const display = Space_Grotesk({

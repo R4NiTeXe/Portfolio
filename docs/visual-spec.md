@@ -1,6 +1,5 @@
 # ECLIPSE Portfolio — Reference-Based Visual Specification
 
-Source of truth: `reference.png` (1536x1024, aspect 3:2).
 Extracted programmatically (System.Drawing pixel sampling) — every number below is measured from the image, not guessed.
 
 ## 1. Colors (measured)

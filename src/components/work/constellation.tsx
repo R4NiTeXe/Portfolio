@@ -2,8 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/data";
-import { toneStyles } from "@/components/work";
-import type { Project } from "@/components/work";
+import { toneStyles, type Project } from "./work";
 
 const NODE_ANGLES = [200, 340, 100];
 
