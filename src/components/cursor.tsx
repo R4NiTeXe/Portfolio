@@ -32,44 +32,53 @@ export function Cursor() {
       y = e.clientY;
       const target = e.target as HTMLElement;
       const interactive = target.closest(
-        "a, button, [role='button'], input, select, textarea, [data-hover]"
+        "a, button, [role='button'], input, select, textarea, summary, [data-hover]"
       );
 
-      // Magnetic pull toward interactive element center
+      // Uniform subtle pull toward interactive element center
       const labeled = interactive?.closest<HTMLElement>("[data-cursor-label]");
-      const project = interactive?.closest<HTMLElement>("[data-cursor-project]");
-      if (interactive && labeled) {
-        const rect = labeled.getBoundingClientRect();
-        const pull = 0.22;
+      const anchor = (labeled ?? interactive) as HTMLElement | null;
+      if (anchor) {
+        const rect = anchor.getBoundingClientRect();
+        const pull = 0.12;
         mx = x + (rect.left + rect.width / 2 - x) * pull;
         my = y + (rect.top + rect.height / 2 - y) * pull;
-        label.textContent = labeled.dataset.cursorLabel ?? "";
       } else {
         mx = x;
         my = y;
       }
-      const isLink = !!interactive?.closest("a[href]");
-      ring.classList.toggle("cursor-ring-link", !!interactive && !labeled && !project && isLink);
-      ring.classList.toggle("cursor-ring-button", !!interactive && !labeled && !project && !isLink);
-      ring.classList.toggle("cursor-ring-project", !!project);
-      ring.classList.toggle("cursor-ring-active", !!labeled);
+      label.textContent = labeled?.dataset.cursorLabel ?? "";
+      ring.classList.toggle("cursor-ring-hover", !!interactive && !labeled);
       ring.classList.toggle("cursor-ring-labeling", !!labeled);
     };
 
+    const onDown = () => {
+      dot.style.scale = "0.7";
+      ring.style.scale = "0.9";
+    };
+    const onUp = () => {
+      dot.style.scale = "1";
+      ring.style.scale = "1";
+    };
+
     const loop = () => {
-      rx += (mx - rx) * 0.16;
-      ry += (my - ry) * 0.16;
-      dot.style.transform = `translate3d(${x - 3}px, ${y - 3}px, 0)`;
-      ring.style.transform = `translate3d(${rx - 12}px, ${ry - 12}px, 0)`;
+      rx += (mx - rx) * 0.2;
+      ry += (my - ry) * 0.2;
+      dot.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
       raf = requestAnimationFrame(loop);
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
     raf = requestAnimationFrame(loop);
     document.documentElement.classList.add("has-custom-cursor");
 
     return () => {
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
       cancelAnimationFrame(raf);
       document.documentElement.classList.remove("has-custom-cursor");
     };
