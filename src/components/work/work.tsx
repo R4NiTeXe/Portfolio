@@ -496,22 +496,20 @@ export function Work() {
                   className="card-spotlight eclipse-card group flex h-full cursor-pointer flex-col p-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <p className={`font-display text-sm font-semibold ${tone.index}`}>
+                    <p
+                      className={`font-display text-sm font-semibold ${project.live ? "text-mint" : tone.index}`}
+                    >
                       {project.index}
                     </p>
-                    <span className="flex shrink-0 items-center gap-1.5">
-                      {project.live && (
-                        <span className="mono-label inline-flex items-center gap-1 rounded border border-mint/30 bg-mint/10 px-2 py-1 !text-[9px] text-mint">
-                          <span className="h-1 w-1 animate-pulse-dot rounded-full bg-mint" />
-                          LIVE
+                    {!project.live && (
+                      <span className="flex shrink-0 items-center gap-1.5">
+                        <span
+                          className={`mono-label rounded border px-2 py-1 !text-[9px] ${tone.chip}`}
+                        >
+                          {project.status}
                         </span>
-                      )}
-                      <span
-                        className={`mono-label rounded border px-2 py-1 !text-[9px] ${tone.chip}`}
-                      >
-                        {project.status}
                       </span>
-                    </span>
+                    )}
                   </div>
 
                   <div className="preview-grid relative mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">

@@ -12,7 +12,9 @@ function InfoPanel({ project }: { project: Project }) {
     <div className="pointer-events-none absolute left-1/2 z-20 w-60 -translate-x-1/2 rounded-xl border border-white/10 bg-[#0A0F1A]/95 p-4 opacity-0 shadow-xl backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
       <div className="flex items-center justify-between gap-2">
         <p className="mono-label !text-[8px] text-white/40">PROJECT {project.index}</p>
-        <p className={`mono-label shrink-0 !text-[8px] ${tone.chip}`}>{project.status}</p>
+        {!project.live && (
+          <p className={`mono-label shrink-0 !text-[8px] ${tone.chip}`}>{project.status}</p>
+        )}
       </div>
       <p className="mt-1.5 font-display text-sm font-semibold text-white">{project.name}</p>
       <p className="mt-2 line-clamp-3 text-[11px] leading-relaxed text-muted-foreground">
@@ -139,10 +141,10 @@ export function ProjectConstellation({
                 >
                   <span className="relative flex h-12 w-12 items-center justify-center">
                     <span
-                      className={`absolute inset-0 rounded-full border transition-all duration-300 group-hover:scale-110 ${tone.chip} ${isCurrent ? "border-violet/40 bg-violet/[0.06] shadow-[0_0_12px_rgba(139,124,255,0.25)]" : ""}`}
+                      className={`absolute inset-0 rounded-full border transition-all duration-300 group-hover:scale-110 ${project.live ? "border-mint/30 bg-mint/[0.06]" : tone.chip} ${isCurrent ? "border-violet/40 bg-violet/[0.06] shadow-[0_0_12px_rgba(139,124,255,0.25)]" : ""}`}
                     />
                     <span
-                      className={`h-2.5 w-2.5 rounded-full transition-shadow duration-300 group-hover:shadow-[0_0_14px_currentColor] ${tone.bar} ${isCurrent ? "animate-pulse-dot" : ""}`}
+                      className={`h-2.5 w-2.5 rounded-full transition-shadow duration-300 group-hover:shadow-[0_0_14px_currentColor] ${project.live ? "bg-mint" : tone.bar} ${isCurrent ? "animate-pulse-dot" : ""}`}
                     />
                     {isCurrent && (
                       <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-violet text-[6px] font-bold text-white">
@@ -182,7 +184,9 @@ export function ProjectConstellation({
               className="eclipse-card group flex items-center justify-between gap-3 p-4 text-left transition-transform active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A0F]"
             >
               <span className="flex min-w-0 items-center gap-3">
-                <span className={`font-display text-sm font-semibold ${tone.index}`}>
+                <span
+                  className={`font-display text-sm font-semibold ${project.live ? "text-mint" : tone.index}`}
+                >
                   {project.index}
                 </span>
                 <span className="min-w-0">
@@ -194,19 +198,15 @@ export function ProjectConstellation({
                   </span>
                 </span>
               </span>
-              <span className="flex shrink-0 items-center gap-1.5">
-                {project.live && (
-                  <span className="mono-label inline-flex items-center gap-1 rounded border border-mint/30 bg-mint/10 px-2 py-0.5 !text-[8px] text-mint">
-                    <span className="h-1 w-1 animate-pulse-dot rounded-full bg-mint" />
-                    LIVE
+              {!project.live && (
+                <span className="flex shrink-0 items-center gap-1.5">
+                  <span
+                    className={`mono-label rounded border px-2 py-0.5 !text-[8px] ${tone.chip}`}
+                  >
+                    {project.status}
                   </span>
-                )}
-                <span
-                  className={`mono-label rounded border px-2 py-0.5 !text-[8px] ${tone.chip}`}
-                >
-                  {project.status}
                 </span>
-              </span>
+              )}
             </button>
           );
         })}
