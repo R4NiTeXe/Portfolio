@@ -198,7 +198,7 @@ export default function Image() {
             display: "flex",
           }}
         >
-          Full-stack development at the edge of light.
+          Building full-stack systems from idea to deployment.
         </div>
         <div
           style={{
@@ -210,7 +210,7 @@ export default function Image() {
             display: "flex",
           }}
         >
-          React · Node.js · MongoDB · Docker · Three.js
+          TypeScript · Next.js · Node.js · MongoDB · Docker
         </div>
       </div>
 

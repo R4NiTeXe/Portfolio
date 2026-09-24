@@ -94,7 +94,9 @@ const FILTERS = [
   "Frontend",
   "Backend",
   "Database",
-  "Tools & Platforms",
+  "Testing",
+  "API / Documentation",
+  "DevOps",
   "AI-Assisted Development",
   "Foundations",
 ] as const;

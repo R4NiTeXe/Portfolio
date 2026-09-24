@@ -59,7 +59,7 @@ export function Journey() {
   return (
     <section id="journey" aria-label="Journey" className="relative scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
-        <p className="mono-label text-mint">04 // Journey</p>
+        <p className="mono-label text-mint">05 // Journey</p>
         <div className="mt-10 grid gap-14 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
           <div data-reveal-item>
             <h2 className="font-display text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">

@@ -4,6 +4,7 @@ import { CommandPalette } from "@/components/command-palette";
 import { Contact } from "@/components/contact";
 import { Cursor } from "@/components/cursor";
 import { EasterEgg } from "@/components/easter-egg";
+import { Experience } from "@/components/experience";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
 import { Journey } from "@/components/journey";
@@ -41,6 +42,9 @@ export default function Home() {
         </Reveal>
         <Reveal>
           <Work />
+        </Reveal>
+        <Reveal>
+          <Experience />
         </Reveal>
         <Reveal>
           <Journey />

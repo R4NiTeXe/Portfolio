@@ -22,7 +22,7 @@ const LINES: { prefix?: string; text: string; color?: string }[] = [
   },
   {
     prefix: "SKILLS   ",
-    text: "C / C++ · React.js · Node.js · Express.js · MongoDB · MySQL · Docker · Linux",
+    text: "TypeScript · Next.js · React.js · Node.js · Express.js · MongoDB · JWT · Docker · Linux",
   },
   {
     prefix: "AI       ",
@@ -31,7 +31,7 @@ const LINES: { prefix?: string; text: string; color?: string }[] = [
   },
   {
     prefix: "PROJECTS ",
-    text: "Video_Tube [SHIPPED] · Dukaan_Sathi [TOP 6] · AnatomiaX [IN DEV]",
+    text: "CarePlus [LIVE] · Video_Tube [SHIPPED] · Dukaan_Sathi [TOP 6] · AnatomiaX [IN DEV]",
     color: "text-amber",
   },
   {

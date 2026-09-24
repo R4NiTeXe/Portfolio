@@ -84,9 +84,13 @@ export function About() {
         <div className="mt-10 grid gap-14 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
           <div data-reveal-item>
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-              I&apos;m Ranit — a software developer from Kolkata, India. I build full-stack products
-              with a code-first mindset: Node.js APIs, React interfaces, and databases designed to
-              scale quietly in the background.
+              I&apos;m Ranit — a software developer from Kolkata, India, focused on building
+              TypeScript/JavaScript applications, REST APIs, database-driven systems, and
+              interactive web experiences.
+            </p>
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+              My work spans React, Next.js, Node.js, Express, MongoDB, authentication, API
+              security, testing, Docker, and modern development infrastructure.
             </p>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
               Pursuing a Diploma in CSE at Brainware University after the Team Project Internship at

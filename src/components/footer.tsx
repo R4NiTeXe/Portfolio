@@ -113,7 +113,7 @@ export function Footer() {
               R4NiTeXe © {new Date().getFullYear()}
             </p>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Full-stack development at the edge of light. Crafted in Kolkata, India.
+              Building full-stack systems from idea to deployment. Crafted in Kolkata, India.
             </p>
             <p className="mono-label mt-5 flex items-center gap-2 !text-[10px] text-mint">
               <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-mint" />

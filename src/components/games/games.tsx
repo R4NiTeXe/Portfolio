@@ -20,7 +20,7 @@ export function Games() {
   return (
     <section id="games" aria-label="Games" className="relative scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
-        <p className="mono-label text-mint">05 // Games</p>
+        <p className="mono-label text-mint">06 // Games</p>
         <div className="mt-10 flex flex-wrap items-end justify-between gap-6">
           <h2 className="font-display max-w-xl text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">
             Engineering

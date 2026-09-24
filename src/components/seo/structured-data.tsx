@@ -19,12 +19,16 @@ export function StructuredData() {
         },
         sameAs: [site.github, site.linkedin],
         knowsAbout: [
+          "TypeScript",
           "React.js",
+          "Next.js",
           "Node.js",
           "Express.js",
           "MongoDB",
+          "JWT",
+          "Docker",
           "Three.js",
-          "Next.js",
+          "React Three Fiber",
           "Full-stack Development",
         ],
       },
@@ -34,7 +38,7 @@ export function StructuredData() {
         url: site.url,
         name: `${site.name} — ${site.role}`,
         description:
-          "Portfolio of Ranit Naskar — Software Developer from Kolkata, India crafting full-stack web experiences with React, Node.js, MongoDB, Three.js and modern tooling.",
+          "Portfolio of Ranit Naskar — Software Developer from Kolkata, India building full-stack systems from idea to deployment with TypeScript, Next.js, Node.js, MongoDB and Docker.",
         publisher: {
           "@id": `${site.url}/#person`,
         },

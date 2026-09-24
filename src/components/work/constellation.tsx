@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/lib/data";
 import { toneStyles, type Project } from "./work";
 
-const NODE_ANGLES = [200, 340, 100];
+const NODE_ANGLES = [200, 340, 100, 280];
 
 function InfoPanel({ project }: { project: Project }) {
   const tone = toneStyles[project.tone];

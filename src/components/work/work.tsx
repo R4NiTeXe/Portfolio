@@ -31,7 +31,51 @@ export const toneStyles = {
 
 type Tone = (typeof toneStyles)[keyof typeof toneStyles];
 
-function MiniPreview({ variant, tone }: { variant: "video" | "retail" | "anatomy"; tone: Tone }) {
+function MiniPreview({ variant, tone }: { variant: "video" | "retail" | "anatomy" | "care"; tone: Tone }) {
+  if (variant === "care") {
+    return (
+      <div className="flex gap-2 p-2.5">
+        <div className="flex w-8 flex-col gap-1.5 border-r border-white/10 pr-2">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={`h-1.5 rounded-full ${
+                i === 0 ? `w-full ${tone.bar}` : "w-3/4 bg-white/15"
+              }`}
+            />
+          ))}
+        </div>
+        <div className="flex-1">
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="flex-1 rounded-md border border-white/10 bg-white/[0.03] p-1.5"
+              >
+                <div className="h-0.5 w-2/3 rounded-full bg-white/15" />
+                <div
+                  className={`mt-1 h-2 rounded-sm ${
+                    i === 0 ? `${tone.bar} opacity-90` : "bg-white/10"
+                  }`}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="mt-1.5 rounded-md border border-white/10 bg-white/[0.02] p-1.5">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="flex items-center gap-1.5 py-0.5">
+                <span className={`h-1 w-1 rounded-full ${i === 0 ? tone.bar : "bg-white/15"}`} />
+                <span className="h-0.5 flex-1 rounded-full bg-white/10" />
+                <span className="h-0.5 w-6 rounded-full bg-white/15" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (variant === "video") {
     return (
       <div className="flex gap-2 p-2.5">

@@ -282,7 +282,7 @@ export function Contact() {
   return (
     <section id="contact" aria-label="Contact" className="relative scroll-mt-24">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32 lg:px-20">
-        <p className="mono-label text-mint">06 // Contact</p>
+        <p className="mono-label text-mint">07 // Contact</p>
         <div className="mt-10 grid gap-14 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
           <div data-reveal-item>
             <h2 className="font-display text-3xl leading-tight font-semibold tracking-tight text-white md:text-5xl">

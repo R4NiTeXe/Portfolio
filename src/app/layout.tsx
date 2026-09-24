@@ -26,16 +26,22 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: `${site.name} — Software Developer`,
   description:
-    "Portfolio of Ranit Naskar — Software Developer from Kolkata, India crafting full-stack web experiences with React, Node.js, MongoDB, Three.js and modern tooling. Explore projects, journey and contact.",
+    "Portfolio of Ranit Naskar — Software Developer from Kolkata, India building full-stack systems from idea to deployment with TypeScript, Next.js, Node.js, Express, MongoDB, Docker and Three.js. Explore CarePlus, projects, experience and contact.",
   keywords: [
     "Ranit Naskar",
     "Software Developer",
     "Full-stack Developer",
     "Portfolio",
+    "TypeScript",
     "React",
-    "Node.js",
     "Next.js",
+    "Node.js",
+    "Express",
+    "MongoDB",
+    "JWT",
+    "Docker",
     "Three.js",
+    "CarePlus",
     "Kolkata",
   ],
   authors: [{ name: site.name, url: site.url }],
@@ -57,8 +63,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${site.name} — Software Developer`,
-    description:
-      "Software Developer from Kolkata, India — building deliberate software at the edge of light.",
+    description: "Software Developer from Kolkata, India — building full-stack systems from idea to deployment.",
     url: site.url,
     siteName: site.name,
     locale: "en_US",
@@ -75,8 +80,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — Software Developer`,
-    description:
-      "Software Developer from Kolkata, India — building deliberate software at the edge of light.",
+    description: "Software Developer from Kolkata, India — building full-stack systems from idea to deployment.",
     images: ["/opengraph-image"],
   },
   // Add Google Search Console verification when token is available:

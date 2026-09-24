@@ -169,11 +169,12 @@ export function Hero() {
             {site.tagline}
           </p>
           <p data-hero-item className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
-            Full-stack developer from Kolkata — React, Node.js and MongoDB on the front lines of
-            real projects. Currently building AnatomiaX, a 3D AI-powered anatomy learning platform.
+            Full-stack developer from Kolkata — focused on TypeScript/JavaScript applications,
+            REST APIs, database-driven systems, modern infrastructure, and interactive web
+            experiences. Currently building AnatomiaX, a 3D AI-powered anatomy learning platform.
           </p>
           <p data-hero-item className="mono-label mt-4 text-mint">
-            {"// "}React · Node.js · MongoDB · Docker
+            {"// "}TypeScript · JavaScript · React · Next.js · Node.js · Express · MongoDB · Docker
           </p>
           <div data-hero-item className="mt-8 flex flex-wrap items-center gap-4">
             <Magnetic>
