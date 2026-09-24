@@ -501,15 +501,26 @@ export function Work() {
                     >
                       {project.index}
                     </p>
-                    {!project.live && (
-                      <span className="flex shrink-0 items-center gap-1.5">
+                    <span className="flex shrink-0 items-center gap-1.5">
+                      {project.live ? (
+                        <span className="mono-label text-glow-mint inline-flex items-center gap-1.5 rounded border border-mint/40 bg-mint/10 px-2 py-1 !text-[9px] text-mint shadow-[0_0_16px_-4px_rgba(101,246,213,0.6)]">
+                          <span className="relative flex h-1.5 w-1.5">
+                            <span
+                              aria-hidden="true"
+                              className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75"
+                            />
+                            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint" />
+                          </span>
+                          LIVE
+                        </span>
+                      ) : (
                         <span
                           className={`mono-label rounded border px-2 py-1 !text-[9px] ${tone.chip}`}
                         >
                           {project.status}
                         </span>
-                      </span>
-                    )}
+                      )}
+                    </span>
                   </div>
 
                   <div className="preview-grid relative mt-4 flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">

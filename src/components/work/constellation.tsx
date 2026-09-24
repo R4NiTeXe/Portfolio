@@ -12,7 +12,18 @@ function InfoPanel({ project }: { project: Project }) {
     <div className="pointer-events-none absolute left-1/2 z-20 w-60 -translate-x-1/2 rounded-xl border border-white/10 bg-[#0A0F1A]/95 p-4 opacity-0 shadow-xl backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
       <div className="flex items-center justify-between gap-2">
         <p className="mono-label !text-[8px] text-white/40">PROJECT {project.index}</p>
-        {!project.live && (
+        {project.live ? (
+          <p className="mono-label text-glow-mint inline-flex items-center gap-1 !text-[8px] text-mint">
+            <span className="relative flex h-1.5 w-1.5">
+              <span
+                aria-hidden="true"
+                className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75"
+              />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint" />
+            </span>
+            LIVE
+          </p>
+        ) : (
           <p className={`mono-label shrink-0 !text-[8px] ${tone.chip}`}>{project.status}</p>
         )}
       </div>
@@ -198,13 +209,24 @@ export function ProjectConstellation({
                   </span>
                 </span>
               </span>
-              {!project.live && (
+              {!project.live ? (
                 <span className="flex shrink-0 items-center gap-1.5">
                   <span
                     className={`mono-label rounded border px-2 py-0.5 !text-[8px] ${tone.chip}`}
                   >
                     {project.status}
                   </span>
+                </span>
+              ) : (
+                <span className="mono-label text-glow-mint inline-flex shrink-0 items-center gap-1.5 rounded border border-mint/40 bg-mint/10 px-2 py-0.5 !text-[8px] text-mint shadow-[0_0_16px_-4px_rgba(101,246,213,0.6)]">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75"
+                    />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint" />
+                  </span>
+                  LIVE
                 </span>
               )}
             </button>
