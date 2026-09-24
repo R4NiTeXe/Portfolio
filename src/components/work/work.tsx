@@ -318,6 +318,15 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             {project.index}
           </p>
           <div className="flex items-center gap-2">
+            {project.live && (
+              <span
+                data-modal-stagger
+                className="mono-label inline-flex shrink-0 items-center gap-1 rounded border border-mint/30 bg-mint/10 px-2 py-1 !text-[9px] text-mint"
+              >
+                <span className="h-1 w-1 animate-pulse-dot rounded-full bg-mint" />
+                LIVE
+              </span>
+            )}
             <span
               className={`mono-label shrink-0 rounded border px-2 py-1 !text-[9px] ${tone.chip}`}
             >
@@ -490,10 +499,18 @@ export function Work() {
                     <p className={`font-display text-sm font-semibold ${tone.index}`}>
                       {project.index}
                     </p>
-                    <span
-                      className={`mono-label shrink-0 rounded border px-2 py-1 !text-[9px] ${tone.chip}`}
-                    >
-                      {project.status}
+                    <span className="flex shrink-0 items-center gap-1.5">
+                      {project.live && (
+                        <span className="mono-label inline-flex items-center gap-1 rounded border border-mint/30 bg-mint/10 px-2 py-1 !text-[9px] text-mint">
+                          <span className="h-1 w-1 animate-pulse-dot rounded-full bg-mint" />
+                          LIVE
+                        </span>
+                      )}
+                      <span
+                        className={`mono-label rounded border px-2 py-1 !text-[9px] ${tone.chip}`}
+                      >
+                        {project.status}
+                      </span>
                     </span>
                   </div>
 
