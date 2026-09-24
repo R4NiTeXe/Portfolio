@@ -57,10 +57,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-aurora: aurora 24s ease-in-out infinite alternate;
   --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
-  --animate-spin-slow: spin 14s linear infinite;
   --animate-scroll-line: scroll-line 2.2s ease-in-out infinite;
 }
 
@@ -167,29 +164,12 @@
     0 24px 60px -32px rgba(0, 0, 0, 0.7);
 }
 
-@utility glass-strong {
-  background: rgba(16, 24, 40, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 32px 80px -40px rgba(0, 0, 0, 0.8);
-}
-
 /* Thin technical grid — measured reference: faint 1px lines */
 @utility grid-lines {
   background-image:
     linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
   background-size: 64px 64px;
-}
-
-@utility grid-lines-fine {
-  background-image:
-    linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
 }
 
 /* Aurora glow blobs — violet #8B7CFF / mint #65F6D5, restrained */
@@ -213,22 +193,6 @@
 
 @utility text-glow-mint {
   text-shadow: 0 0 24px rgba(101, 246, 213, 0.45);
-}
-
-@utility text-glow-violet {
-  text-shadow: 0 0 28px rgba(139, 124, 255, 0.5);
-}
-
-@utility shadow-mint {
-  box-shadow:
-    0 0 0 1px rgba(101, 246, 213, 0.25),
-    0 12px 40px -12px rgba(101, 246, 213, 0.35);
-}
-
-@utility shadow-violet {
-  box-shadow:
-    0 0 0 1px rgba(139, 124, 255, 0.22),
-    0 12px 44px -12px rgba(139, 124, 255, 0.4);
 }
 
 @keyframes constellation-drift {
@@ -290,18 +254,6 @@
   }
 }
 
-@keyframes aurora {
-  0% {
-    transform: translate3d(-6%, -4%, 0) scale(1) rotate(0deg);
-  }
-  50% {
-    transform: translate3d(5%, 6%, 0) scale(1.15) rotate(6deg);
-  }
-  100% {
-    transform: translate3d(-3%, 4%, 0) scale(1.05) rotate(-4deg);
-  }
-}
-
 @keyframes pulse-dot {
   0%,
   100% {
@@ -320,17 +272,6 @@
   }
   100% {
     transform: translateY(340%);
-  }
-}
-
-@keyframes preloader-in {
-  from {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -484,30 +425,6 @@
   animation: orbit-rotate 120s linear infinite;
 }
 
-/* Celestial star dot */
-.celestial-star {
-  position: absolute;
-  border-radius: 9999px;
-  background: rgba(230, 237, 243, 0.8);
-  box-shadow: 0 0 6px rgba(139, 124, 255, 0.25);
-}
-
-/* Dark planet body — directional rim lighting */
-@utility planet-body {
-  border-radius: 9999px;
-  background: radial-gradient(circle at 32% 28%, #131c2e 0%, #0b1120 45%, #05070d 100%);
-  box-shadow:
-    inset -3px 3px 10px rgba(0, 0, 0, 0.95),
-    inset 3px -3px 10px rgba(139, 124, 255, 0.18),
-    inset 1px -1px 4px rgba(101, 246, 213, 0.12);
-}
-
-/* Thin 1px orbit arc */
-@utility orbit-arc {
-  border: 1px solid rgba(230, 237, 243, 0.12);
-  border-radius: 9999px;
-}
-
 /* Cursor ring label */
 .cursor-label {
   position: absolute;
@@ -621,22 +538,6 @@
     linear-gradient(to right, rgba(230, 237, 243, 0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(230, 237, 243, 0.06) 1px, transparent 1px);
   background-size: 24px 24px;
-}
-
-/* Pulse rings for project previews */
-@keyframes pulse-ring {
-  0% {
-    transform: translate(-50%, -50%) scale(0.6);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.5);
-    opacity: 0;
-  }
-}
-
-.animate-pulse-ring {
-  animation: pulse-ring 1.6s ease-out infinite;
 }
 
 /* Scan line for project previews */

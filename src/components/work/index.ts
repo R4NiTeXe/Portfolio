@@ -1,3 +1,1 @@
-export { Work, toneStyles } from "./work";
-export type { Project } from "./work";
-export { ProjectConstellation } from "./constellation";
+export { Work } from "./work";
